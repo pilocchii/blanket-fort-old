@@ -7,7 +7,7 @@ define([
     /**************
     GameBoard class
     **************/
-    class GameBoard extends Entity {
+    class GameBoard extends Entity.Entity {
 
         // so this prototype.call() is calling the Entity constructor with (game=null, x=0, y=0)
         constructor () {
@@ -19,7 +19,8 @@ define([
         }
 
         update () {
-            Entity.prototype.update.call(this);
+            super.update(this)
+            // Entity.Entity.prototype.update.call(this);
         }
 
         draw (ctx) {

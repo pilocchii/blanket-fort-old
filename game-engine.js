@@ -17,6 +17,13 @@ define([
             this.wheel = null;
             this.surfaceWidth = null;
             this.surfaceHeight = null;
+            this.controls = {
+                "jump": {"key": "Space", "active": false},
+                "up": {"key": "KeyW", "active": false},
+                "down": {"key": "s", "active": false},
+                "left": {"key": "a", "active": false},
+                "right": {"key": "d", "active": false},
+            }
         }
 
         /*
@@ -36,7 +43,7 @@ define([
         */
         start () {
             console.log("starting game");
-            var that = this;
+            let that = this;
             (function gameLoop() {
                 that.loop();
                 requestAnimFrame(gameLoop, that.ctx.canvas);
@@ -49,9 +56,11 @@ define([
         startInput () {
             console.log('Starting input');
 
-            var getXandY = function (e) {
-                var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
-                var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
+            this.ctx.canvas.tabIndex = 0;;
+
+            let getXandY = function (e) {
+                let x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
+                let y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
 
                 if (x < 1024) {
                     x = Math.floor(x / 32);
@@ -61,18 +70,19 @@ define([
                 return { x: x, y: y };
             }
 
-            var that = this;
+            let that = this;
 
-            this.ctx.canvas.addEventListener("click", function (e) {
-                that.click = getXandY(e);
+            // control event listeners go here
+            let map = {};
+
+            this.ctx.canvas.addEventListener("keydown", function (e) {
+                console.log("Key Down Event - Char " + e.code + " Code " + e.type);
+
             }, false);
 
-            this.ctx.canvas.addEventListener("mousemove", function (e) {
-                that.mouse = getXandY(e);
-            }, false);
+            this.ctx.canvas.addEventListener("keyup", function (e) {
+                // console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
 
-            this.ctx.canvas.addEventListener("mousewheel", function (e) {
-                that.wheel = e;
             }, false);
 
             console.log('Input started');
@@ -93,7 +103,7 @@ define([
         draw (drawCallback) {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
             this.ctx.save();
-            for (var i = 0; i < this.entities.length; i++) {
+            for (let i = 0; i < this.entities.length; i++) {
                 this.entities[i].draw(this.ctx);
             }
             if (drawCallback) {
@@ -106,17 +116,17 @@ define([
         Updates all entities, calls their update methods
         */
         update () {
-            var entitiesCount = this.entities.length;
+            let entitiesCount = this.entities.length;
 
-            for (var i = 0; i < entitiesCount; i++) {
-                var entity = this.entities[i];
+            for (let i = 0; i < entitiesCount; i++) {
+                let entity = this.entities[i];
 
                 if (!entity.removeFromWorld) {
                     entity.update();
                 }
             }
 
-            for (var i = this.entities.length - 1; i >= 0; --i) {
+            for (let i = this.entities.length - 1; i >= 0; --i) {
                 if (this.entities[i].removeFromWorld) {
                     // todo: what does this do?
                     this.entities.splice(i, 1);

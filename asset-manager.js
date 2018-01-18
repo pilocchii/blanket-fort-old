@@ -24,7 +24,7 @@ define([
         Adds an asset path to the download queue
         */
         queueDownload (path) {
-            console.log(path.toString());
+            // console.log(path.toString());
             this.downloadQueue.push(path);
         }
 
@@ -45,7 +45,7 @@ define([
                 let img = new Image();
                 let that = this;
                 img.addEventListener("load", function () {
-                    console.log("dun: " + this.src.toString());
+                    // console.log("dun: " + this.src.toString());
                     that.successCount += 1;
                     if (that.isDone()) { callback(); }
                 });

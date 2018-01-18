@@ -1,11 +1,14 @@
 define([
     'asset-manager',
     'game-engine',
-    'game-board'
+    'game-board',
+    'entity',
 ], function(
     AssetManager,
     GameEngine,
     GameBoard,
+    Entity,
+
 ) {
 
     let init = function() {
@@ -14,18 +17,31 @@ define([
 
     // the "main" code begins here
 
-    let ASSET_MANAGER = new AssetManager();
+    toload = [
+        "img/ZXe.png",
+        "img/OtorenRockman.jpg",
+        "animations/hero.json",
+
+    ];
+
+    let ASSET_MANAGER = new AssetManager(toload);
 
     ASSET_MANAGER.downloadAll(function () {
         console.log("starting up da sheild");
-        var canvas = document.getElementById('gameWorld');
-        var ctx = canvas.getContext('2d');
+        let canvas = document.getElementById('gameWorld');
+        let ctx = canvas.getContext('2d');
 
-        var gameEngine = new GameEngine();
-        var gameboard = new GameBoard();
+        let gameEngine = new GameEngine();
+        // let gameboard = new GameBoard();
 
-        gameEngine.addEntity(gameboard);
-     
+        // gameEngine.addEntity(gameboard);
+        // console.log(hero);
+
+        /*gameEngine.addEntity(new Entity.Entity(gameEngine, 100, 100, 
+            ASSET_MANAGER.getAsset("img/ZXe.png"), 
+            null,
+            ctx));
+     */
         gameEngine.init(ctx);
         gameEngine.start();
     });
