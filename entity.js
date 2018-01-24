@@ -31,10 +31,10 @@ define([
         */
         drawOutline (ctx) {
             ctx.beginPath();
-                ctx.strokeStyle = "green";
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-                ctx.stroke();
-                ctx.closePath();
+            ctx.strokeStyle = "green";
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.stroke();
+            ctx.closePath();
         }
 
         /*
@@ -113,7 +113,7 @@ define([
     removeFromWorld - a flag that denotes when to remove this entity from the game
     ************/
     class Actor extends Entity {
-        constructor (game, x, y, img=null, jsondata=null, ctx=null) {
+        constructor (game, x, y, img=null, jsondata=null, ctx=null, scale=null) {
             super(game, x, y, img, jsondata, ctx);
             this.facing = null;
             this.states = null;
@@ -134,52 +134,72 @@ define([
 
     class Hero extends Actor {
 
-        constructor (game, x, y, img=null, ctx=null) {
+        constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=50, spriteHeight=50) {
             super(game, x, y, img, ctx);
+            this.scale = scale;
+            this.spriteWidth = spriteWidth;
+            this.spriteHeight = spriteHeight;
             // collection of booleans for states
-            this.facing = "right";
+            this.facingRight = true;
             this.states = {
                 "idle": true,
                 "run": false,
                 "swordAttack": false,
             };
             this.animations = {
-                "idle": new Animation(this.img, [50, 50], 0, 9, 4, 9, true, 3, this.facing),
-                "run": new Animation(this.img, [50, 50], 1, 11, 4, 11, true, 3, this.facing),
+                "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale),
+                "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
             };
             this.animation = this.animations.idle;
+
+            console.log(this.scale);
+        }
+
+        drawOutline (ctx) {
+            ctx.beginPath();
+            ctx.strokeStyle = "green";
+            ctx.arc(this.x + (this.spriteWidth/2), this.y + ((this.spriteHeight*this.scale)/2), this.radius, 0, Math.PI * 2, false);
+            ctx.stroke();
+            ctx.closePath();
         }
 
         drawImg (ctx) {
-            // add facing here
-            this.animation.drawFrame(1, ctx, this.x, this.y, this.facing);
+            this.drawOutline(ctx);
+            this.animation.drawFrame(1, ctx, this.x, this.y, this.facingRight);
+
         }
 
         /////////////////////
         update () {
             // run right
             if (this.game.controlKeys[this.game.controls.right].active) { 
-                if (this.facing != "right") { this.facing = "right" };
-                this.idle = false;
-                this.run = true;
+                if (!this.facingRight) { this.facingRight = true };
+                this.states.idle = false;
+                this.states.run = true;
             } 
 
             // run left
             else if (this.game.controlKeys[this.game.controls.left].active) {
-                if (this.facing != "left") { this.facing = "left" };
-                this.idle = false;
-                this.run = true;
+                if (this.facingRight) { this.facingRight = false };
+                this.states.idle = false;
+                this.states.run = true;
             }
 
-            else { this.idle = true }
+            else { 
+            	this.states.idle = true;
+            	this.states.run = false; 
+            }
         }
 
         /////////////////////
         draw (ctx) {
-            if (this.states.run == true) {
+        	if (this.states.idle) {
+        		this.animation = this.animations.idle;
+        	}
+            else if (this.states.run) {
                this.animation = this.animations.run; // ??
             } else {
-                this.animation = this.animations.idle;
+                this.animation = this.animations.idle; // what do we do with this? default action
             }
             this.drawImg(ctx);
         }

@@ -17,13 +17,15 @@ define([
             this.wheel = null;
             this.surfaceWidth = null;
             this.surfaceHeight = null;
+            // KB input keycodes
             this.controlKeys = {
                 "Space": {"active": false},
                 "KeyW": {"active": false},
                 "KeyS": {"active": false},
                 "KeyD": {"active": false},
-                "right": {"active": false},
+                "KeyA": {"active": false}
             }
+            // control mapping
             this.controls = {
                 "jump": "Space",
                 "right": "KeyD",
@@ -88,6 +90,7 @@ define([
             }, false);
 
             this.ctx.canvas.addEventListener("keyup", function (e) {
+            	if (!that.controlKeys.hasOwnProperty(e.code)) { that.controlKeys[e.code] = {"active": false}; }
                 if (that.controlKeys[e.code].active == true) { that.controlKeys[e.code].active = false }
                 // console.log(`${e.code} is ${that.controls[e.code].active}`);
 

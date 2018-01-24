@@ -35,7 +35,7 @@ define([
                 this.scale = scale;
             }
 
-            drawFrame (tick, ctx, x, y, facing) {
+            drawFrame (tick, ctx, x, y, facingRight) {
                 this.elapsedTime += tick;
                 if (this.isDone()) {
                     if (this.loop) this.elapsedTime = 0;
@@ -47,12 +47,32 @@ define([
                 xindex = frame % this.sheetWidth;
                 yindex = Math.floor(frame / this.sheetWidth);
 
-                ctx.drawImage(this.spriteSheet,
+                // Draw facing left
+                if (!facingRight) {
+                	ctx.translate((this.scale*this.frameWidth) + x, 
+                		y - (this.scale*this.frameHeight));
+
+				    // scaleX by -1; this "trick" flips horizontally
+				    ctx.scale(-1,1);
+				    
+                	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
-                             x, y,
+                             x - this.frameWidth, y + this.frameHeight,
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
+				    
+				    // always clean up -- reset transformations to default
+				    ctx.setTransform(1,0,0,1,0,0);
+                } else { // Draw facing right
+                	ctx.drawImage(this.spriteSheet,
+                             (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
+                             this.frameWidth, this.frameHeight,
+                             x - this.frameWidth, y,
+                             this.frameWidth * this.scale,
+                             this.frameHeight * this.scale);
+                }
+                
             }
 
             currentFrame () {

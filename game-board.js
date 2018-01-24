@@ -6,6 +6,8 @@ define([
 
     /**************
     GameBoard class
+
+    
     **************/
     class GameBoard extends Entity.Entity {
 
