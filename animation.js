@@ -49,21 +49,32 @@ define([
 
                 // Draw facing left
                 if (!facingRight) {
-                	ctx.translate((this.scale*this.frameWidth) + x, 
-                		y - (this.scale*this.frameHeight));
 
-				    // scaleX by -1; this "trick" flips horizontally
-				    ctx.scale(-1,1);
-				    
+                    // Save original context
+                    ctx.save();
+
+                    // Set context to horizontal center of image (don't care about changing y's position)
+                	ctx.translate(x + (this.scale * this.frameWidth) / 2, 
+                        0);
+                        
+				    // Scale x by -1 to flip horizontally
+                    ctx.scale(-1, 1);
+
+                    // Draw image on the transformed context
+                    // Note: after transforming [0,0] is visually [-width/2, 0]
+                    // so the image needs to be offset accordingly when drawn
+
                 	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
-                             x - this.frameWidth, y + this.frameHeight,
+                             -(this.frameWidth)/2, y, // Offset dx
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
-				    
-				    // always clean up -- reset transformations to default
-				    ctx.setTransform(1,0,0,1,0,0);
+
+                    // Restore original context
+                    ctx.restore();
+                    // omg it's finally working ;-;
+
                 } else { // Draw facing right
                 	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
