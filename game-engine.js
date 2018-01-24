@@ -17,12 +17,17 @@ define([
             this.wheel = null;
             this.surfaceWidth = null;
             this.surfaceHeight = null;
+            this.controlKeys = {
+                "Space": {"active": false},
+                "KeyW": {"active": false},
+                "KeyS": {"active": false},
+                "KeyD": {"active": false},
+                "right": {"active": false},
+            }
             this.controls = {
-                "jump": {"key": "Space", "active": false},
-                "up": {"key": "KeyW", "active": false},
-                "down": {"key": "s", "active": false},
-                "left": {"key": "a", "active": false},
-                "right": {"key": "d", "active": false},
+                "jump": "Space",
+                "right": "KeyD",
+                "left": "KeyA",
             }
         }
 
@@ -75,13 +80,16 @@ define([
             // control event listeners go here
             let map = {};
 
-            this.ctx.canvas.addEventListener("keydown", function (e) {
-                console.log("Key Down Event - Char " + e.code + " Code " + e.type);
+            this.ctx.canvas.addEventListener("keypress", function (e) {
+                if (!that.controlKeys.hasOwnProperty(e.code)) { that.controlKeys[e.code] = {"active": true}; }
+                if (that.controlKeys[e.code].active == false) { that.controlKeys[e.code].active = true; }
+                // console.log(`${e.code} is ${that.controls[e.code].active}`);
 
             }, false);
 
             this.ctx.canvas.addEventListener("keyup", function (e) {
-                // console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
+                if (that.controlKeys[e.code].active == true) { that.controlKeys[e.code].active = false }
+                // console.log(`${e.code} is ${that.controls[e.code].active}`);
 
             }, false);
 

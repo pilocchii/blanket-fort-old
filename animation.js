@@ -18,7 +18,6 @@ define([
         frames - the number of frames in this animation.
         loop - a boolean denoting whether this animation should replay or not.
         scale - a value to multiply the original sprite's size by.
-        jsonData - todo // may be used in providing additional data to this Animation, such as transition frame data
         */
         class Animation {
         
@@ -36,7 +35,7 @@ define([
                 this.scale = scale;
             }
 
-            drawFrame (tick, ctx, x, y) {
+            drawFrame (tick, ctx, x, y, facing) {
                 this.elapsedTime += tick;
                 if (this.isDone()) {
                     if (this.loop) this.elapsedTime = 0;

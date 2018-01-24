@@ -8,7 +8,6 @@ define([
     GameEngine,
     GameBoard,
     Entity,
-
 ) {
 
     let init = function() {
@@ -37,11 +36,11 @@ define([
         // gameEngine.addEntity(gameboard);
         // console.log(hero);
 
-        /*gameEngine.addEntity(new Entity.Entity(gameEngine, 100, 100, 
+        gameEngine.addEntity(new Entity.Hero(gameEngine, 100, 100, 
             ASSET_MANAGER.getAsset("img/ZXe.png"), 
             null,
             ctx));
-     */
+     
         gameEngine.init(ctx);
         gameEngine.start();
     });
