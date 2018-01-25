@@ -58,7 +58,7 @@ define([
                         0);
                         
 				    // Scale x by -1 to flip horizontally
-                    //ctx.scale(-1, 1);
+                    ctx.scale(-1, 1);
 
                     // Draw image on the transformed context
                     // Note: after transforming [0,0] is visually [-width/2, 0]

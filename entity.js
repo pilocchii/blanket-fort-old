@@ -136,23 +136,27 @@ define([
 
         constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=50, spriteHeight=50) {
             super(game, x, y, img, ctx);
+            this.movementSpeed = 8;
+            this.maxHeight = 200;
             this.scale = scale;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
             // collection of booleans for states
-            this.facingRight = true;
+
+            this.jumpStart = y;
             this.states = {
-                "idle": true,
-                "run": false,
+                "running": false,
+                "jumping": false,
+                "falling": false,
                 "swordAttack": false,
+                "facingRight": true,
             };
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale),
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
+                "jump": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
             };
-            this.animation = this.animations.idle;
-
-            console.log(this.scale);
+            // this.animation = this.animations.idle;
         }
 
         drawOutline (ctx) {
@@ -165,41 +169,89 @@ define([
 
         drawImg (ctx) {
             this.drawOutline(ctx);
-            this.animation.drawFrame(1, ctx, this.x, this.y, this.facingRight);
+            this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
 
         }
 
-        /////////////////////
         update () {
-            // run right
-            if (this.game.controlKeys[this.game.controls.right].active) { 
-                if (!this.facingRight) { this.facingRight = true };
-                this.states.idle = false;
-                this.states.run = true;
-            } 
 
-            // run left
-            else if (this.game.controlKeys[this.game.controls.left].active) {
-                if (this.facingRight) { this.facingRight = false };
-                this.states.idle = false;
-                this.states.run = true;
+            /////////// all button checks go here ///////////
+            // check if button pressed
+            // Moving left and right are mutually exclusive, thus else-if
+            if (this.game.controlKeys[this.game.controls.right].active) { //run right
+                if (!this.states.facingRight) { this.states.facingRight = true };
+                this.states.running = true;
+            } else if (this.game.controlKeys[this.game.controls.left].active) { //run left
+                if (this.states.facingRight) { this.states.facingRight = false };
+                this.states.running = true;
+            }
+            if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
+                this.states.jumping = true;
             }
 
-            else { 
-            	this.states.idle = true;
-            	this.states.run = false; 
+            // check if button NOT pressed, if state is supposed to change...
+            if (!(this.game.controlKeys[this.game.controls.right].active || this.game.controlKeys[this.game.controls.left].active)
+                && this.states.running) { 
+                this.states.running = false;
             }
+
+
+            ///////////// THEN do actions //////////////
+            // Running
+            if (this.states.running) {
+                if (this.states.facingRight) {
+                    this.x += this.movementSpeed;
+                } else {
+                    this.x -= this.movementSpeed;
+                }
+            }
+
+            // // Jumping
+            // if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump control
+            //     this.states.jumping = true;
+            //     this.jumpStart = this.y;
+            //     console.log("jump start")
+            // }
+            // // jump logic
+            // if (this.states.jumping) {
+            //     // if (this.animations.jump.isDone()) {
+            //     //     this.animations.jump.elapsedTime = 0;
+            //     //     this.states.jumping = false;
+            //     // }
+            //     let jumpDistance = this.animations.jump.elapsedTime / this.animations.jump.totalTime;
+
+            //     if (jumpDistance > .5) {
+            //         jumpDistance = 1 - jumpDistance;
+            //     }
+
+            //     let height = this.maxHeight * (-4 * (jumpDistance * jumpDistance - jumpDistance));
+            //     this.y = this.jumpStart - height;
+            // }
+
+            // // check if jump over
+            // if (this.y == this.jumpStart && this.states.jumping) {
+            //     console.log("jump end")
+            //     this.states.jumping = false;
+            //     // this.states.idle = true;
+            // }
+
+
+
+
+            // FINALLY assign a single active animation
+            // if (this.states.running && this.animation != this.animations.run) {
+            //     this.animation = this.animations.run;
+            // } else {
+            //     this.animation = this.animations.idle;
+            // }
         }
 
         /////////////////////
         draw (ctx) {
-        	if (this.states.idle) {
-        		this.animation = this.animations.idle;
-        	}
-            else if (this.states.run) {
-               this.animation = this.animations.run; // ??
+        	if (this.states.running && this.animation) {
+                this.animation = this.animations.run;
             } else {
-                this.animation = this.animations.idle; // what do we do with this? default action
+                this.animation = this.animations.idle;
             }
             this.drawImg(ctx);
         }
