@@ -158,7 +158,7 @@ define([
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale),
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
-                "jump": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
+                "jump": new Animation(this.img, [spriteWidth, spriteHeight], 2, 6, 3, 6, true, this.scale),
             };
             // this.animation = this.animations.idle;
         }
