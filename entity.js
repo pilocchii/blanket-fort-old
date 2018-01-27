@@ -1,7 +1,9 @@
 define([
-    'animation'
+    'animation',
+    'game-engine'
 ],function(
-    Animation
+    Animation,
+    GameEngine,
 ){
 
     /***********
@@ -17,6 +19,7 @@ define([
             this.game = game;
             this.x = x;
             this.y = y;
+            this.gravity = 0.5;
             this.img = img;
             // this.jsondata = jsondata;
             this.removeFromWorld = false;
@@ -41,11 +44,7 @@ define([
 
         */
         drawImg (ctx) {
-            if (!this.animation) {
-                //this.animation = new Animation(this.img, [50, 50], 1, 11, 4, 11, true, 3);
-
-            }
-            this.animation.drawFrame(1, ctx, this.x, this.y, "run");
+            this.animation.drawFrame(this.clockTick, ctx, this.x, this.y, "run");
         }
 
 
@@ -118,6 +117,8 @@ define([
             this.facing = null;
             this.states = null;
             this.animations = null;
+
+            //Is this used?
             this.animation = null;
         }
         
@@ -136,8 +137,12 @@ define([
 
         constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=50, spriteHeight=50) {
             super(game, x, y, img, ctx);
+            this.origY = this.y; //For jumping
             this.movementSpeed = 8;
-            this.maxHeight = 200;
+            this.jumpSpeed = -10;
+            this.origJumpSpeed;
+            this.jumpTime = 2;
+            this.maxHeight = this.origY -200; // Down is positive
             this.scale = scale;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
@@ -147,7 +152,6 @@ define([
             this.states = {
                 "running": false,
                 "jumping": false,
-                "falling": false,
                 "swordAttack": false,
                 "facingRight": true,
             };
@@ -169,12 +173,14 @@ define([
 
         drawImg (ctx) {
             this.drawOutline(ctx);
-            this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+            if(this.states.jumping || this.states.falling) {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+
+            } else this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
 
         }
 
         update () {
-
             /////////// all button checks go here ///////////
             // check if button pressed
             // Moving left and right are mutually exclusive, thus else-if
@@ -186,7 +192,10 @@ define([
                 this.states.running = true;
             }
             if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
+                this.origY = this.y;
+                this.origJumpSpeed = this.jumpSpeed;
                 this.states.jumping = true;
+                console.log("Jump");
             }
 
             // check if button NOT pressed, if state is supposed to change...
@@ -207,54 +216,56 @@ define([
             }
 
             // // Jumping
-            // if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump control
-            //     this.states.jumping = true;
-            //     this.jumpStart = this.y;
-            //     console.log("jump start")
-            // }
-            // // jump logic
-            // if (this.states.jumping) {
-            //     // if (this.animations.jump.isDone()) {
-            //     //     this.animations.jump.elapsedTime = 0;
-            //     //     this.states.jumping = false;
-            //     // }
-            //     let jumpDistance = this.animations.jump.elapsedTime / this.animations.jump.totalTime;
+            //TODO: time is VERY important for animating jumps properly. w/o proper ticking o/ clock,
+            //zero ends up simply jumping to where he should end up at the end of the jump if conditional.
 
-            //     if (jumpDistance > .5) {
-            //         jumpDistance = 1 - jumpDistance;
+            // jump logic
+            //I have no idea wtf is real anymore
+            // //I THINK THIS FINALLY WORKS (linear jump tho)
+            // if (this.states.jumping && !this.states.falling) {
+
+            //     if (this.y > this.maxHeight) {
+            //         this.y -= this.y*this.jumpTimeTotal - this.ju
+            //     } else {
+            //         this.states.falling = true;
             //     }
-
-            //     let height = this.maxHeight * (-4 * (jumpDistance * jumpDistance - jumpDistance));
-            //     this.y = this.jumpStart - height;
             // }
 
-            // // check if jump over
-            // if (this.y == this.jumpStart && this.states.jumping) {
-            //     console.log("jump end")
-            //     this.states.jumping = false;
-            //     // this.states.idle = true;
+            // if (this.states.falling) {
+            //     if (this.y < this.origY) {
+            //         this.y +=this.jumpSpeed;
+            //     } else {
+            //         this.states.jumping = false;
+            //         this.states.falling = false;
+            //     }
             // }
 
-
-
-
-            // FINALLY assign a single active animation
-            // if (this.states.running && this.animation != this.animations.run) {
-            //     this.animation = this.animations.run;
-            // } else {
-            //     this.animation = this.animations.idle;
-            // }
+            if (this.states.jumping) {
+               this.y += this.jumpSpeed*this.jumpTime;
+               this.jumpSpeed += this.gravity*this.jumpTime;
+                
+               if (this.y > 500) { //TODO this will change when we handle collision
+                   this.y = 500;
+                   this.jumpSpeed = this.origJumpSpeed;
+                   this.states.jumping = false;
+               }
+                
+             
+            }
+        
         }
-
         /////////////////////
         draw (ctx) {
-        	if (this.states.running && this.animation) {
+            if(this.states.jumping) {
+                this.animation = this.animations.jump;
+            }
+        	else if (this.states.running && this.animation) {
                 this.animation = this.animations.run;
             } else {
                 this.animation = this.animations.idle;
             }
             this.drawImg(ctx);
-        }
+        };
     }
 
 
