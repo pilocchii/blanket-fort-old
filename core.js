@@ -18,9 +18,7 @@ define([
 
     toload = [
         "img/ZXe.png",
-        "img/OtorenRockman.jpg",
-        "animations/hero.json",
-
+        "img/Fistleo.png"
     ];
 
     let ASSET_MANAGER = new AssetManager(toload);
@@ -41,6 +39,8 @@ define([
         gameEngine.addEntity(new Entity.Hero(gameEngine, 200, 500, 
             ASSET_MANAGER.getAsset("img/ZXe.png"), 
             ctx));
+
+        gameEngine.addEntity(new Entity.Fistleo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Fistleo.png"), ctx));
      
         gameEngine.init(ctx);
         gameEngine.start();
