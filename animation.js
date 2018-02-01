@@ -18,25 +18,33 @@ define([
         frames - the number of frames in this animation.
         loop - a boolean denoting whether this animation should replay or not.
         scale - a value to multiply the original sprite's size by.
+        columnOffset - added to this.currentFrame to get starting point of any animations that start partway into a sheet.
         */
         class Animation {
         
-            constructor (spriteSheet, frameDimensions, row, sheetWidth, frameDuration, frames, loop, scale, jsondata=null) {
+            constructor(spriteSheet, frameDimensions, row, sheetWidth, frameDuration, frames, loop, scale, columnOffset = 0, jsondata = null) {
+
                 this.spriteSheet = spriteSheet;
                 this.frameWidth = frameDimensions[0];
                 this.frameDuration = frameDuration;
-                this.frameHeight = frameDimensions[1]+1;
+                this.frameHeight = frameDimensions[1] + 1;
                 this.row = row;
+                this.columnOffset = columnOffset;
                 this.sheetWidth = sheetWidth;
                 this.frames = frames;
                 this.totalTime = frameDuration * frames;
                 this.elapsedTime = 0;
                 this.loop = loop;
+                this.pause = false;
                 this.scale = scale;
             }
 
-            drawFrame (tick, ctx, x, y, facingRight) {
-                this.elapsedTime += tick;
+            drawFrame(tick, ctx, x, y, facingRight) {
+                if (this.pause) {//can be used to pause the animation a given frame (only useable in specific situations)
+                    this.elapsedTime += 0;
+                } else {
+                    this.elapsedTime += tick;
+                }
                 if (this.isDone()) {
                     if (this.loop) this.elapsedTime = 0;
                 }
@@ -45,7 +53,7 @@ define([
                 var yindex = 0;
                 let drow = (this.row * this.frameHeight)
                 xindex = frame % this.sheetWidth;
-                yindex = Math.floor(frame / this.sheetWidth);
+                yindex = Math.floor((frame) / this.sheetWidth);
 
                 // Draw facing left
                 if (!facingRight) {
@@ -86,12 +94,13 @@ define([
                 
             }
 
+            //DS3 1/28: added this.columnOffset for cases where starting frame is not in first column
             currentFrame () {
-                return Math.floor(this.elapsedTime / this.frameDuration);
+                return Math.floor(this.elapsedTime / this.frameDuration) + this.columnOffset;
             }
 
             isDone () {
-                return (this.elapsedTime >= this.totalTime);
+                return (this.elapsedTime >= this.totalTime - 1);
             }
     }
 

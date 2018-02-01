@@ -19,6 +19,8 @@ define([
             this.game = game;
             this.x = x;
             this.y = y;
+            this.origX = x;
+            this.origY = y;
             this.gravity = 0.5;
             this.img = img;
             // this.jsondata = jsondata;
@@ -117,15 +119,28 @@ define([
             this.facing = null;
             this.states = null;
             this.animations = null;
-
-            //Is this used?
             this.animation = null;
         }
+
+        drawOutline(ctx) {
+            ctx.beginPath();
+            ctx.strokeStyle = "green";
+            ctx.arc(this.x + (this.spriteWidth / 2), this.y + ((this.spriteHeight * this.scale) / 2), this.radius, 0, Math.PI * 2, false);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        drawImg(ctx) {
+            this.drawOutline(ctx);
+            try {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+            } catch (e) {
+                console.log(e);
+            }
+
+        }
         
-        /*
-        Updates the entity each game loop
-        i.e. what does this entity do?
-        */
+        /*Updates the entity each game loop. i.e. what does this entity do? */
         update () {
             super.update();
         }
@@ -265,119 +280,151 @@ define([
                 this.animation = this.animations.idle;
             }
             this.drawImg(ctx);
-        };
+        }
     }
 
-    class Fistleo extends Actor {
+    class Leo extends Actor {
 
         constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 80, spriteHeight = 60) {
             super(game, x, y, img, ctx);
-            this.origY = this.y; //For jumping
             this.movementSpeed = 12;
             this.jumpSpeed = -10;
-            this.origJumpSpeed;
-            this.jumpTime = 2;
-            this.maxHeight = this.origY - 200; // Down is positive
             this.scale = scale;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
-            let leo = this;
-            // collection of booleans for states
+            this.timerStart = Date.now();
+            //Contains detailed spritesheet info: [FWidth, FHeight, Row, Column, Frames (sheet width)]
+            this.sprinfo = [//each five-tuple is from a row of the sprite sheet
+                [80, 60, 0, 0, 7], [50, 70, 1, 0, 5],
+                [70, 70, 2, 0, 8], [70, 80, 3, 0, 11]
+            ];
 
-            this.jumpStart = y;
+            //Actor States
             this.states = { //DS3: These state and animation names are tentative.
-                "lunging": true,
-                "attacking": false,
-                "grappling": false,
+                "lunging": true, //row 0; 1-3, 4-7
+                "attacking": false, //row 3; 7-10
+                "grappling": false, //row 3; 1-4
+                "evading": false, //row 1; 1
+                "firelunging": false, //row 2; 1-2, 3-6, 7-8
+                "demoloop": true,
                 "facingRight": false,
             };
 
             this.animations = {
                 "lunge": new Animation(this.img, [80, 60], 0, 7, 7, 7, false, this.scale),
-                "attack": new Animation(this.img, [70, 80], 1, 11, 7, 11, false, this.scale),
-                "idling": new Animation(this.img, [80, 60], 0, 7, 7, 1, true, this.scale),
+                "attack": new Animation(this.img, [70, 80], 3, 11, 7, 11, false, this.scale),
+                "firelunge": new Animation(this.img, [70, 70], 2, 8, 7, 8, false, this.scale),
+                "idle": new Animation(this.img, [80, 60], 3, 11, 100, 1, true, this.scale),
             };
             this.animation = this.animations.lunge;
         }
 
-        drawOutline(ctx) {
-            ctx.beginPath();
-            ctx.strokeStyle = "green";
-            ctx.arc(this.x + (this.spriteWidth / 2), this.y + ((this.spriteHeight * this.scale) / 2), this.radius, 0, Math.PI * 2, false);
-            ctx.stroke();
-            ctx.closePath();
-        }
-
-        drawImg(ctx) {
-            //test
-            this.drawOutline(ctx);
-            try {
-                //trytest
-                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-            } catch (e) {
-                console.log("drawImg", e);
-            }
-
-        }
-
         update() {
-
-            if (this.states.lunging && !this.states.attacking && this.animation) {
-                this.spriteHeight = 60;
-                this.spriteWidth = 80;
-                if (this.animation.elapsedTime > 21) {
-                    this.x += this.movementSpeed;
-                }
-                if (this.animation.elapsedTime >= 43) {
-                    this.states.lunging = false;
-                    this.states.attacking = true;
-                    this.y -= 15;
-                }
-                console.log("lunging");
-            }
-            else if (!this.states.lunging && this.states.attacking && this.animation) {
-                this.spriteHeight = 80;
-                this.spritWidth = 70;
-                //This will potentially be used to flag different levels of "vulnerability" (ex: counterable)
-                if (this.animation.elapsedTime >= 78) {
-                    this.states.lunging = false;
-                    this.states.attacking = false;
-                    this.spriteHeight = 60;
+            if (this.states.demoloop) {
+                //lunge (shoulder slam)
+                if (this.states.lunging && !this.states.attacking && this.animation) {
+                    this.spriteHeight = 80;
+                    this.spriteWidth = 60;
+                    if (this.animation.currentFrame() > 3) {
+                        this.x += this.movementSpeed;
+                    }
+                    if (this.animation.isDone()) {
+                        this.animation.elapsedTime = 0;
+                        this.states.lunging = false;
+                        this.states.attacking = true;
+                        this.y -= 40;
+                    }
+                } //grapple/slam (shoulder slam)
+                else if (!this.states.lunging && this.states.attacking && this.animation) {
+                    this.spriteHeight = 70;
                     this.spriteWidth = 80;
-                    console.log("animation done");
-                }
-                console.log("attacking");
-            } else {
-                //will eventually revert to some set of default states
-                console.log("End Animation Loop!");
-                this.spriteHeight = 60;
-                this.spriteWidth = 80;
-                    if (/*this.animation.totalTime >= 100*/1) {
+                    if (this.animation.isDone()) {
+                        this.animation.elapsedTime = 0;
+                        this.states.lunging = false;
+                        this.states.attacking = false;
+                        this.states.firelunging = true;
+                        this.timerStart = Date.now();
+                        this.y += 30
+                    }
+                }//fire lunge
+                else if (this.states.firelunging) {
+                    this.animation = this.animations.firelunge;
+                    this.spriteHeight = 70;
+                    this.spriteWidth = 70;
+                    if (this.animation.currentFrame() > 2 && this.animation.currentFrame() < 5) {
+                        this.x += this.movementSpeed;
+                    }
+                    if (this.animation.isDone()) {
+                        this.animation.elapsedTime = 0;
+                        this.x = this.origX;
+                        this.y = this.origY;
+                        this.states.firelunging = false;
                         this.states.lunging = true;
                         this.states.attacking = false;
-                        this.animations = {
-                            "lunge": new Animation(this.img, [80, 60], 0, 6, 7, 6, false, this.scale),
-                            "attack": new Animation(this.img, [70, 80], 1, 11, 7, 11, false, this.scale),
-                            "idling": new Animation(this.img, [80, 60], 0, 7, 7, 1, true, this.scale),
-                        };
-                        this.x = 200;
-                        this.y = 150;
-                    }
+                    }                    
+                }
             }
+            //Same as above, but not in "demo" form.
+            //else if (this.states.lunging && !this.states.attacking && this.animation) {
+            //    this.spriteHeight = 80;
+            //    this.spriteWidth = 60;
+            //    if (this.animation.currentFrame > 3) {
+            //        this.x += this.movementSpeed;
+            //    }
+            //    if (this.animation.isDone()) {
+            //        this.animation.elapsedTime = 0;
+            //        this.states.lunging = false;
+            //        this.states.attacking = true;
+            //        this.y -= 40;
+            //    }
+            //}
+            //else if (!this.states.lunging && this.states.attacking && this.animation) {
+            //    this.spriteHeight = 70;
+            //    this.spriteWidth = 80;
+            //    //This will potentially be used to flag different levels of "vulnerability" (ex: counterable)
+            //    if (this.animation.isDone()) {
+            //        this.animation.elapsedTime = 0;
+            //        this.states.lunging = false;
+            //        this.states.attacking = false;
+            //    }
+            //    console.log("attacking");
+            //}
+            //else if (this.states.firelunging) {
+            //    this.spriteHeight = 70;
+            //    this.spriteWidth = 70;
+            //    if (this.animation.currentFrame() > 2 && this.animation.currentFrame() < 5) {
+            //        this.x += this.movementSpeed;
+            //    }
+            //    if (this.animation.elapsedTime >= this.animation.totalTime - 1) {
+            //        this.animation.elapsedTime = 0;
+            //        this.x = this.origX;
+            //    }
+            //}
+            //else {
+            //        if (/*this.animation.isDone*/1) {
+            //            this.states.lunging = true;
+            //            this.states.attacking = false;
+            //            this.x = this.origX;
+            //            this.y = this.origY;
+            //        }
+            //}
 
         };
 
 
         draw(ctx) {
-            if (this.states.lunging === true && this.states.attacking === false) {
+            if (this.states.lunging && !this.states.attacking) {
                 this.animation = this.animations.lunge;
             }
-            else if (this.states.attacking === true && this.states.lunging === false) {
+            else if (this.states.attacking && !this.states.lunging) {
                 this.animation = this.animations.attack;
+            }
+            else if (this.states.firelunging) {
+                this.animation = this.animations.firelunge;
             }
             else {
                 try {
-                    //this.animation = this.animations.idling;
+                    //this.animation = this.animations.idle;
                 } catch (e) {
                     console.log("animation does not exist", e);
                 }
@@ -386,10 +433,86 @@ define([
         };
     }
 
+    class Soldier extends Actor {
+        constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 40, spriteHeight = 50) {
+            super(game, x, y, img, ctx);
+            this.movementSpeed = 7;
+            this.scale = scale;
+            this.spriteWidth = spriteWidth;
+            this.spriteHeight = spriteHeight;
+
+            this.states = { "demo": false, "running": true, "facingRight": false, };
+            this.animations = {
+                "demo": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 0, 8, 7, 8, true, this.scale),
+                "run": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 0, 8, 7, 4, true, this.scale, 4)
+            };
+            this.animation = this.animations.demo;
+        }
+
+        update() {
+
+            if (this.states.running) {
+                this.animation = this.animations.run;
+                if (!this.states.facingRight) {
+                    this.x += this.movementSpeed;
+                    if (this.x > 450) {
+                        this.states.facingRight = true;
+                    }
+                }
+                else if (this.states.facingRight) {
+                    this.x -= this.movementSpeed;
+                    if (this.x < 100) {
+                        this.states.facingRight = false;
+                    }
+                }
+                
+
+            }
+            else if (this.states.demo && this.animation.currentFrame() >= 5) {
+                this.x += this.movementSpeed;
+            }
+        };
+
+        draw(ctx) {
+            this.drawImg(ctx);
+        };
+    }
+
+    class Flames extends Actor {
+
+        constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 20, spriteHeight = 40) {
+            super(game, x, y, img, ctx);
+            this.movementSpeed = 1;
+            this.scale = scale;
+            this.spriteWidth = spriteWidth;
+            this.spriteHeight = spriteHeight;
+
+            this.states = { "active": false, "facingRight": false, };
+            this.animations = { "demo": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 8, 9, 10, 9, true, this.scale) };
+            this.animation = this.animations.demo;
+        }
+
+        update() {
+            //TODO
+            if (this.isDone) {
+                this.elapsedTime = 0;
+                this.x = this.origX;
+                this.y = this.origY;
+            }
+        };
+
+        draw(ctx) {
+            this.drawImg(ctx);
+        };
+
+    }
+
     return {
         "Entity": Entity,
         "Hero": Hero,
-        "Fistleo": Fistleo,
+        "Leo": Leo,
+        "Soldier": Soldier,
+        "Flames": Flames,
         "Camera": Camera
     };
 });
