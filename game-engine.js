@@ -57,6 +57,22 @@ define([
             })();
         }
 
+        //Timer class
+        Timer() {//Added this for when we implement a pause function.
+            this.gameTime = 0;
+            this.maxStep = 0.05;
+            this.wallLastTimestamp = 0;
+            function tick() {
+                var wallCurrent = Date.now();
+                var wallDelta = (wallCurrent - this.wallLastTimestamp) / 1000;
+                this.wallLastTimestamp = wallCurrent;
+
+                var gameDelta = Math.min(wallDelta, this.maxStep);
+                this.gameTime += gameDelta;
+                return gameDelta;
+            }
+        }
+
         /*
         Input handling, initializes listeners
         */
@@ -83,6 +99,8 @@ define([
             let map = {};
 
             this.ctx.canvas.addEventListener("keypress", function (e) {
+                if (String.fromCharCode(e.which) === ' ') that.space = true;
+                e.preventDefault();
                 if (!that.controlKeys.hasOwnProperty(e.code)) { that.controlKeys[e.code] = {"active": true}; }
                 if (that.controlKeys[e.code].active == false) { that.controlKeys[e.code].active = true; }
                 // console.log(`${e.code} is ${that.controls[e.code].active}`);
@@ -139,7 +157,6 @@ define([
 
             for (let i = this.entities.length - 1; i >= 0; --i) {
                 if (this.entities[i].removeFromWorld) {
-                    // todo: what does this do?
                     this.entities.splice(i, 1);
                 }
             }
