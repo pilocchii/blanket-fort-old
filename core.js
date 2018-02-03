@@ -41,6 +41,7 @@ define([
         gameEngine.addEntity(new Entity.Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         gameEngine.addEntity(new Entity.Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         gameEngine.addEntity(new Entity.Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
+        gameEngine.addEntity(new Entity.Terrain(gameEngine, 100, 499, null, ctx))
 
         gameEngine.init(ctx);
         gameEngine.start();

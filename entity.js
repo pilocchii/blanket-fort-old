@@ -16,6 +16,7 @@ define([
     class Entity {
 
         constructor (game, x, y, img=null, ctx=null) {
+            this.name = this.constructor.name;
             this.game = game;
             this.x = x;
             this.y = y;
@@ -28,6 +29,10 @@ define([
             this.ctx = ctx;
             // this.states = null;
             // this.currentState = null;
+            this.boundX = null;
+            this.boundY = null;
+            this.boundWidth = null;
+            this.boundHeight = null;
         }
 
         /*
@@ -80,10 +85,30 @@ define([
         }
 
         /*
-        Collision detection
+        Collision detection, rectangle
         */
         collide(other) {
-            // inhereted
+            let rect1 = {
+                "x" : this.boundX,
+                "y" : this.boundY,
+                "width" : this.boundWidth,
+                "height": this.boundHeight
+            }
+
+            let rect2 = {
+                "x" : other.boundX,
+                "y" : other.boundY,
+                "width" : other.boundWidth,
+                "height": other.boundHeight
+            }
+
+            if(rect1.x < rect2.x + rect2.width && 
+                rect1.x + rect1.width > rect2.x && 
+                rect1.y < rect2.y + rect2.height && 
+                rect1.height + rect1.y > rect2.y) {
+                // collision detected!
+                console.log(`${this.name} colliding with ${other.name}` )
+            }
         }
 
         /*
@@ -177,11 +202,16 @@ define([
             this.scale = scale;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
+
+            this.centerX = x + ((spriteWidth*scale)/2)
             this.boundWidth = 60
             this.boundHeight = 110
+            this.boundX = this.centerX - (this.boundWidth/2);
+            this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight);
+
 
             // experimental
-            this.centerX = x + ((spriteWidth*scale)/2)
+
             // this.centerX = x + ((spriteWidth*scale)/2)
 
             // collection of booleans for states
@@ -204,8 +234,8 @@ define([
         drawOutline (ctx) {
             ctx.beginPath();
             ctx.strokeStyle = "green";
-            ctx.rect(this.centerX - (this.boundWidth/2), 
-                this.y + (this.spriteHeight*this.scale - this.boundHeight), 
+            ctx.rect(this.boundX, 
+                this.boundY, 
                 this.boundWidth, this.boundHeight);
             ctx.stroke();
             ctx.closePath();
@@ -251,9 +281,12 @@ define([
                 if (this.states.facingRight) {
                     this.x += this.movementSpeed;
                     this.centerX += this.movementSpeed;
+                    this.boundX += this.movementSpeed;
                 } else {
                     this.x -= this.movementSpeed;
                     this.centerX -= this.movementSpeed;
+                    this.boundX -= this.movementSpeed;
+
                 }
             }
 
@@ -534,12 +567,50 @@ define([
 
     }
 
+    class Terrain extends Entity {
+         constructor (game, x, y, img=null, jsondata=null, ctx=null, scale=null) {
+            super(game, x, y, img, jsondata, ctx);
+            this.states = null;
+            this.animations = null;
+            this.animation = null;
+
+            this.boundX = this.x;
+            this.boundY = this.y;
+            this.boundWidth = 500;
+            this.boundHeight = 50;
+        }
+
+        drawOutline (ctx) {
+            ctx.beginPath();
+            ctx.strokeStyle = "green";
+            ctx.rect(this.x, this.y, 
+                this.boundWidth, this.boundHeight);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        draw(ctx) {
+            this.drawImg(ctx);
+        };
+
+        drawImg(ctx) {
+            this.drawOutline(ctx);
+        }
+        
+        /*Updates the entity each game loop. i.e. what does this entity do? */
+        update () {
+            super.update();
+
+        }
+    }
+
     return {
         "Entity": Entity,
         "Hero": Hero,
         "Leo": Leo,
         "Soldier": Soldier,
         "Flames": Flames,
-        "Camera": Camera
+        "Camera": Camera,
+        "Terrain": Terrain
     };
 });
