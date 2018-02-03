@@ -75,7 +75,7 @@ define([
                 	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
-                             -(this.frameWidth)/2, y, // Offset dx
+                             -(this.frameWidth*2) + (this.frameWidth/2), y, // Offset dx
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
 
@@ -87,7 +87,7 @@ define([
                 	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
-                             x - this.frameWidth, y,
+                             x, y,
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
                 }

@@ -30,6 +30,15 @@ define([
             // this.currentState = null;
         }
 
+        /*
+        Returns the distance between two points
+        */
+        distance(a, b) {
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
 
         /*
         Draws the outline of this entity
@@ -68,6 +77,13 @@ define([
             if (this.img) {
                 this.drawImg(ctx)
             }
+        }
+
+        /*
+        Collision detection
+        */
+        collide(other) {
+            // inhereted
         }
 
         /*
@@ -161,6 +177,13 @@ define([
             this.scale = scale;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
+            this.boundWidth = 60
+            this.boundHeight = 110
+
+            // experimental
+            this.centerX = x + ((spriteWidth*scale)/2)
+            // this.centerX = x + ((spriteWidth*scale)/2)
+
             // collection of booleans for states
 
             this.jumpStart = y;
@@ -175,13 +198,15 @@ define([
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
                 "jump": new Animation(this.img, [spriteWidth, spriteHeight], 2, 6, 3, 6, true, this.scale),
             };
-            // this.animation = this.animations.idle;
+
         }
 
         drawOutline (ctx) {
             ctx.beginPath();
             ctx.strokeStyle = "green";
-            ctx.arc(this.x + (this.spriteWidth/2), this.y + ((this.spriteHeight*this.scale)/2), this.radius, 0, Math.PI * 2, false);
+            ctx.rect(this.centerX - (this.boundWidth/2), 
+                this.y + (this.spriteHeight*this.scale - this.boundHeight), 
+                this.boundWidth, this.boundHeight);
             ctx.stroke();
             ctx.closePath();
         }
@@ -225,8 +250,10 @@ define([
             if (this.states.running) {
                 if (this.states.facingRight) {
                     this.x += this.movementSpeed;
+                    this.centerX += this.movementSpeed;
                 } else {
                     this.x -= this.movementSpeed;
+                    this.centerX -= this.movementSpeed;
                 }
             }
 
