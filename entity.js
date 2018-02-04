@@ -174,7 +174,6 @@ define([
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale),
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
-                "jump": new Animation(this.img, [spriteWidth, spriteHeight], 2, 6, 3, 6, true, this.scale),
                 "ascending": new Animation(this.img, [spriteWidth, spriteHeight], 2, 10, 3, 4, true, this.scale, 2),
                 "descending": new Animation(this.img, [spriteWidth, spriteHeight], 2, 16, 3, 4, true, this.scale, 8),
 
@@ -230,9 +229,6 @@ define([
                 this.states.running = true;
             }
             if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
-
-                // this.origY = this.y;
-                // this.origJumpSpeed = this.jumpSpeed;
                 this.states.jumping = true;
             }
 
@@ -244,13 +240,11 @@ define([
 
 
             ///////////// THEN do actions //////////////
-
-            // this.jumpSpeed += this.gravity*this.jumpTime;
             if (this.jumpTimer > 0) {
                 this.jumpTimer -= 1
             }
 
-            // Runningd
+            // Running
             if (this.states.running) {
                 if (this.states.facingRight) {
                     this.x += this.movementSpeed;
@@ -263,31 +257,6 @@ define([
 
                 }
             }
-
-            // // Jumping
-            //TODO: time is VERY important for animating jumps properly. w/o proper ticking o/ clock,
-            //zero ends up simply jumping to where he should end up at the end of the jump if conditional.
-
-            // jump logic
-            //I have no idea wtf is real anymore
-            // //I THINK THIS FINALLY WORKS (linear jump tho)
-            // if (this.states.jumping && !this.states.falling) {
-
-            //     if (this.y > this.maxHeight) {
-            //         this.y -= this.y*this.jumpTimeTotal - this.ju
-            //     } else {
-            //         this.states.falling = true;
-            //     }
-            // }
-
-            // if (this.states.falling) {
-            //     if (this.y < this.origY) {
-            //         this.y +=this.jumpSpeed;
-            //     } else {
-            //         this.states.jumping = false;
-            //         this.states.falling = false;
-            //     }
-            // }
 
             if (this.states.jumping) {
 
