@@ -22,7 +22,7 @@ define([
         */
         class Animation {
         
-            constructor(spriteSheet, frameDimensions, row, sheetWidth, frameDuration, frames, loop, scale, columnOffset = 0, jsondata = null) {
+            constructor(spriteSheet, frameDimensions, row, sheetWidth, frameDuration, frames, loop, scale, columnOffset=0) {
 
                 this.spriteSheet = spriteSheet;
                 this.frameWidth = frameDimensions[0];

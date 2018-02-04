@@ -142,10 +142,13 @@ define([
             super(game, x, y, img, ctx);
             this.origY = this.y; //For jumping
             this.movementSpeed = (8);
-            this.jumpSpeed = -(10);
-            this.origJumpSpeed;
-            this.jumpTime = 2;
-            this.maxHeight = this.origY - (200); // Down is positive
+
+            this.jumpStrength = (10);
+            this.jumpsLeft = 2
+            this.maxJumps = 2
+            this.jumpTimer = 0
+            this.jumpCooldown = 20
+
             this.scale = scale;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
@@ -159,17 +162,22 @@ define([
 
             // collection of booleans for states
 
-            this.jumpStart = y;
+            
+
             this.states = {
                 "running": false,
                 "jumping": false,
                 "swordAttack": false,
                 "facingRight": true,
+                "grounded" : false
             };
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale),
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
                 "jump": new Animation(this.img, [spriteWidth, spriteHeight], 2, 6, 3, 6, true, this.scale),
+                "ascending": new Animation(this.img, [spriteWidth, spriteHeight], 2, 10, 3, 4, true, this.scale, 2),
+                "descending": new Animation(this.img, [spriteWidth, spriteHeight], 2, 16, 3, 4, true, this.scale, 8),
+
             };
 
         }
@@ -187,7 +195,7 @@ define([
 
         drawImg (ctx) {
             this.drawOutline(ctx);
-            if(this.states.jumping || this.states.falling) {
+            if(this.yVelocity < 0) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
 
             } else this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
@@ -196,8 +204,11 @@ define([
 
                 /////////////////////
         draw (ctx) {
-            if(this.states.jumping) {
-                this.animation = this.animations.jump;
+            if(this.yVelocity < 0) {
+                this.animation = this.animations.ascending;
+            }
+            else if (this.yVelocity > 0) {
+                this.animation = this.animations.descending;
             }
             else if (this.states.running && this.animation) {
                 this.animation = this.animations.run;
@@ -219,10 +230,10 @@ define([
                 this.states.running = true;
             }
             if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
-                this.origY = this.y;
-                this.origJumpSpeed = this.jumpSpeed;
+
+                // this.origY = this.y;
+                // this.origJumpSpeed = this.jumpSpeed;
                 this.states.jumping = true;
-                console.log("Jump");
             }
 
             // check if button NOT pressed, if state is supposed to change...
@@ -233,12 +244,13 @@ define([
 
 
             ///////////// THEN do actions //////////////
-            this.yVelocity += this.gravity * this.gravity
-            this.y += this.yVelocity;
-            this.boundY += this.yVelocity;
-            // this.jumpSpeed += this.gravity*this.jumpTime;
 
-            // Running
+            // this.jumpSpeed += this.gravity*this.jumpTime;
+            if (this.jumpTimer > 0) {
+                this.jumpTimer -= 1
+            }
+
+            // Runningd
             if (this.states.running) {
                 if (this.states.facingRight) {
                     this.x += this.movementSpeed;
@@ -278,33 +290,32 @@ define([
             // }
 
             if (this.states.jumping) {
-               this.y += (this.jumpSpeed*this.jumpTime);
-               this.boundY += (this.jumpSpeed*this.jumpTime);
-               this.jumpSpeed += this.gravity*this.jumpTime;
-               
-                
-               if (this.yVelocity == 0) { //TODO this will change when we handle collision
-                   this.jumpSpeed = this.origJumpSpeed;
-                   this.states.jumping = false;
-                   console.log("not jhumping")
-               }
 
-               this.yVelocity += 1;
-                
-             
+                this.states.jumping = false;
+                if (this.jumpsLeft > 0 && this.jumpTimer == 0) {
+                    this.jumpsLeft -= 1
+                    this.jumpTimer = this.jumpCooldown
+                    this.yVelocity -= this.jumpStrength;
+                }
             }
-        
+
+            // update velocities based on gravity and friction
+            this.yVelocity += this.gravity * this.gravity
+            this.y += this.yVelocity;
+            this.boundY += this.yVelocity;
         }
 
 
         collided (other) {
             // collide with terrain
             console.log("collided");
-            this.states.jumping = false;
             if (other instanceof Terrain) {
-                    this.y = other.boundY - this.spriteHeight*this.scale
-                    this.boundY = other.boundY - this.boundHeight
-                    this.yVelocity = 0
+                this.y = other.boundY - this.spriteHeight*this.scale
+                this.boundY = other.boundY - this.boundHeight
+                this.yVelocity = 0
+                this.jumpsLeft = this.maxJumps
+                // this.states.grounded = true
+                this.states.jumping = false;
             }
 
         }
