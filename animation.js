@@ -22,7 +22,7 @@ define([
         */
         class Animation {
         
-            constructor(spriteSheet, frameDimensions, row, sheetWidth, frameDuration, frames, loop, scale, columnOffset = 0, jsondata = null) {
+            constructor(spriteSheet, frameDimensions, row, sheetWidth, frameDuration, frames, loop, scale, columnOffset=0) {
 
                 this.spriteSheet = spriteSheet;
                 this.frameWidth = frameDimensions[0];
@@ -75,7 +75,7 @@ define([
                 	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
-                             -(this.frameWidth)/2, y, // Offset dx
+                             -(this.frameWidth*2) + (this.frameWidth/2), y, // Offset dx
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
 
@@ -87,7 +87,7 @@ define([
                 	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
-                             x - this.frameWidth, y,
+                             x, y,
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
                 }

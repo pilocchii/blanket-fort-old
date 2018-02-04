@@ -16,24 +16,32 @@ define([
     class Entity {
 
         constructor (game, x, y, img=null, ctx=null) {
+            this.name = this.constructor.name;
             this.game = game;
             this.x = x;
             this.y = y;
-            this.origX = x;
-            this.origY = y;
             this.gravity = 0.5;
             this.img = img;
-            // this.jsondata = jsondata;
             this.removeFromWorld = false;
             this.ctx = ctx;
-            // this.states = null;
-            // this.currentState = null;
+
+            // used for simple rect hitbox
+            this.boundX = null;
+            this.boundY = null;
+            this.boundWidth = null;
+            this.boundHeight = null;
         }
 
+        // TODO, implement a list of bounding shapes, iterate through depending on type (circle or rect) 
+        rectangle () {
 
-        /*
-        Draws the outline of this entity
-        */
+        }
+        circle () {
+
+        }
+ 
+
+        /* Draws the outline of this entity */
         drawOutline (ctx) {
             ctx.beginPath();
             ctx.strokeStyle = "green";
@@ -43,54 +51,53 @@ define([
         }
 
         /*
-
-        */
-        drawImg (ctx) {
-            this.animation.drawFrame(this.clockTick, ctx, this.x, this.y, "run");
-        }
-
-
-        /*
         Updates the entity each game loop
         i.e. what does this entity do?
         */
-        update () {
-            // this.drawImg(this.ctx);
-        }
+        update () { }
 
-        /*
-        Draws this entity. Called every cycle of the game engine.
-        */
+        /* Draws this entity. Called every cycle of the game engine. */
         draw (ctx) {
-            if (this.game.showOutlines && this.radius) {
+            if (this.game.showOutlines && this.boundX) {
                 drawOutline(ctx)
             }
             if (this.img) {
-                this.drawImg(ctx)
+                this.animation.drawFrame(this.clockTick, ctx, this.x, this.y, true);
             }
         }
 
         /*
-        todo: probably not necessary
+        Collision detection, rectangle
         */
-        rotateAndCache (image, angle) {
-            let offscreenCanvas = document.createElement('canvas');
-            let size = Math.max(image.width, image.height);
-            offscreenCanvas.width = size;
-            offscreenCanvas.height = size;
-            let offscreenCtx = offscreenCanvas.getContext('2d');
-            offscreenCtx.save();
-            offscreenCtx.translate(size / 2, size / 2);
-            offscreenCtx.rotate(angle);
-            offscreenCtx.translate(0, 0);
-            offscreenCtx.drawImage(image, -(image.width / 2), -(image.height / 2));
-            offscreenCtx.restore();
-            //offscreenCtx.strokeStyle = "red";
-            //offscreenCtx.strokeRect(0,0,size,size);
-            return offscreenCanvas;
+        isColliding(other) {
+            let rect1 = {
+                "x" : this.boundX,
+                "y" : this.boundY,
+                "width" : this.boundWidth,
+                "height": this.boundHeight
+            }
+
+            let rect2 = {
+                "x" : other.boundX,
+                "y" : other.boundY,
+                "width" : other.boundWidth,
+                "height": other.boundHeight
+            }
+
+            if(rect1.x < rect2.x + rect2.width && 
+                rect1.x + rect1.width > rect2.x && 
+                rect1.y < rect2.y + rect2.height && 
+                rect1.height + rect1.y > rect2.y) {
+                // collision detected!
+                return true
+            }
+            return false
+
         }
 
-
+        collided(other) {
+            console.log(`${this.name} colliding with ${other.name}` )
+        }
     } // end of Entity class
 
 
@@ -99,7 +106,6 @@ define([
     This class controls where in the gameboard the camera is located, and where to draw.
     ************/
     class Camera extends Entity {
-
         draw(ctx) {}
     }
 
@@ -114,30 +120,12 @@ define([
     removeFromWorld - a flag that denotes when to remove this entity from the game
     ************/
     class Actor extends Entity {
-        constructor (game, x, y, img=null, jsondata=null, ctx=null, scale=null) {
-            super(game, x, y, img, jsondata, ctx);
+        constructor (game, x, y, img=null, ctx=null, scale=null) {
+            super(game, x, y, img, ctx);
             this.facing = null;
             this.states = null;
             this.animations = null;
             this.animation = null;
-        }
-
-        drawOutline(ctx) {
-            ctx.beginPath();
-            ctx.strokeStyle = "green";
-            ctx.arc(this.x + (this.spriteWidth / 2), this.y + ((this.spriteHeight * this.scale) / 2), this.radius, 0, Math.PI * 2, false);
-            ctx.stroke();
-            ctx.closePath();
-        }
-
-        drawImg(ctx) {
-            this.drawOutline(ctx);
-            try {
-                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-            } catch (e) {
-                console.log(e);
-            }
-
         }
         
         /*Updates the entity each game loop. i.e. what does this entity do? */
@@ -153,46 +141,80 @@ define([
         constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=50, spriteHeight=50) {
             super(game, x, y, img, ctx);
             this.origY = this.y; //For jumping
-            this.movementSpeed = 8;
-            this.jumpSpeed = -10;
-            this.origJumpSpeed;
-            this.jumpTime = 2;
-            this.maxHeight = this.origY -200; // Down is positive
+            this.movementSpeed = (8);
+
+            this.jumpStrength = (10);
+            this.jumpsLeft = 2
+            this.maxJumps = 2
+            this.jumpTimer = 0
+            this.jumpCooldown = 20
+
             this.scale = scale;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
+            this.yVelocity = 0;
+
+            this.centerX = x + ((spriteWidth*scale)/2)
+            this.boundWidth = 60
+            this.boundHeight = 110
+            this.boundX = this.centerX - (this.boundWidth/2);
+            this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight);
+
             // collection of booleans for states
 
-            this.jumpStart = y;
+            
+
             this.states = {
                 "running": false,
                 "jumping": false,
                 "swordAttack": false,
                 "facingRight": true,
+                "grounded" : false
             };
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale),
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 11, 3, 11, true, this.scale),
-                "jump": new Animation(this.img, [spriteWidth, spriteHeight], 2, 6, 3, 6, true, this.scale),
+                "ascending": new Animation(this.img, [spriteWidth, spriteHeight], 2, 10, 3, 4, true, this.scale, 2),
+                "descending": new Animation(this.img, [spriteWidth, spriteHeight], 2, 16, 3, 4, true, this.scale, 8),
+
             };
-            // this.animation = this.animations.idle;
+
         }
+
 
         drawOutline (ctx) {
             ctx.beginPath();
             ctx.strokeStyle = "green";
-            ctx.arc(this.x + (this.spriteWidth/2), this.y + ((this.spriteHeight*this.scale)/2), this.radius, 0, Math.PI * 2, false);
+            ctx.rect(this.boundX, 
+                this.boundY, 
+                this.boundWidth, this.boundHeight);
             ctx.stroke();
             ctx.closePath();
         }
 
         drawImg (ctx) {
             this.drawOutline(ctx);
-            if(this.states.jumping || this.states.falling) {
+            if(this.yVelocity < 0) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
 
             } else this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
 
+        }
+
+                /////////////////////
+        draw (ctx) {
+            if(this.yVelocity < 0) {
+                this.animation = this.animations.ascending;
+            }
+            else if (this.yVelocity > 0) {
+                this.animation = this.animations.descending;
+            }
+            else if (this.states.running && this.animation) {
+                this.animation = this.animations.run;
+            } else {
+                this.animation = this.animations.idle;
+            }
+            this.drawImg(ctx);
         }
 
         update () {
@@ -207,10 +229,7 @@ define([
                 this.states.running = true;
             }
             if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
-                this.origY = this.y;
-                this.origJumpSpeed = this.jumpSpeed;
                 this.states.jumping = true;
-                console.log("Jump");
             }
 
             // check if button NOT pressed, if state is supposed to change...
@@ -221,65 +240,53 @@ define([
 
 
             ///////////// THEN do actions //////////////
+            if (this.jumpTimer > 0) {
+                this.jumpTimer -= 1
+            }
+
             // Running
             if (this.states.running) {
                 if (this.states.facingRight) {
                     this.x += this.movementSpeed;
+                    this.centerX += this.movementSpeed;
+                    this.boundX += this.movementSpeed;
                 } else {
                     this.x -= this.movementSpeed;
+                    this.centerX -= this.movementSpeed;
+                    this.boundX -= this.movementSpeed;
+
                 }
             }
 
-            // // Jumping
-            //TODO: time is VERY important for animating jumps properly. w/o proper ticking o/ clock,
-            //zero ends up simply jumping to where he should end up at the end of the jump if conditional.
-
-            // jump logic
-            //I have no idea wtf is real anymore
-            // //I THINK THIS FINALLY WORKS (linear jump tho)
-            // if (this.states.jumping && !this.states.falling) {
-
-            //     if (this.y > this.maxHeight) {
-            //         this.y -= this.y*this.jumpTimeTotal - this.ju
-            //     } else {
-            //         this.states.falling = true;
-            //     }
-            // }
-
-            // if (this.states.falling) {
-            //     if (this.y < this.origY) {
-            //         this.y +=this.jumpSpeed;
-            //     } else {
-            //         this.states.jumping = false;
-            //         this.states.falling = false;
-            //     }
-            // }
-
             if (this.states.jumping) {
-               this.y += this.jumpSpeed*this.jumpTime;
-               this.jumpSpeed += this.gravity*this.jumpTime;
-                
-               if (this.y > 500) { //TODO this will change when we handle collision
-                   this.y = 500;
-                   this.jumpSpeed = this.origJumpSpeed;
-                   this.states.jumping = false;
-               }
-                
-             
+
+                this.states.jumping = false;
+                if (this.jumpsLeft > 0 && this.jumpTimer == 0) {
+                    this.jumpsLeft -= 1
+                    this.jumpTimer = this.jumpCooldown
+                    this.yVelocity -= this.jumpStrength;
+                }
             }
-        
+
+            // update velocities based on gravity and friction
+            this.yVelocity += this.gravity * this.gravity
+            this.y += this.yVelocity;
+            this.boundY += this.yVelocity;
         }
-        /////////////////////
-        draw (ctx) {
-            if(this.states.jumping) {
-                this.animation = this.animations.jump;
+
+
+        collided (other) {
+            // collide with terrain
+            console.log("collided");
+            if (other instanceof Terrain) {
+                this.y = other.boundY - this.spriteHeight*this.scale
+                this.boundY = other.boundY - this.boundHeight
+                this.yVelocity = 0
+                this.jumpsLeft = this.maxJumps
+                // this.states.grounded = true
+                this.states.jumping = false;
             }
-        	else if (this.states.running && this.animation) {
-                this.animation = this.animations.run;
-            } else {
-                this.animation = this.animations.idle;
-            }
-            this.drawImg(ctx);
+
         }
     }
 
@@ -287,6 +294,8 @@ define([
 
         constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 80, spriteHeight = 60) {
             super(game, x, y, img, ctx);
+            this.origX = x; // TODO: demo
+            this.origY = y; // TODO: demo
             this.movementSpeed = 12;
             this.jumpSpeed = -10;
             this.scale = scale;
@@ -429,7 +438,7 @@ define([
                     console.log("animation does not exist", e);
                 }
             }
-            this.drawImg(ctx);
+            this.animation.drawFrame(this.clockTick, ctx, this.x, this.y);
         };
     }
 
@@ -473,9 +482,6 @@ define([
             }
         };
 
-        draw(ctx) {
-            this.drawImg(ctx);
-        };
     }
 
     class Flames extends Actor {
@@ -501,10 +507,44 @@ define([
             }
         };
 
+
+    }
+
+    class Terrain extends Entity {
+         constructor (game, x, y, img=null, jsondata=null, ctx=null, scale=null) {
+            super(game, x, y, img, jsondata, ctx);
+            this.states = null;
+            this.animations = null;
+            this.animation = null;
+
+            this.boundX = this.x;
+            this.boundY = this.y;
+            this.boundWidth = 500;
+            this.boundHeight = 50;
+        }
+
+        drawOutline (ctx) {
+            ctx.beginPath();
+            ctx.strokeStyle = "green";
+            ctx.rect(this.x, this.y, 
+                this.boundWidth, this.boundHeight);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
         draw(ctx) {
             this.drawImg(ctx);
         };
 
+        drawImg(ctx) {
+            this.drawOutline(ctx);
+        }
+        
+        /*Updates the entity each game loop. i.e. what does this entity do? */
+        update () {
+            super.update();
+
+        }
     }
 
     return {
@@ -513,6 +553,7 @@ define([
         "Leo": Leo,
         "Soldier": Soldier,
         "Flames": Flames,
-        "Camera": Camera
+        "Camera": Camera,
+        "Terrain": Terrain
     };
 });
