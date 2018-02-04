@@ -144,25 +144,22 @@ define([
             this.movementSpeed = (8);
 
             this.jumpStrength = (10);
-            this.jumpsLeft = 2
-            this.maxJumps = 2
-            this.jumpTimer = 0
-            this.jumpCooldown = 20
+            this.jumpsLeft = 2;
+            this.maxJumps = 2;
+            this.jumpTimer = 0;
+            this.jumpCooldown = 20;
 
             this.scale = scale;
             this.spriteWidth = spriteWidth;
             this.spriteHeight = spriteHeight;
             this.yVelocity = 0;
 
-            this.centerX = x + ((spriteWidth*scale)/2)
-            this.boundWidth = 60
-            this.boundHeight = 110
+            this.centerX = x + ((spriteWidth*scale)/2);
+            this.boundWidth = 60;
+            this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth/2);
             this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight);
 
-            // collection of booleans for states
-
-            
 
             this.states = {
                 "running": false,
@@ -192,6 +189,7 @@ define([
             ctx.closePath();
         }
 
+
         drawImg (ctx) {
             this.drawOutline(ctx);
             if(this.yVelocity < 0) {
@@ -201,7 +199,7 @@ define([
 
         }
 
-                /////////////////////
+
         draw (ctx) {
             if(this.yVelocity < 0) {
                 this.animation = this.animations.ascending;
@@ -241,7 +239,7 @@ define([
 
             ///////////// THEN do actions //////////////
             if (this.jumpTimer > 0) {
-                this.jumpTimer -= 1
+                this.jumpTimer -= 1;
             }
 
             // Running
@@ -262,14 +260,14 @@ define([
 
                 this.states.jumping = false;
                 if (this.jumpsLeft > 0 && this.jumpTimer == 0) {
-                    this.jumpsLeft -= 1
-                    this.jumpTimer = this.jumpCooldown
+                    this.jumpsLeft -= 1;
+                    this.jumpTimer = this.jumpCooldown;
                     this.yVelocity -= this.jumpStrength;
                 }
             }
 
             // update velocities based on gravity and friction
-            this.yVelocity += this.gravity * this.gravity
+            this.yVelocity += this.gravity * this.gravity;
             this.y += this.yVelocity;
             this.boundY += this.yVelocity;
         }
@@ -277,13 +275,11 @@ define([
 
         collided (other) {
             // collide with terrain
-            console.log("collided");
             if (other instanceof Terrain) {
-                this.y = other.boundY - this.spriteHeight*this.scale
-                this.boundY = other.boundY - this.boundHeight
-                this.yVelocity = 0
-                this.jumpsLeft = this.maxJumps
-                // this.states.grounded = true
+                this.y = other.boundY - this.spriteHeight*this.scale;
+                this.boundY = other.boundY - this.boundHeight;
+                this.yVelocity = 0;
+                this.jumpsLeft = this.maxJumps;
                 this.states.jumping = false;
             }
 
