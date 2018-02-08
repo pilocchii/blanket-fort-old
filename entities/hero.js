@@ -1,6 +1,6 @@
 define([
-    'actor',
-    'animation',
+    ["actor"],
+    ["animation"],
 ],function(
     Actor,
     Animation,
@@ -157,9 +157,7 @@ define([
         }
     }
 
-    return {
-        "Hero": Hero,
-    };
+    return Hero;
 });
 
 

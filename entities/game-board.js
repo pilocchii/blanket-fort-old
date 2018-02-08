@@ -1,5 +1,5 @@
 define([
-    'entity',
+    ["entity"],
 ],function(
     Entity,
 ){

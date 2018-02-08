@@ -1,5 +1,5 @@
 define([
-    'animation',
+    ["animation"],
 ],function(
     Animation,
 ){

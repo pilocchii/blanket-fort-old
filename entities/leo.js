@@ -1,13 +1,13 @@
 define([
-    'actor',
-    'animation',
+    ['actor'],
+    ['animation'],
 ],function(
     Actor,
     Animation,
 ){
 
 
-        class Leo extends Actor {
+    class Leo extends Actor {
 
         constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 80, spriteHeight = 60) {
             super(game, x, y, img, ctx);
@@ -159,9 +159,7 @@ define([
         };
     }
 
-    return {
-        "Leo": Leo,
-    };
+    return Leo;
 });
 
 

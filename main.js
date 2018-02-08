@@ -1,15 +1,4 @@
-// require.config({
-//     paths: {
-//         jquery: 'vendor/jquery-1.11.3.min',
-//         underscore: 'vendor/underscore-min',
-//     },
 
-//     shim: {
-//         underscore: {
-//             exports: '_'
-//         },
-//     }
-// });
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -20,6 +9,20 @@ window.requestAnimFrame = (function () {
                 window.setTimeout(callback, 1000 / 60);
             };
 })();
+
+require.config({
+    paths: {
+        "actor": "entities/actor",
+        "animation": "animation",
+        "game-board": "entities/game-board",
+        "entity": "entities/entity",
+        "hero": "entities/hero",
+    	"leo": "entities/leo",
+    	"flames": "entities/flames",
+    	"solider": "entities/soldier",
+    	"terrain" : "entities/terrain"
+    }
+});
 
 require(['core'], function(Core) {
     Core.init();
