@@ -1,9 +1,11 @@
 define([
-    ["actor"],
-    ["animation"],
+    "actor",
+    "animation",
+    "terrain"
 ],function(
     Actor,
     Animation,
+    Terrain
 ){
 
 
@@ -14,7 +16,7 @@ define([
             this.origY = this.y; //For jumping
             this.movementSpeed = (8);
 
-            this.jumpStrength = (10);
+            this.jumpStrength = (20);
             this.jumpsLeft = 2;
             this.maxJumps = 2;
             this.jumpTimer = 0;
@@ -133,6 +135,7 @@ define([
                 if (this.jumpsLeft > 0 && this.jumpTimer == 0) {
                     this.jumpsLeft -= 1;
                     this.jumpTimer = this.jumpCooldown;
+                    this.yVelocity = 0;
                     this.yVelocity -= this.jumpStrength;
                 }
             }

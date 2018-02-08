@@ -1,6 +1,6 @@
 define([
-    ['actor'],
-    ['animation'],
+    'actor',
+    'animation',
 ],function(
     Actor,
     Animation,

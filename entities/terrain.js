@@ -42,9 +42,7 @@ define([
         }
     } // end Terrain
 
-    return {
-        "Terrain": Terrain,
-    };
+    return Terrain;
 });
 
 

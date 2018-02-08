@@ -1,5 +1,5 @@
 define([
-    ["animation"],
+    "animation",
 ],function(
     Animation,
 ){
@@ -18,7 +18,7 @@ define([
             this.game = game;
             this.x = x;
             this.y = y;
-            this.gravity = 0.5;
+            this.gravity = .9;
             this.img = img;
             this.removeFromWorld = false;
             this.ctx = ctx;
@@ -98,26 +98,5 @@ define([
         }
     } // end of Entity class
 
-
-    
-
-
-
-
-
-
-
-
-
-    
-
-   
-
-
-
-
-
-    return {
-        "Entity": Entity,
-    };
+    return Entity;
 });

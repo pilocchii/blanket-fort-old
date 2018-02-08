@@ -21,8 +21,11 @@ require.config({
     	"flames": "entities/flames",
     	"solider": "entities/soldier",
     	"terrain" : "entities/terrain"
-    }
+    },
+
+
 });
+
 
 require(['core'], function(Core) {
     Core.init();
