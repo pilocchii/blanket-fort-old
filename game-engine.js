@@ -125,6 +125,12 @@ define([
             this.entities.push(entity);
         }
 
+        addEntitySet (entitySet) {
+            for (var entity in entitySet) {
+                addEntity(entity);
+            }
+        }
+
 
         /*
         Draws all entities in the list

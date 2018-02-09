@@ -30,6 +30,7 @@ define([
         "img/ZXe.png",
         "img/Leo.png",
         "img/EnemySheet1.png",
+        "img/pipes.png"
     ];
 
     let ASSET_MANAGER = new AssetManager(toload);
@@ -50,7 +51,9 @@ define([
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
-        gameEngine.addEntity(new Terrain(gameEngine, 0, 700, null, ctx));
+        gameEngine.addEntity(new Terrain(gameEngine, 0, 700, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx, 3, [0,0]));
+        // gameEngine.addEntitySet()
+
 
         gameEngine.init(ctx);
         gameEngine.start();
