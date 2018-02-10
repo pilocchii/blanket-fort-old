@@ -1,13 +1,23 @@
 define([
     'asset-manager',
     'game-engine',
-    'game-board',
-    'entity',
+    "game-board",
+    "entity",
+    "hero",
+    "leo",
+    "flames",
+    "solider",
+    "terrain"
 ], function(
     AssetManager,
     GameEngine,
     GameBoard,
     Entity,
+    Hero,
+    Leo,
+    Flames,
+    Soldier,
+    Terrain
 ) {
 
     let init = function() {
@@ -35,12 +45,12 @@ define([
         // let gameboard = new GameBoard();
 
         // gameEngine.addEntity(gameboard);
-        // console.log(hero);
         //(game, x, y, img=null, ctx=null, scale=3, spriteWidth=50, spriteHeight=50)
-        gameEngine.addEntity(new Entity.Hero(gameEngine, 200, 500, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx));
-        gameEngine.addEntity(new Entity.Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
-        gameEngine.addEntity(new Entity.Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
-        gameEngine.addEntity(new Entity.Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
+        gameEngine.addEntity(new Hero(gameEngine, 400, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx));
+        // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
+        // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
+        // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
+        gameEngine.addEntity(new Terrain(gameEngine, 300, 600, null, ctx));
 
         gameEngine.init(ctx);
         gameEngine.start();

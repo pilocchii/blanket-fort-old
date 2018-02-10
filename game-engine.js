@@ -19,17 +19,24 @@ define([
             this.surfaceHeight = null;
             // KB input keycodes
             this.controlKeys = {
-                "Space": {"active": false},
-                "KeyW": {"active": false},
-                "KeyS": {"active": false},
-                "KeyD": {"active": false},
-                "KeyA": {"active": false}
+                "Space": { "active": false },
+                "KeyW": { "active": false },
+                "KeyS": { "active": false },
+                "KeyD": { "active": false },
+                "KeyA": { "active": false },
+                "KeyR": { "active": false },
+                "KeyF": { "active": false },
+                "KeyE": { "active": false },
+
             }
             // control mapping
             this.controls = {
                 "jump": "Space",
                 "right": "KeyD",
                 "left": "KeyA",
+                "shoot": "KeyE",
+                "slash": "KeyR",
+                "cleave": "KeyF",
             }
         }
 
@@ -160,6 +167,18 @@ define([
                     this.entities.splice(i, 1);
                 }
             }
+
+            for (let i = 0; i < this.entities.length; i++) {
+                let entity = this.entities[i];
+                for (let j = 1; j < this.entities.length; j++) {
+                    let other = this.entities[j];
+                    if (entity != other && entity.isColliding(other)) {
+                        entity.collided(other)
+                    }
+                }
+                
+            }
+
         }
 
         /*
