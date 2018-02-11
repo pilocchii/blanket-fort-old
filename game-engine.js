@@ -27,7 +27,6 @@ define([
                 "KeyR": { "active": false },
                 "KeyF": { "active": false },
                 "KeyE": { "active": false },
-
             }
             // control mapping
             this.controls = {
@@ -37,6 +36,7 @@ define([
                 "shoot": "KeyE",
                 "slash": "KeyR",
                 "cleave": "KeyF",
+                "energize": "KeyW",
             }
         }
 
