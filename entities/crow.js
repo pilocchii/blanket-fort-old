@@ -43,7 +43,6 @@ define([
                     "hurt":         new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 10, 1, true, this.scale, 10),
                 };
                 this.animation = this.animations.fly;
-                console.log("flying");
             }
 
             update() {
@@ -54,7 +53,6 @@ define([
                         this.states.flying = false;
                         //for demo
                         this.states.attacking = true;
-                        console.log("attacking");
                     }
                 }
                 if (this.states.attacking) {

@@ -24,7 +24,8 @@ require.config({
         "solider": "entities/soldier",
         "soldier-shield": "entities/soldier-shield",
         "terrain": "entities/terrain",
-        "crow": "entities/crow"
+        "crow": "entities/crow",
+        "dino": "entities/dino",
     },
 
 

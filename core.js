@@ -9,6 +9,7 @@ define([
     "flames",
     "solider",
     "soldier-shield",
+    "dino",
     "crow",    
 ], function(
     AssetManager,
@@ -21,6 +22,7 @@ define([
     Flames,
     Soldier,
     Soldier_Shield,
+    Dino,
     Crow,  
 ) {
 
@@ -51,12 +53,13 @@ define([
 
         // gameEngine.addEntity(gameboard);
         //(game, x, y, img=null, ctx=null, scale=3, spriteWidth=50, spriteHeight=50)
-        gameEngine.addEntity(new Hero(gameEngine, 400, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx));
+        gameEngine.addEntity(new Hero(gameEngine, 400, 500, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx));
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
         gameEngine.addEntity(new Soldier_Shield(gameEngine, 100, 100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Crow(gameEngine, 400, 100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx))
+        gameEngine.addEntity(new Crow(gameEngine, 500, 100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 700, 150, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         gameEngine.addEntity(new Terrain(gameEngine, 300, 600, null, ctx));
 
         gameEngine.init(ctx);

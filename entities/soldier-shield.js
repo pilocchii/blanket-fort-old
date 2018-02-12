@@ -55,34 +55,32 @@ define([
             }
 
             update() {
-                if (this.states.idling) {
+                if (this.states.idling) { //idling
                     if (this.animation.loops > 3) {
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.idling = false;
                         //for demo
                         this.states.running = true;
-                        console.log("running");
                     }
                 }
-                if (this.states.running) {
+                if (this.states.running) { //running
                     if (this.animation.loops > 3) {
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.running = false;
                         //for demo
                         this.states.shooting_startup = true;
-                        console.log("shooting");
                     }
                 }
-                if (this.states.shooting_startup) {
+                if (this.states.shooting_startup) { //shooting start
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.shooting_startup = false;
                         this.states.shooting_active = true;                        
                     }
                 }
-                if (this.states.shooting_active) {
+                if (this.states.shooting_active) { //shooting active
                     if (!this.states.hasShot) {
                         //TODO: create a new "bullet" class to spawn projectile and activate animation
                         this.states.hasShot = true;
@@ -94,43 +92,39 @@ define([
                         this.states.hasShot = false;
                         //for demo
                         this.states.slashing_start = true;
-                        console.log("slashing");
                     }
                 }
-                if (this.states.slashing_start) {
+                if (this.states.slashing_start) { //slashing start
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.slashing_start = false;
                         this.states.slashing_end = true;
                     }
                 }
-                if (this.states.slashing_end) {
+                if (this.states.slashing_end) { //slashing end
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.slashing_end = false;
                         //for demo
                         this.states.blocking = true;
-                        console.log("blocking");
                     }
                 }
-                if (this.states.blocking) {
+                if (this.states.blocking) { //blocking
                     if (this.animation.loops > 2) {
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.blocking = false;
                         //for demo                        
                         this.states.turning = true;
-                        console.log("turning");
                     }
                 }
-                if (this.states.turning) {
+                if (this.states.turning) { //turning
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.turning = false;
                         this.states.facingRight = !this.states.facingRight;
                         //for demo
                         this.states.idling = true;
-                        console.log("idling");
                     }
                 }
             }
