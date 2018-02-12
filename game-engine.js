@@ -1,7 +1,9 @@
 define([
-
-],function(
-
+    "asset-manager",
+    'soldier-shield',
+], function (
+    AssetManager,
+    Soldier_Shield,
 ){
 
      /***************
@@ -27,6 +29,7 @@ define([
                 "KeyR": { "active": false },
                 "KeyF": { "active": false },
                 "KeyE": { "active": false },
+                "Numpad1": { "active": false },
             }
             // control mapping
             this.controls = {
@@ -37,7 +40,9 @@ define([
                 "slash": "KeyR",
                 "cleave": "KeyF",
                 "energize": "KeyW",
+                "spawnSS": "Numpad1",
             }
+            this.spawnedSS = false;
         }
 
         /*
@@ -178,7 +183,14 @@ define([
                 }
                 
             }
-
+            ////ANIM TESTING
+            //if (this.controlKeys[this.controls.spawnSS].active && !this.spawnedSS) { //spawn soldier-shield
+            //    let img = new Image();
+            //    img.Source = "img/SoldierShield.png";
+            //    console.log("Check");
+            //    this.addEntity(new Soldier_Shield(this, 100, 100, img, this.ctx))
+            //    this.spawnedSS = true;
+            //}
         }
 
         /*

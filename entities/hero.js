@@ -4,12 +4,14 @@ define([
     "terrain",
     "projectile",
     "projectile-sword",
-],function(
+    "soldier-shield",
+], function (
     Actor,
     Animation,
     Terrain,
     Projectile,
     Projectile_Sword,
+    Soldier_Shield,
 ){
 
 
@@ -36,7 +38,7 @@ define([
             this.boundWidth = 60;
             this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth/2);
-            this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight - this.scale*5);
+            this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight - this.scale*5); //TODO: More testing
 
 
             this.states = {

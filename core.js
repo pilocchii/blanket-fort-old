@@ -3,21 +3,25 @@ define([
     'game-engine',
     "game-board",
     "entity",
+    "terrain",
     "hero",
     "leo",
     "flames",
     "solider",
-    "terrain"
+    "soldier-shield",
+    "crow",    
 ], function(
     AssetManager,
     GameEngine,
     GameBoard,
     Entity,
+    Terrain,
     Hero,
     Leo,
     Flames,
     Soldier,
-    Terrain
+    Soldier_Shield,
+    Crow,  
 ) {
 
     let init = function() {
@@ -30,6 +34,7 @@ define([
         "img/ZXe.png",
         "img/Leo.png",
         "img/EnemySheet1.png",
+        "img/Enemies.png",
     ];
 
     let ASSET_MANAGER = new AssetManager(toload);
@@ -50,6 +55,8 @@ define([
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
+        gameEngine.addEntity(new Soldier_Shield(gameEngine, 100, 100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 400, 100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx))
         gameEngine.addEntity(new Terrain(gameEngine, 300, 600, null, ctx));
 
         gameEngine.init(ctx);
