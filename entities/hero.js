@@ -27,11 +27,14 @@ define([
             this.spriteHeight = spriteHeight;
             this.yVelocity = 0;
 
+            let hittingCeiling = false; // For jumping into a ceiling
+
             this.centerX = x + ((spriteWidth*scale)/2);
             this.boundWidth = 60;
             this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth/2);
             this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight);
+
 
 
             this.states = {
@@ -142,19 +145,51 @@ define([
 
             // update velocities based on gravity and friction
             this.yVelocity += this.gravity * this.gravity;
+
+            //TODO this CANNOT be updating when colliding into a ceiling
+            if (!this.hittingCeiling){
             this.y += this.yVelocity;
-            this.boundY += this.yVelocity;
+            this.boundY += this.yVelocity;}
         }
 
 
-        collided (other) {
+        collided (other, direction) {
             // collide with terrain
             if (other instanceof Terrain) {
-                this.y = other.boundY - this.spriteHeight*this.scale;
-                this.boundY = other.boundY - this.boundHeight;
-                this.yVelocity = 0;
-                this.jumpsLeft = this.maxJumps;
-                this.states.jumping = false;
+
+                // Hero above terrain
+                if (direction === 'bottom') {
+                    this.y = other.boundY - this.spriteHeight*this.scale;
+                    this.boundY = other.boundY - this.boundHeight;
+                    this.yVelocity = 0;
+                    this.jumpsLeft = this.maxJumps;
+                    this.states.jumping = false;
+                }
+
+                // Hero jumps into terrain
+                else if (direction === 'top') {
+                    //TODO
+                    this.hittingCeiling = true;
+                    //this.y = other.boundY - this.spriteHeight*this.scale;
+                    this.boundY = other.boundY + this.boundHeight;
+                    direction = 'none';
+                }
+
+                // Hero collides with terrain to the left
+                //TODO some black magic happens when i fall and collide left
+                else if (direction === 'left') {
+                    this.x = other.boundX;
+                    this.boundX = other.boundX + this.boundWidth + 10; // The 10 stops Hero from "vibrating" into the wall. idk why
+                }
+
+                // Hero collides with terrain to the right
+                else if (direction === 'right') {
+                    this.x = other.x - this.spriteWidth*this.scale + 40; // The 40 stops Hero from shifting left from the hitbox. idk why
+                    this.boundX = other.boundX - this.boundWidth;
+                }
+                
+                //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
+                console.log(direction);
         }
 
         }

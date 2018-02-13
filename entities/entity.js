@@ -67,6 +67,7 @@ define([
         /*
         Collision detection, rectangle
         */
+        //TODO collided direction
         isColliding(other) {
             let rect1 = {
                 "x" : this.boundX,
@@ -81,20 +82,33 @@ define([
                 "width" : other.boundWidth,
                 "height": other.boundHeight
             }
+            
+            // New take on collision detection
+            let collision = 'none';
+            var dx = (rect1.x + rect1.width/2) - (rect2.x + rect2.width/2);
+            var dy = (rect1.y + rect1.height/2) - (rect2.y + rect2.height/2);
+            var width = (rect1.width + rect2.width)/2;
+            var height = (rect1.height + rect2.height)/2;
+            var crossWidth = width * dy;
+            var crossHeight = height * dx;
+            
+            // First check if rect1 and rect2 are close enough to even collide. Then check the intersection depths to determine which side was most involved in the collision.
+            if(Math.abs(dx) <= width && Math.abs(dy) <= height) {
 
-            if(rect1.x < rect2.x + rect2.width && 
-                rect1.x + rect1.width > rect2.x && 
-                rect1.y < rect2.y + rect2.height && 
-                rect1.height + rect1.y > rect2.y) {
-                // collision detected!
-                return true
+                if (crossWidth > crossHeight) {
+                    crossWidth > -(crossHeight) ? collision = 'top' : collision = 'right';
+
+                } else {
+                    (crossWidth > -(crossHeight)) ? collision = 'left' : collision = 'bottom';
+                }
             }
-            return false
+
+        return collision;
 
         }
 
-        collided(other) {
-            console.log(`${this.name} colliding with ${other.name}` )
+        collided(other, direction) {
+            //console.log(`${this.name} colliding with ${other.name} from ${direction}` )
         }
     } // end of Entity class
 

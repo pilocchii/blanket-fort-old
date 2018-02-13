@@ -6,7 +6,7 @@ define([
 
 
     class Terrain extends Entity {
-         constructor (game, x, y, dimensions, img=null, ctx=null, scale=null, tiles=null) {
+         constructor (game, x, y, boundWidth, boundHeight, dimensions, img=null, ctx=null, scale=null, tiles=null) {
             super(game, x, y, img, ctx);
             this.states = null;
             this.animations = null;
@@ -17,8 +17,8 @@ define([
             this.height = dimensions[1];
             this.boundX = this.x;
             this.boundY = this.y;
-            this.boundWidth = 500;
-            this.boundHeight = 50;
+            this.boundWidth = boundWidth;
+            this.boundHeight = boundHeight;
         }
 
         drawOutline (ctx) {

@@ -171,8 +171,9 @@ define([
                 let entity = this.entities[i];
                 for (let j = 1; j < entitiesCount; j++) {
                     let other = this.entities[j];
-                    if (entity != other && entity.isColliding(other)) {
-                        entity.collided(other)
+                    if (entity != other && entity.isColliding(other) != 'none') {
+                        let direction = entity.isColliding(other);
+                        entity.collided(other, direction);
 
                     }
                 }
