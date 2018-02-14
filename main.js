@@ -17,10 +17,15 @@ require.config({
         "game-board": "entities/game-board",
         "entity": "entities/entity",
         "hero": "entities/hero",
+        "projectile": "entities/projectile",
+        "projectile-sword": "entities/projectile-sword",
     	"leo": "entities/leo",
     	"flames": "entities/flames",
-    	"solider": "entities/soldier",
-    	"terrain" : "entities/terrain"
+        "solider": "entities/soldier",
+        "soldier-shield": "entities/soldier-shield",
+        "terrain": "entities/terrain",
+        "crow": "entities/crow",
+        "dino": "entities/dino",
     },
 
 
