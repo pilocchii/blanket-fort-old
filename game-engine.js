@@ -1,7 +1,9 @@
 define([
-
-],function(
-
+    "asset-manager",
+    'soldier-shield',
+], function (
+    AssetManager,
+    Soldier_Shield,
 ){
 
      /***************
@@ -19,18 +21,28 @@ define([
             this.surfaceHeight = null;
             // KB input keycodes
             this.controlKeys = {
-                "Space": {"active": false},
-                "KeyW": {"active": false},
-                "KeyS": {"active": false},
-                "KeyD": {"active": false},
-                "KeyA": {"active": false}
+                "Space": { "active": false },
+                "KeyW": { "active": false },
+                "KeyS": { "active": false },
+                "KeyD": { "active": false },
+                "KeyA": { "active": false },
+                "KeyR": { "active": false },
+                "KeyF": { "active": false },
+                "KeyE": { "active": false },
+                "Numpad1": { "active": false },
             }
             // control mapping
             this.controls = {
                 "jump": "Space",
                 "right": "KeyD",
                 "left": "KeyA",
+                "shoot": "KeyE",
+                "slash": "KeyR",
+                "cleave": "KeyF",
+                "energize": "KeyW",
+                "spawnSS": "Numpad1",
             }
+            this.spawnedSS = false;
         }
 
         /*
@@ -167,19 +179,26 @@ define([
                 }
             }
 
-            for (let i = 0; i < entitiesCount; i++) {
+            for (let i = 0; i < this.entities.length; i++) {
                 let entity = this.entities[i];
-                for (let j = 1; j < entitiesCount; j++) {
+                for (let j = 1; j < this.entities.length; j++) {
                     let other = this.entities[j];
                     if (entity != other && entity.isColliding(other) != 'none') {
-                        let direction = entity.isColliding(other);
-                        entity.collided(other, direction);
-
+                      let direction = entity.isColliding(other);
+                      entity.collided(other)
                     }
                 }
                 
             }
 
+            ////ANIM TESTING
+            //if (this.controlKeys[this.controls.spawnSS].active && !this.spawnedSS) { //spawn soldier-shield
+            //    let img = new Image();
+            //    img.Source = "img/SoldierShield.png";
+            //    console.log("Check");
+            //    this.addEntity(new Soldier_Shield(this, 100, 100, img, this.ctx))
+            //    this.spawnedSS = true;
+            //}
         }
 
         /*

@@ -26,6 +26,7 @@ define([
             // used for simple rect hitbox
             this.boundX = null;
             this.boundY = null;
+
             this.lastBoundY = null;
             this.boundWidth = null;
             this.boundHeight = null;
