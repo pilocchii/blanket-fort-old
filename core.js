@@ -54,7 +54,7 @@ define([
         gameEngine.addEntity(new Terrain(gameEngine, 0, 700, 1000, 50, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx, 3, [0,0]));
         //gameEngine.addEntity(new Terrain(gameEngine, 70, 200, 80, 500,[32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx, 3, [0,0]));
         //gameEngine.addEntity(new Terrain(gameEngine, 300, 500, 50, 200,[32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx, 3, [0,0]));
-        gameEngine.addEntity(new Terrain(gameEngine, 500, 400, 200, 50,[32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx, 3, [0,0]));
+        gameEngine.addEntity(new Terrain(gameEngine, 500, 400, 200, 100,[32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx, 3, [0,0]));
         gameEngine.addEntity(new Terrain(gameEngine, 300, 100, 500, 50,[32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx, 3, [0,0]));
 
 

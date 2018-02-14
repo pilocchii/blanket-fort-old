@@ -88,22 +88,25 @@ define([
             let collision = 'none';
             var dx = (rect1.x + rect1.width/2) - (rect2.x + rect2.width/2);
             var dy = (rect1.y + rect1.height/2) - (rect2.y + rect2.height/2);
+            var lastdy = (rect1.lastY + rect1.height/2) - (rect2.y + rect2.height/2);
             var width = (rect1.width + rect2.width) / 2;
             var height = (rect1.height + rect2.height) / 2;
             var crossWidth = width * dy;
+            var lastCrossWidth = width * lastdy;
             var crossHeight = height * dx;
             
             // First check if rect1 and rect2 are close enough to even collide. Then check the intersection depths to determine which side was most involved in the collision.
             if(Math.abs(dx) <= width && Math.abs(dy) <= height) {
 
                 //TODO store last bottom of rect1, compare to bound of rect2, determine if i should fall or not
-                if (crossWidth > crossHeight) {
-                    crossWidth < -(crossHeight) ? collision = 'right' : collision = 'top';
+                if (crossWidth > crossHeight && lastCrossWidth > crossHeight) {
+                    (crossWidth < -(crossHeight)) && lastCrossWidth < -(crossHeight) ? collision = 'right' : collision = 'top';
 
                 } else {
-                    crossWidth > (-crossHeight) && rect1.y > other.boundHeight ? collision = 'left' : collision = 'bottom';
-                    console.log("rect1: " + rect1.y + rect1.height);
-                    console.log("rect2: " + rect2.y);
+                    crossWidth > (-crossHeight) && lastCrossWidth > (-crossHeight) ? collision = 'left' : collision = 'bottom';
+                    // console.log("rect1 cur: " + rect1.y);
+                    // console.log("rect1 last: " + rect1.lastY);
+                    // console.log("rect2: " + rect2.y);
 
                 }
 

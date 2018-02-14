@@ -32,7 +32,7 @@ define([
             this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth/2);
             this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight);
-            this.lastboundY = this.y + (this.spriteHeight*this.scale - this.boundHeight); // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
+            this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
 
 
@@ -102,7 +102,6 @@ define([
                 this.states.running = true;
             }
             if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
-                this.lastboundY === this.y + (this.spriteHeight*this.scale - this.boundHeight);
                 this.states.jumping = true;
             }
 
@@ -133,6 +132,7 @@ define([
             }
 
             if (this.states.jumping) {
+                this.lastBoundY = this.boundY;
 
                 this.states.jumping = false;
                 if (this.jumpsLeft > 0 && this.jumpTimer == 0) {
@@ -163,14 +163,13 @@ define([
                     this.yVelocity = 0;
                     this.jumpsLeft = this.maxJumps;
                     this.states.jumping = false;
-                    //this.lastboundY === this.boundY;
-
                 }
 
                 // Hero jumps into terrain
                 else if (direction === 'top') {
                     this.boundY = other.boundY + other.boundHeight;
                     this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
+                    this.lastBoundY = this.boundY;
 
                 }
 
@@ -186,7 +185,7 @@ define([
                     this.x = this.boundX - this.spriteWidth;
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
-                //console.log(direction);
+                console.log(direction);
         }
 
         }
