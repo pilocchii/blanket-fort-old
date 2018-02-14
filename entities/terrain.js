@@ -6,7 +6,6 @@ define([
 
 
     class Terrain extends Entity {
-
          constructor (game, x, y, boundWidth, boundHeight, dimensions, img=null, ctx=null, scale=null, tiles=null) {
             super(game, x, y, img, ctx);
             this.states = null;
@@ -32,7 +31,6 @@ define([
         }
 
         draw(ctx) {
-
             for (var tile in this.tiles) {
                 let col = tile[0]
                 let row = tile[1]
@@ -56,6 +54,7 @@ define([
             super.update();
 
         }
+
 
     } // end Terrain
 
