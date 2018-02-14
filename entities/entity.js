@@ -26,6 +26,7 @@ define([
             // used for simple rect hitbox
             this.boundX = null;
             this.boundY = null;
+            this.lastBoundY = null;
             this.boundWidth = null;
             this.boundHeight = null;
         }
@@ -67,11 +68,11 @@ define([
         /*
         Collision detection, rectangle
         */
-        //TODO collided direction
         isColliding(other) {
             let rect1 = {
                 "x" : this.boundX,
                 "y" : this.boundY,
+                "lastY" : this.lastBoundY,
                 "width" : this.boundWidth,
                 "height": this.boundHeight
             }
@@ -83,26 +84,30 @@ define([
                 "height": other.boundHeight
             }
             
-            // New take on collision detection
+            // This is the same as Mariott's method, just formatted differently
             let collision = 'none';
             var dx = (rect1.x + rect1.width/2) - (rect2.x + rect2.width/2);
             var dy = (rect1.y + rect1.height/2) - (rect2.y + rect2.height/2);
-            var width = (rect1.width + rect2.width)/2;
-            var height = (rect1.height + rect2.height)/2;
+            var width = (rect1.width + rect2.width) / 2;
+            var height = (rect1.height + rect2.height) / 2;
             var crossWidth = width * dy;
             var crossHeight = height * dx;
             
             // First check if rect1 and rect2 are close enough to even collide. Then check the intersection depths to determine which side was most involved in the collision.
             if(Math.abs(dx) <= width && Math.abs(dy) <= height) {
 
+                //TODO store last bottom of rect1, compare to bound of rect2, determine if i should fall or not
                 if (crossWidth > crossHeight) {
-                    crossWidth > -(crossHeight) ? collision = 'top' : collision = 'right';
+                    crossWidth < -(crossHeight) ? collision = 'right' : collision = 'top';
 
                 } else {
-                    (crossWidth > -(crossHeight)) ? collision = 'left' : collision = 'bottom';
-                }
-            }
+                    crossWidth > (-crossHeight) && rect1.y > other.boundHeight ? collision = 'left' : collision = 'bottom';
+                    console.log("rect1: " + rect1.y + rect1.height);
+                    console.log("rect2: " + rect2.y);
 
+                }
+
+            }
         return collision;
 
         }

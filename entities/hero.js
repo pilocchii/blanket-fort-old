@@ -27,13 +27,12 @@ define([
             this.spriteHeight = spriteHeight;
             this.yVelocity = 0;
 
-            let hittingCeiling = false; // For jumping into a ceiling
-
             this.centerX = x + ((spriteWidth*scale)/2);
             this.boundWidth = 60;
             this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth/2);
             this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight);
+            this.lastboundY = this.y + (this.spriteHeight*this.scale - this.boundHeight); // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
 
 
@@ -103,6 +102,7 @@ define([
                 this.states.running = true;
             }
             if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
+                this.lastboundY === this.y + (this.spriteHeight*this.scale - this.boundHeight);
                 this.states.jumping = true;
             }
 
@@ -145,11 +145,9 @@ define([
 
             // update velocities based on gravity and friction
             this.yVelocity += this.gravity * this.gravity;
-
-            //TODO this CANNOT be updating when colliding into a ceiling
-            if (!this.hittingCeiling){
             this.y += this.yVelocity;
-            this.boundY += this.yVelocity;}
+            this.boundY += this.yVelocity;
+
         }
 
 
@@ -158,38 +156,37 @@ define([
             if (other instanceof Terrain) {
 
                 // Hero above terrain
+                // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
                 if (direction === 'bottom') {
-                    this.y = other.boundY - this.spriteHeight*this.scale;
                     this.boundY = other.boundY - this.boundHeight;
+                    this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
                     this.yVelocity = 0;
                     this.jumpsLeft = this.maxJumps;
                     this.states.jumping = false;
+                    //this.lastboundY === this.boundY;
+
                 }
 
                 // Hero jumps into terrain
                 else if (direction === 'top') {
-                    //TODO
-                    this.hittingCeiling = true;
-                    //this.y = other.boundY - this.spriteHeight*this.scale;
-                    this.boundY = other.boundY + this.boundHeight;
-                    direction = 'none';
+                    this.boundY = other.boundY + other.boundHeight;
+                    this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
+
                 }
 
                 // Hero collides with terrain to the left
-                //TODO some black magic happens when i fall and collide left
                 else if (direction === 'left') {
-                    this.x = other.boundX;
-                    this.boundX = other.boundX + this.boundWidth + 10; // The 10 stops Hero from "vibrating" into the wall. idk why
+                    this.boundX = other.boundX + other.boundWidth;
+                    this.x = this.boundX - this.spriteWidth;
                 }
 
                 // Hero collides with terrain to the right
                 else if (direction === 'right') {
-                    this.x = other.x - this.spriteWidth*this.scale + 40; // The 40 stops Hero from shifting left from the hitbox. idk why
                     this.boundX = other.boundX - this.boundWidth;
+                    this.x = this.boundX - this.spriteWidth;
                 }
-                
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
-                console.log(direction);
+                //console.log(direction);
         }
 
         }
