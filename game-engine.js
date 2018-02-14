@@ -137,6 +137,12 @@ define([
             this.entities.push(entity);
         }
 
+        addEntitySet (entitySet) {
+            for (var entity in entitySet) {
+                addEntity(entity);
+            }
+        }
+
 
         /*
         Draws all entities in the list
@@ -177,12 +183,14 @@ define([
                 let entity = this.entities[i];
                 for (let j = 1; j < this.entities.length; j++) {
                     let other = this.entities[j];
-                    if (entity != other && entity.isColliding(other)) {
-                        entity.collided(other)
+                    if (entity != other && entity.isColliding(other) != 'none') {
+                      let direction = entity.isColliding(other);
+                      entity.collided(other)
                     }
                 }
                 
             }
+
             ////ANIM TESTING
             //if (this.controlKeys[this.controls.spawnSS].active && !this.spawnedSS) { //spawn soldier-shield
             //    let img = new Image();
