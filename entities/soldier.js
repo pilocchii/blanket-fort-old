@@ -50,9 +50,7 @@ define([
     }
 
 
-    return {
-        "Soldier": Soldier,
-    };
+    return Soldier;
 });
 
 

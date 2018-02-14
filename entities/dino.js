@@ -86,31 +86,31 @@ define([
 
             draw(ctx) {
                 if (this.states.idling) {
-                    console.log("idle");
+                    //console.log("idle");
                     this.animation = this.animations.idle;
                 }
                 if (this.states.walking && this.direction === 1) {
-                    console.log("walk straight");
+                    //console.log("walk straight");
                     this.animation = this.animations.walk_straight;
                 }
                 if (this.states.walking && this.direction === 2) {
-                    console.log("walk down");
+                    //console.log("walk down");
                     this.animation = this.animations.walk_down;
                 }
                 if (this.states.walking && this.direction === 3) {
-                    console.log("walk up");
+                    //console.log("walk up");
                     this.animation = this.animations.walk_up;
                 }
                 if (this.states.shooting && this.direction === 1) {
-                    console.log("shoot diagonal");
+                    //console.log("shoot diagonal");
                     this.animation = this.animations.shoot_diagonal;   
                 }
                 if (this.states.shooting && this.direction === 2) {
-                    console.log("shoot straight");
+                    //console.log("shoot straight");
                     this.animation = this.animations.shoot_straight;
                 }
                 if (this.states.shooting && this.direction === 3) {
-                    console.log("shoot up");
+                    //console.log("shoot up");
                     this.animation = this.animations.shoot_up;
                 }
                 this.drawImg(ctx);

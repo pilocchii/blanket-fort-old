@@ -228,7 +228,7 @@ define([
                 // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
                 if (direction === 'bottom') {
                     this.boundY = other.boundY - this.boundHeight;
-                    this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
+                    this.y = this.boundY - (this.spriteHeight * this.scale - this.boundHeight);
                     this.yVelocity = 0;
                     this.jumpsLeft = this.maxJumps;
                     this.states.jumping = false;
@@ -237,7 +237,7 @@ define([
                 // Hero jumps into terrain
                 else if (direction === 'top') {
                     this.boundY = other.boundY + other.boundHeight;
-                    this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
+                    this.y = this.boundY - (this.spriteHeight * this.scale - this.boundHeight);
                     this.lastBoundY = this.boundY;
 
                 }
@@ -255,6 +255,7 @@ define([
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
                 console.log(direction);
+            }
         }
 
         drawOutline (ctx) {
@@ -270,18 +271,9 @@ define([
 
         drawImg (ctx) {
             this.drawOutline(ctx);
-            if(this.yVelocity < 0) {
-                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-
-            } else this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-
-        }
-
-        }
-
+            this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }
-
     return Hero;
 });
 
