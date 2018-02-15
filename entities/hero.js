@@ -132,7 +132,7 @@ define([
             }
 
             if (this.states.jumping) {
-                this.lastBoundY = this.boundY;
+                // this.lastBoundY = this.boundY;
 
                 this.states.jumping = false;
                 if (this.jumpsLeft > 0 && this.jumpTimer == 0) {
@@ -146,6 +146,8 @@ define([
             // update velocities based on gravity and friction
             this.yVelocity += this.gravity * this.gravity;
             this.y += this.yVelocity;
+            this.lastBoundY = this.boundY;
+
             this.boundY += this.yVelocity;
 
         }
