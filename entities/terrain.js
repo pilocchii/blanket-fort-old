@@ -18,7 +18,7 @@ define([
             this.height = dimensions[1];
             this.boundX = this.x;
             this.boundY = this.y+6;
-            this.boundWidth = 500;
+            this.boundWidth = 5000;
             this.boundHeight = 50;
 
         }
