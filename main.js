@@ -20,7 +20,8 @@ require.config({
     	"leo": "entities/leo",
     	"flames": "entities/flames",
     	"solider": "entities/soldier",
-    	"terrain" : "entities/terrain"
+    	"terrain" : "entities/terrain",
+    	"level-one": "maps/level-one"
     },
 
 

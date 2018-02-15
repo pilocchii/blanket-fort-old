@@ -18,8 +18,8 @@ define([
             this.height = dimensions[1];
             this.boundX = this.x;
             this.boundY = this.y+6;
-            this.boundWidth = 500;
-            this.boundHeight = 50;
+            this.boundWidth = 75;
+            this.boundHeight = 75;
 
         }
 
@@ -33,10 +33,13 @@ define([
         }
 
         draw(ctx) {
-            console.log(this.tiles[0])
-            for (var i = 0; i < this.tiles.length; i++) {
-                let col = this.tiles[i][0]
-                let row = this.tiles[i][1]
+            // console.log(this.tiles[0])
+            // if (this.tiles !== null) {
+            for (var i = 0; i < 1; i++) {
+                // let col = this.tiles[i][0]
+                // let row = this.tiles[i][1]
+                let col = this.tiles[0]
+                let row = this.tiles[1]
                 ctx.drawImage(this.img, 
                     (col * this.width),
                     // 0, 
