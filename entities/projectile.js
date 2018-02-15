@@ -19,10 +19,16 @@ define([
                 this.spriteHeight = spriteHeight;
 
                 this.centerX = x + ((spriteWidth * scale) / 2);
-                this.boundWidth = 0;
-                this.boundHeight = 0;
-                this.boundX = this.centerX - (this.boundWidth / 2);
-                this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight);
+                this.boundWidth = 50;
+                this.boundHeight = 50;
+                if (facingRight) {
+                    this.boundX = this.centerX - (this.boundWidth / 2) + 100;
+                    this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight) - 80;
+                }
+                else {
+                    this.boundX = this.centerX - (this.boundWidth / 2) - 100;
+                    this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight) - 80;
+                }
 
                 this.states = {
                     "green": !energized,
@@ -42,7 +48,13 @@ define([
 
             update() {
                 //TODO
-                if (this.states.facingRight) { this.x += this.movementSpeed; } else { this.x -= this.movementSpeed; }
+                if (this.states.facingRight) {
+                    this.x += this.movementSpeed;
+                    this.boundX += this.movementSpeed;
+                } else {
+                    this.x -= this.movementSpeed;
+                    this.boundX -= this.movementSpeed;
+                }
                 if (this.states.active) {
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;

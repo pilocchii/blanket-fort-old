@@ -38,7 +38,7 @@ define([
             this.boundWidth = 60;
             this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth/2);
-            this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight - this.scale * 5); //TODO: More testing
+            this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight);
 
             this.energy = 0;
 
@@ -60,7 +60,7 @@ define([
                 "ascend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 8, 3, 5, true, this.scale, 2), //50x50
                 "descend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 14, 3, 4, true, this.scale, 8), //50x50
                 //Land?
-                "airshoot": new Animation(this.img, [spriteWidth, spriteHeight], 2, 20, 3, 6, true, this.scale, 14), //50x50
+                "airshoot": new Animation(this.img, [spriteWidth, spriteHeight], 2, 20, 3, 6, false, this.scale, 14), //50x50
                 "shoot": new Animation(this.img, [80, 60], 3, 3, 6, 3, false, this.scale), //80x60
                 "gunrun": new Animation(this.img, [60, 60], 1, 22, 3, 11, true, this.scale, 11), //50x50
                 "slash": new Animation(this.img, [90, 60], 4, 11, 3, 11, false, this.scale), //80x50
@@ -201,12 +201,12 @@ define([
                 this.spriteWidth = 50;
                 this.animation = this.animations.gunrun;
             }
-            else if (this.states.shooting && !this.states.jumping && this.animation) {//shooting
+            else if (this.states.shooting && this.yVelocity == 0 && this.animation) {//shooting
                 this.spriteHeight = 50;
                 this.spriteWidth = 70;
                 this.animation = this.animations.shoot;
             }
-            else if (this.states.shooting && this.states.jumping && this.animation) {//air shooting
+            else if (this.states.shooting && this.yVelocity != 0 && this.animation) {//air shooting
                 this.spriteHeight = 50;
                 this.spriteWidth = 50;
                 this.animation = this.animations.airshoot;
