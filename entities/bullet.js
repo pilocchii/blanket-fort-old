@@ -7,7 +7,7 @@ define([
     ) {
 
 
-        class Projectile_Enemy extends Actor {
+        class Bullet extends Actor {
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
@@ -28,19 +28,20 @@ define([
                     "facingRight": facingRight,
                 };
                 this.animations = {
-                    "shotblast": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 4, 6, false, this.scale, 10),
+                    "bullet": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 20, 2, true, this.scale, 16),
                 };
-                this.animation = this.animations.shotblast;
+                this.animation = this.animations.bullet;
             }
 
             update() {
                 //TODO
-                
+
                 if (this.states.active) {
-                    if (this.animation.isDone()) {
-                        console.log("ss active");
+                    if (this.states.facingRight) { this.x += this.movementSpeed; } else { this.x -= this.movementSpeed; }
+                    if (this.animation.loops > 1) {
                         this.animation.elapsedTime = 0;
-                        this.states.active = false;
+                        this.animation.loops = 0;
+                        this.states.steady = false;
                         this.removeFromWorld = true;
                     }
                 }
@@ -48,7 +49,7 @@ define([
 
             draw(ctx) {
                 if (this.states.active) {
-                    this.animation = this.animations.shotblast;
+                    this.animation = this.animations.bullet;
                 }
                 this.drawImg(ctx);
             }
@@ -70,5 +71,5 @@ define([
             }
         }
 
-        return Projectile_Enemy;
+        return Bullet;
     });

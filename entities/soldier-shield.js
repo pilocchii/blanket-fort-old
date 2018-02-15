@@ -1,10 +1,14 @@
 define([
     "actor",
     "animation",
+    "projectile-enemy",
+    "bullet",
     "terrain",
 ], function (
     Actor,
     Animation,
+    Projectile_Enemy,
+    Bullet,
     Terrain,
     ) {
 
@@ -46,8 +50,6 @@ define([
                     "run":                  new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 3, 12, true, this.scale), 
                     "shoot_startup":        new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 7, 5, false, this.scale),
                     "shoot_active":         new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 7, 5, false, this.scale, 5),
-                    "shotblast":            new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 6, 6, false, this.scale, 10),
-                    "bullet":               new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 6, 2, true, this.scale, 16),
                     "slash_start":          new Animation(this.img, [80, 60], 3, 9, 7, 9, false, this.scale),
                     "slash_end":            new Animation(this.img, [100, 60], 4, 11, 7, 7, false, this.scale),
                 };
@@ -83,6 +85,8 @@ define([
                 if (this.states.shooting_active) { //shooting active
                     if (!this.states.hasShot) {
                         //TODO: create a new "bullet" class to spawn projectile and activate animation
+                        this.game.addEntity(new Projectile_Enemy(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.facingRight));
+                        this.game.addEntity(new Bullet(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.facingRight));
                         this.states.hasShot = true;
                     }
                     if (this.animation.isDone()) {
@@ -124,6 +128,7 @@ define([
                         this.states.turning = false;
                         this.states.facingRight = !this.states.facingRight;
                         //for demo
+                        console.log(this.states.facingRight);
                         this.states.idling = true;
                     }
                 }
