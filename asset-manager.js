@@ -62,7 +62,7 @@ define([
         Gets an asset
         */
         getAsset (path) {
-            //console.log(path.toString());
+            console.log(path.toString());
             return this.cache[path];
         }
         

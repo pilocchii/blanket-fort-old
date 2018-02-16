@@ -116,7 +116,6 @@ define([
         }
 
         collided(other, direction) {
-            //console.log(`${this.name} colliding with ${other.name} from ${direction}` )
         }
     } // end of Entity class
 
