@@ -43,7 +43,7 @@ define([
                     this.src_height, 
                     this.x, this.y,
                     this.src_width*3, 
-                    this.src_height*3
+                    this.src_height*3 
                 );
             }
             }
