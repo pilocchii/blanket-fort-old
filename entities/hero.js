@@ -117,13 +117,13 @@ define([
             // Running
             if (this.states.running) {
                 if (this.states.facingRight) {
-                    //this.x += this.movementSpeed;
-                    //this.centerX += this.movementSpeed;
-                    //this.boundX += this.movementSpeed;
+                    this.x += this.movementSpeed;
+                    this.centerX += this.movementSpeed;
+                    this.boundX += this.movementSpeed;
                 } else {
-                    //this.x -= this.movementSpeed;
-                    //this.centerX -= this.movementSpeed;
-                    //this.boundX -= this.movementSpeed;
+                    this.x -= this.movementSpeed;
+                    this.centerX -= this.movementSpeed;
+                    this.boundX -= this.movementSpeed;
 
                 }
             }
