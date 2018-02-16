@@ -1,7 +1,7 @@
 define([
     "terrain",
     "game-engine",
-    // "text!testmap.txt"
+    // "text!testmap"
 ],function(
     Terrain,
     GameEngine,

@@ -21,7 +21,9 @@ require.config({
     	"flames": "entities/flames",
     	"solider": "entities/soldier",
     	"terrain" : "entities/terrain",
-    	"level-one": "maps/level-one"
+    	"level-one": "maps/level-one",
+        "text": "https://cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text",
+        "testmap": "text!https://www.dropbox.com/s/1qwcfo8qt8by4w7/testmap.txt?dl=1"
     },
 
 
