@@ -48,9 +48,7 @@ define([
         };
 
     }
-
-
-    return Soldier;
+    return Soldier
 });
 
 

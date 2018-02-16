@@ -26,7 +26,6 @@ define([
             // used for simple rect hitbox
             this.boundX = null;
             this.boundY = null;
-
             this.lastBoundY = null;
             this.boundWidth = null;
             this.boundHeight = null;
@@ -117,7 +116,6 @@ define([
         }
 
         collided(other, direction) {
-            //console.log(`${this.name} colliding with ${other.name} from ${direction}` )
         }
     } // end of Entity class
 

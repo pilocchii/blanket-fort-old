@@ -16,16 +16,22 @@ require.config({
         "animation": "animation",
         "game-board": "entities/game-board",
         "entity": "entities/entity",
+
+    	"terrain" : "entities/terrain",
+    	"level-one": "maps/level-one",
+
         "hero": "entities/hero",
         "projectile": "entities/projectile",
         "projectile-sword": "entities/projectile-sword",
-    	"leo": "entities/leo",
-    	"flames": "entities/flames",
+        "leo": "entities/leo",
+        "flames": "entities/flames",
         "solider": "entities/soldier",
         "soldier-shield": "entities/soldier-shield",
-        "terrain": "entities/terrain",
         "crow": "entities/crow",
         "dino": "entities/dino",
+        "bullet": "entities/bullet",
+        "shotblast": "entities/shotblast",
+        "enemy": "entities/enemy",
     },
 
 

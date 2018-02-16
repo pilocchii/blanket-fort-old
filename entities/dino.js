@@ -1,15 +1,17 @@
 define([
-    "actor",
+    "enemy",
     "animation",
     "terrain",
+    "projectile",
 ], function (
-    Actor,
+    Enemy,
     Animation,
     Terrain,
+    Projectile,
     ) {
 
 
-        class Dino extends Actor {
+        class Dino extends Enemy {
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60) {
                 super(game, x, y, img, ctx);
@@ -23,11 +25,12 @@ define([
                 this.spriteHeight = spriteHeight;
 
                 this.centerX = x + ((spriteWidth * scale) / 2);
-                this.boundWidth = 0;
-                this.boundHeight = 0;
+                this.boundWidth = 90*this.scale;
+                this.boundHeight = 60*this.scale;
                 this.boundX = this.centerX - (this.boundWidth / 2);
                 this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight);
 
+                this.health = 200;
 
                 this.states = {
                     "idling": true,
@@ -113,7 +116,17 @@ define([
                     //console.log("shoot up");
                     this.animation = this.animations.shoot_up;
                 }
+                if (this.health <= 0) {
+                    this.removeFromWorld = true;
+                }
                 this.drawImg(ctx);
+            }
+
+            collided(other) {
+                // collide with terrain
+                if (other instanceof Projectile) {
+                    this.health -= 50;
+                }
             }
 
             drawOutline(ctx) {
@@ -131,17 +144,6 @@ define([
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
 
-            collided(other) {
-                // collide with terrain
-                if (other instanceof Terrain) {
-                    this.y = other.boundY - this.spriteHeight * this.scale;
-                    this.boundY = other.boundY - this.boundHeight;
-                    this.yVelocity = 0;
-                    this.jumpsLeft = this.maxJumps;
-                    this.states.jumping = false;
-                }
-
-            }
         }
 
         return Dino;

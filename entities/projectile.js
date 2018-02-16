@@ -1,9 +1,13 @@
 define([
     'actor',
     'animation',
+    "terrain",
+    "enemy",
 ], function (
     Actor,
     Animation,
+    Terrain,
+    Enemy,
     ) {
 
 
@@ -19,10 +23,16 @@ define([
                 this.spriteHeight = spriteHeight;
 
                 this.centerX = x + ((spriteWidth * scale) / 2);
-                this.boundWidth = 0;
-                this.boundHeight = 0;
-                this.boundX = this.centerX - (this.boundWidth / 2);
-                this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight);
+                this.boundWidth = 50;
+                this.boundHeight = 50;
+                if (facingRight) {
+                    this.boundX = this.centerX - (this.boundWidth / 2) + 100;
+                    this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight) - 80;
+                }
+                else {
+                    this.boundX = this.centerX - (this.boundWidth / 2) - 100;
+                    this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight) - 80;
+                }
 
                 this.states = {
                     "green": !energized,
@@ -32,17 +42,23 @@ define([
                     "facingRight": facingRight,
                 };
                 this.animations = {
-                    "green_growing": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 3, 15, 6, 8, false, this.scale, 4),
+                    "green_exiting": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 3, 15, 6, 8, false, this.scale, 4),
                     "green_stable": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 3, 15, 6, 4, true, this.scale, 11),
-                    "blue_growing": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 3, 23, 6, 8, false, this.scale, 15),
+                    "blue_exiting": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 3, 23, 6, 8, false, this.scale, 15),
                     "blue_stable": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 3, 23, 6, 3, true, this.scale, 20),
                 };
-                if (this.states.green) { this.animation = this.animations.green_growing; } else { this.animation = this.animations.blue_growing; }
+                if (this.states.green) { this.animation = this.animations.green_exiting; } else { this.animation = this.animations.blue_exiting; }
             }
 
             update() {
                 //TODO
-                if (this.states.facingRight) { this.x += this.movementSpeed; } else { this.x -= this.movementSpeed; }
+                if (this.states.facingRight) {
+                    this.x += this.movementSpeed;
+                    this.boundX += this.movementSpeed;
+                } else {
+                    this.x -= this.movementSpeed;
+                    this.boundX -= this.movementSpeed;
+                }
                 if (this.states.active) {
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
@@ -63,7 +79,7 @@ define([
             draw(ctx) {
                 if (this.states.green) {
                     if (this.states.active) {
-                        this.animation = this.animations.green_growing;
+                        this.animation = this.animations.green_exiting;
                     }
                     if (this.states.stablized) {
                         this.animation = this.animations.green_stable;
@@ -72,12 +88,22 @@ define([
                 }
                 else if (this.states.blue) {
                     if (this.states.active) {
-                        this.animation = this.animations.blue_growing;
+                        this.animation = this.animations.blue_exiting;
                     }
                     if (this.states.stablized) {
                         this.animation = this.animations.blue_stable;
                     }
                     this.drawImg(ctx);
+                }
+            }
+
+            collided(other) {
+                // collide with terrain
+                if (other instanceof Terrain) {
+                    this.removeFromWorld = true;
+                }
+                if (other instanceof Enemy) {
+                    this.removeFromWorld = true;
                 }
             }
 

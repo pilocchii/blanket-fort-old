@@ -20,6 +20,7 @@ define([
         constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=60, spriteHeight=60) {
             super(game, x, y, img, ctx);
             this.origY = this.y; //For jumping
+            //this.y = y - spriteHeight*scale;
             this.movementSpeed = (8);
 
             this.jumpStrength = (20);
@@ -40,6 +41,9 @@ define([
             this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight);
             this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
+
+            this.energy = 0;
+
             this.states = {
                 "running": false,
                 "jumping": false,
@@ -58,7 +62,7 @@ define([
                 "ascend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 8, 3, 5, true, this.scale, 2), //50x50
                 "descend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 14, 3, 4, true, this.scale, 8), //50x50
                 //Land?
-                "airshoot": new Animation(this.img, [spriteWidth, spriteHeight], 2, 20, 3, 6, true, this.scale, 14), //50x50
+                "airshoot": new Animation(this.img, [spriteWidth, spriteHeight], 2, 20, 3, 6, false, this.scale, 14), //50x50
                 "shoot": new Animation(this.img, [80, 60], 3, 3, 6, 3, false, this.scale), //80x60
                 "gunrun": new Animation(this.img, [60, 60], 1, 22, 3, 11, true, this.scale, 11), //50x50
                 "slash": new Animation(this.img, [90, 60], 4, 11, 3, 11, false, this.scale), //80x50
@@ -78,7 +82,6 @@ define([
                 if (this.states.facingRight) { this.states.facingRight = false };
                 this.states.running = true;
             }
-  
             if (this.game.controlKeys[this.game.controls.energize].active) {
                 this.states.energized = true;
             }
@@ -123,19 +126,18 @@ define([
                     this.x -= this.movementSpeed;
                     this.centerX -= this.movementSpeed;
                     this.boundX -= this.movementSpeed;
+
                 }
             }
 
             if (this.states.jumping) {
-
-                this.lastBoundY = this.boundY;
-
                 this.states.jumping = false;
+
                 if (this.jumpsLeft > 0 && this.jumpTimer == 0) {
                     this.jumpsLeft -= 1;
                     this.jumpTimer = this.jumpCooldown;
                     this.yVelocity = 0;
-                    //this.yVelocity -= this.jumpStrength;
+                    this.yVelocity -= this.jumpStrength;
                 }
             }
 
@@ -148,7 +150,13 @@ define([
 
             if (this.states.shooting) {
                 if (!this.states.shotlocked) {
-                    this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
+                    if (this.energy >= 75 && this.states.energized) {
+                        this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
+                        this.energy -= 75;
+                    }
+                    else {
+                        this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false))
+                    }
                     this.states.shotlocked = true;
                 }
                 if (this.animation.isDone()) {
@@ -159,9 +167,10 @@ define([
             }
 
             if (this.states.slashing) {
-                if (this.animation.currentFrame() === 4 && this.states.energized && !this.states.shotlocked) {
+                if (this.animation.currentFrame() === 2 && this.states.energized && !this.states.shotlocked && this.energy >= 100) {
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                     this.states.shotlocked = true;
+                    this.energy -= 100;
                 }
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
@@ -170,10 +179,16 @@ define([
                 }
             }
 
+            if (this.energy < 200) {
+                this.energy++;
+            }
+
             // update velocities based on gravity and friction
             this.yVelocity += this.gravity * this.gravity;
             this.y += this.yVelocity;
+            this.lastBoundY = this.boundY;
             this.boundY += this.yVelocity;
+
         }
 
         draw(ctx) {
@@ -192,12 +207,12 @@ define([
                 this.spriteWidth = 50;
                 this.animation = this.animations.gunrun;
             }
-            else if (this.states.shooting && !this.states.jumping && this.animation) {//shooting
+            else if (this.states.shooting && this.yVelocity == 0 && this.animation) {//shooting
                 this.spriteHeight = 50;
                 this.spriteWidth = 70;
                 this.animation = this.animations.shoot;
             }
-            else if (this.states.shooting && this.states.jumping && this.animation) {//air shooting
+            else if (this.states.shooting && this.yVelocity != 0 && this.animation) {//air shooting
                 this.spriteHeight = 50;
                 this.spriteWidth = 50;
                 this.animation = this.animations.airshoot;
@@ -220,6 +235,27 @@ define([
             this.drawImg(ctx);
         }
 
+
+        drawOutline (ctx) {
+            ctx.beginPath();
+            ctx.strokeStyle = "green";
+            ctx.rect(this.boundX, 
+                this.boundY, 
+                this.boundWidth, this.boundHeight);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+
+        drawImg (ctx) {
+            this.drawOutline(ctx);
+            if(this.yVelocity < 0) {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+
+            } else this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+
+        }
+
         collided (other, direction) {
             // collide with terrain
             if (other instanceof Terrain) {
@@ -228,7 +264,7 @@ define([
                 // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
                 if (direction === 'bottom') {
                     this.boundY = other.boundY - this.boundHeight;
-                    this.y = this.boundY - (this.spriteHeight * this.scale - this.boundHeight);
+                    this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
                     this.yVelocity = 0;
                     this.jumpsLeft = this.maxJumps;
                     this.states.jumping = false;
@@ -237,7 +273,7 @@ define([
                 // Hero jumps into terrain
                 else if (direction === 'top') {
                     this.boundY = other.boundY + other.boundHeight;
-                    this.y = this.boundY - (this.spriteHeight * this.scale - this.boundHeight);
+                    this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
                     this.lastBoundY = this.boundY;
 
                 }
@@ -255,25 +291,11 @@ define([
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
                 console.log(direction);
-            }
         }
 
-        drawOutline (ctx) {
-            ctx.beginPath();
-            ctx.strokeStyle = "green";
-            ctx.rect(this.boundX, 
-                this.boundY, 
-                this.boundWidth, this.boundHeight);
-            ctx.stroke();
-            ctx.closePath();
-        }
-
-
-        drawImg (ctx) {
-            this.drawOutline(ctx);
-            this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }
+
     return Hero;
 });
 

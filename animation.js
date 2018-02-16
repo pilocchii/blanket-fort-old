@@ -40,11 +40,7 @@ define([
             }
 
             drawFrame(tick, ctx, x, y, facingRight) {
-                if (this.pause) {//can be used to pause the animation a given frame (only useable in specific situations)
-                    this.elapsedTime += 0;
-                } else {
-                    this.elapsedTime += tick;
-                }
+                this.elapsedTime += tick;
                 if (this.isDone()) {
                     if (this.loop) {
                         this.elapsedTime = 0;
@@ -65,8 +61,7 @@ define([
                     ctx.save();
 
                     // Set context to horizontal center of image (don't care about changing y's position)
-                	ctx.translate(x + (this.scale * this.frameWidth) / 2, 
-                        0);
+                	ctx.translate(x + (this.scale * this.frameWidth) / 2, 0);
                         
 				    // Scale x by -1 to flip horizontally
                     ctx.scale(-1, 1);
@@ -77,7 +72,8 @@ define([
                 	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
-                             -(this.frameWidth*2) + (this.frameWidth/2), y, // Offset dx
+                             -(this.frameWidth * 2) + (this.frameWidth / 2), // Offset dx
+                             y, 
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
 
@@ -96,7 +92,6 @@ define([
                 
             }
 
-            //DS3 1/28: added this.columnOffset for cases where starting frame is not in first column
             currentFrame () {
                 return Math.floor(this.elapsedTime / this.frameDuration) + this.columnOffset;
             }
@@ -107,7 +102,5 @@ define([
     }
 
     return Animation;
-
-    
 
 });
