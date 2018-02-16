@@ -58,7 +58,7 @@ define([
         console.log("canvas height: " + canvas.height);
 
         let gameEngine = new GameEngine();
-        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, 10,10, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary
+        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width/2,canvas.height/2, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary and camera
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
         gameEngine.addEntity(camera);
 
@@ -75,7 +75,7 @@ define([
         // let gameboard = new GameBoard();
 
         // gameEngine.addEntity(gameboard);
-        let player = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let player = new Hero(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         camera.follow(player);
 
         gameEngine.addEntity(player);  

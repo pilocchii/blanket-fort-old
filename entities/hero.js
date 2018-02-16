@@ -331,7 +331,7 @@ define([
                     this.x = this.boundX - this.spriteWidth;
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
-                console.log(direction);
+                //console.log(direction);
         }
 
         }

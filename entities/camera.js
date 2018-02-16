@@ -46,34 +46,19 @@ define([
 
 
         update() {
-            
+            // Note: this logic feels HORRIBLY wrong, but it works for now, so yay?
             if (this.followed != null) {
-
-                if (-this.followed.x + this.canvasWidth/2 < 0) {
-                    this.xView = 0;
-                }
-
-                else if (-this.followed.x + this.canvasWidth/2 > this.worldWidth - this.canvasWidth) {
-                    this.xView = this.worldWidth - this.canvasWidth;
-                }
-                else this.xView = -this.followed.x + this.canvasWidth/2;
-
-                if (-this.followed.y + this.canvasHeight/2 < 0) {
-                    this.yView = 0;
-                }
-
-                else if (-this.followed.y + this.canvasHeight/2 > this.worldHeight - this.canvasHeight) {
-                    this.yView = this.worldHeight - this.canvasHeight;
-                }
-
-                else this.yView = -this.followed.y + this.canvasHeight/2;
-            
-                
+                this.xView = this.boundsCheck(-this.followed.x + this.canvasWidth, -this.worldWidth, this.worldWidth - this.canvasWidth);
+                this.yView = this.boundsCheck(-this.followed.y + this.canvasHeight, 0, this.worldHeight + this.canvasHeight);
             }
             
-            // console.log("xView: " + this.xView);
-            // console.log("yView: " + this.yView);
+             console.log("xView: " + this.xView);
+             //console.log("yView: " + this.yView);
 
+        }
+
+        boundsCheck(val, min, max) {
+            return Math.min(Math.max(val, min), max);
         }
 
     }
