@@ -94,7 +94,7 @@ define([
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
                 }
-                ctx.translate(50, 50);
+                //ctx.translate(50, 50);
                 
             }
 

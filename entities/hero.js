@@ -67,7 +67,6 @@ define([
             this.drawOutline(ctx);
             if(this.yVelocity < 0) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-
                 
             } else {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);

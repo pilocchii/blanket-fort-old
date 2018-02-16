@@ -16,8 +16,8 @@ define([
     class Camera extends Entity {
         constructor(game, xView, yView=0, img=null, ctx=null, canvasWidth, canvasHeight, worldWidth, worldHeight) {
             super(game, xView, yView, img, ctx);
-            this.canvasWidth = canvasWidth;
-            this.canvasHeight = canvasHeight;
+            this.canvasWidth = canvasWidth; //this is the viewport, NOT the same as canvas in core.js
+            this.canvasHeight = canvasHeight; //this is the viewport, NOT the same as canvas in core.js
             this.worldWidth = worldWidth;
             this.worldHeight = worldHeight;
 
@@ -52,7 +52,7 @@ define([
                     this.xView = 0;
                 }
 
-                else if (-this.followed.x > this.worldWidth - this.canvasWidth) {
+                else if (-this.followed.x + this.canvasWidth/2 > this.worldWidth - this.canvasWidth) {
                     this.xView = this.worldWidth- this.canvasWidth;
                 }
                 else this.xView = -this.followed.x + this.canvasWidth/2;
