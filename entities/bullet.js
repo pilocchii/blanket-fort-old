@@ -12,7 +12,7 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 7;
-                if (facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
+                if (!facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
@@ -25,7 +25,7 @@ define([
 
                 this.states = {
                     "active": true,
-                    "facingRight": facingRight,
+                    "facingRight": !facingRight,
                 };
                 this.animations = {
                     "bullet": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 20, 2, true, this.scale, 16),
@@ -37,7 +37,11 @@ define([
                 //TODO
 
                 if (this.states.active) {
-                    if (this.states.facingRight) { this.x += this.movementSpeed; } else { this.x -= this.movementSpeed; }
+                    if (this.states.facingRight) {
+                        this.x += this.movementSpeed;
+                    } else {
+                        this.x -= this.movementSpeed;
+                    }
                     if (this.animation.loops > 1) {
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;

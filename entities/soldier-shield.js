@@ -1,13 +1,13 @@
 define([
     "actor",
     "animation",
-    "projectile-enemy",
+    "shotblast",
     "bullet",
     "terrain",
 ], function (
     Actor,
     Animation,
-    Projectile_Enemy,
+    Shotblast,
     Bullet,
     Terrain,
     ) {
@@ -41,7 +41,7 @@ define([
                     "slashing_end": false,
                     "blocking": false,
                     "turning": false,
-                    "facingRight": true,
+                    "facingRight": false,
                 };
                 this.animations = {
                     "idle":                 new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 6, true, this.scale),
@@ -85,8 +85,9 @@ define([
                 if (this.states.shooting_active) { //shooting active
                     if (!this.states.hasShot) {
                         //TODO: create a new "bullet" class to spawn projectile and activate animation
-                        this.game.addEntity(new Projectile_Enemy(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.facingRight));
-                        this.game.addEntity(new Bullet(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.facingRight));
+
+                        this.game.addEntity(new Shotblast(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
+                        this.game.addEntity(new Bullet(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.states.hasShot = true;
                     }
                     if (this.animation.isDone()) {
