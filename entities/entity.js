@@ -94,7 +94,7 @@ define([
         }
 
         collided(other) {
-            console.log(`${this.name} colliding with ${other.name}` )
+            //console.log(`${this.name} colliding with ${other.name}` )
         }
     } // end of Entity class
 

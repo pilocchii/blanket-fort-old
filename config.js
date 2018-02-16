@@ -3,7 +3,7 @@ require.config({
         "actor": "entities/actor",
         "animation": "animation",
         "game-board": "entities/game-board",
-        "camera": "camera",
+        "camera": "entities/camera",
         "entity": "entities/entity",
         "hero": "entities/hero",
     	"leo": "entities/leo",

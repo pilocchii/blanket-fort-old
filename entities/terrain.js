@@ -33,7 +33,7 @@ define([
         }
 
         draw(ctx) {
-            console.log(this.tiles[0])
+            //console.log(this.tiles[0])
             for (var i = 0; i < this.tiles.length; i++) {
                 let col = this.tiles[i][0]
                 let row = this.tiles[i][1]
