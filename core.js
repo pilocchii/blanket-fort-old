@@ -53,8 +53,6 @@ define([
     ASSET_MANAGER.downloadAll(function () {
         console.log("starting up da sheild");
         let canvas = document.getElementById('gameWorld');
-        canvas.width = 5000;
-        canvas.height = 5000;
         let ctx = canvas.getContext('2d');
         console.log(canvas.width);
         console.log(canvas.height);
@@ -74,8 +72,8 @@ define([
         // let gameboard = new GameBoard();
 
         // gameEngine.addEntity(gameboard);
-        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, 1000, 1000, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary
-        let player = new Hero(gameEngine, 200, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, 100,50, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary
+        let player = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         camera.follow(player);
 
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/

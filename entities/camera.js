@@ -41,7 +41,7 @@ define([
         draw(ctx) {
              ctx.setTransform(1, 0, 0, 1, 0, 0); //reset transform matrix
              ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // clear viewport after matrix is reset
-            ctx.translate(this.xView, this.yView);
+             ctx.translate(this.xView, this.yView);
         }
 
 
