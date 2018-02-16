@@ -23,7 +23,7 @@ require.config({
     	"terrain" : "entities/terrain",
     	"level-one": "maps/level-one",
         "text": "https://cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text",
-        "testmap": "text!https://www.dropbox.com/s/1qwcfo8qt8by4w7/testmap.txt?dl=1"
+        // "testmap": "text!http://github.com/GreenFour/pencil-knight/blob/feat/level/maps/testmap.txt"
     },
 
 

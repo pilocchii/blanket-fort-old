@@ -21,6 +21,7 @@ define([
             this.boundWidth = 75;
             this.boundHeight = 75;
 
+
         }
 
         drawOutline (ctx) {
@@ -34,7 +35,8 @@ define([
 
         draw(ctx) {
             // console.log(this.tiles[0])
-            // if (this.tiles !== null) {
+
+            if (this.tiles != null) {
             for (var i = 0; i < 1; i++) {
                 // let col = this.tiles[i][0]
                 // let row = this.tiles[i][1]
@@ -45,13 +47,13 @@ define([
                     // 0, 
                     (row * this.height),
                     // 0,
-                    this.width, 
-                    // 32, 32,
+                    this.width,
                     this.height, 
-                    this.x + (i * this.width*this.scale), this.y,
+                    this.x + (i * this.width), this.y,
                     this.width*this.scale, 
                     this.height*this.scale
                 );
+            }
                 // ctx.drawImage(this.img, 
                 //     this.x, this.y, this.width*this.scale, this.height*this.scale
                 // );

@@ -23,32 +23,47 @@ define([
 
 			this.tileMap = {
 				' ': null,
-				'+': [2, 0],
+				// '\n': null,
+				'{': [2, 0],
+				'}': [4, 0],
+				'[': [1, 4],
+				']': [6, 3],
 				'|': [1, 0],
-				'_': [3, 0]
+				'_': [3, 0],
+				'#': [3, 1],
 			}
 
-			this.map = [ 
-			['|', ' ', ' ', ' ', ' ', ' ', ' '],
-			['|', ' ', ' ', ' ', ' ', ' ', ' '],
-			['|', ' ', ' ', ' ', ' ', ' ', ' '],
-			['|', ' ', ' ', ' ', ' ', ' ', ' '],
-			['|', ' ', ' ', ' ', ' ', ' ', ' '],
-			['|', '+', '_', '_', '_', '_', '_'],
-			];
+this.map = 
+`                        
+ 
+ 
+
+ 
+        
+        
+        
+        
+        
+ {________}
+ [########]
+ [########]`.split('\n');
+
 
 			this.constructTerrain();
 
 		}
 
 
-		constructTerrain() {
 
+
+		constructTerrain() {
+			console.log("constructing terrain...")
+			console.log(this.map[0].length + " x " + this.map.length)
 			for (var col = 0; col < this.map[0].length; col++) {
 				for (var row = 0; row < this.map.length; row++) {
-					var tile = this.map[row][col]
-					if (tile != null && tile != ' ') {
-						this.gameEngine.addEntity(new Terrain(this.gameEngine, col * this.tileSize, row * this.tileSize, [32, 32], this.tilesheet, this.ctx, 3, this.tileMap[this.map[row][col]]));
+					var tile = this.tileMap[this.map[row][col]]
+					if (tile != null) {
+						this.gameEngine.addEntity(new Terrain(this.gameEngine, col * this.tileSize, row * this.tileSize, [32, 32], this.tilesheet, this.ctx, 3, tile));
 
 					}
 				}
