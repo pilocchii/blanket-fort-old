@@ -38,37 +38,39 @@ define([
             this.followed = obj;
         }
 
-        draw() {
-            this.animation.drawFrame(1, ctx, this.xView, this.yView, null, true);
+        draw(ctx) {
+             ctx.setTransform(1, 0, 0, 1, 0, 0); //reset transform matrix
+             ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // clear viewport after matrix is reset
+            ctx.translate(this.xView, this.yView);
         }
 
 
         update() {
             if (this.followed != null) {
 
-                if (this.followed.x + this.canvasWidth/2 < 0) {
+                if (-this.followed.x + this.canvasWidth/2 < 0) {
                     this.xView = 0;
                 }
 
-                else if (this.followed.x > this.worldWidth) {
-                    this.xView = this.worldWidth;
+                else if (-this.followed.x > this.worldWidth - this.canvasWidth) {
+                    this.xView = this.worldWidth- this.canvasWidth;
                 }
-                else this.xView = this.followed.x;
+                else this.xView = -this.followed.x + this.canvasWidth/2;
 
-                if (this.followed.y + this.canvasHeight/2 < 0) {
+                if (-this.followed.y + this.canvasHeight/2 < 0) {
                     this.yView = 0;
                 }
 
-                else if (this.followed.y + this.canvasHeight/2 > this.worldHeight) {
-                    this.yView = this.worldHeight;
+                else if (-this.followed.y + this.canvasHeight/2 > this.worldHeight - this.canvasHeight) {
+                    this.yView = this.worldHeight - this.canvasHeight;
                 }
 
-                else this.yView = this.followed.y;
+                else this.yView = -this.followed.y + this.canvasHeight/2;
             
             }
             
-            console.log("xView: " + this.xView);
-            console.log("yView: " + this.yView);
+            // console.log("xView: " + this.xView);
+            // console.log("yView: " + this.yView);
 
         }
 

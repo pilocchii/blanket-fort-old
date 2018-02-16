@@ -41,7 +41,7 @@ define([
 
    
 
-            drawFrame(tick, ctx, x, y, facingRight, isCamera) {
+            drawFrame(tick, ctx, x, y, facingRight) {
                 if (this.pause) {//can be used to pause the animation a given frame (only useable in specific situations)
                     this.elapsedTime += 0;
                 } else {
@@ -57,12 +57,6 @@ define([
                 xindex = frame % this.sheetWidth;
                 yindex = Math.floor((frame) / this.sheetWidth);
 
-                //TODO need to change context for camera before drawing everything
-                if(isCamera) {
-                    ctx.setTransform(1, 0, 0, 1, 0, 0); //reset transform matrix
-                    ctx.clearRect(0, 0, ctx.width, ctx.height); // clear viewport after matrix is reset
-                    ctx.translate(x, y);
-                }
 
                 // Draw facing left
                 if (!facingRight) {

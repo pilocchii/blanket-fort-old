@@ -40,7 +40,11 @@ define([
     ASSET_MANAGER.downloadAll(function () {
         console.log("starting up da sheild");
         let canvas = document.getElementById('gameWorld');
+        canvas.width = 5000;
+        canvas.height = 5000;
         let ctx = canvas.getContext('2d');
+        console.log(canvas.width);
+        console.log(canvas.height);
 
         let gameEngine = new GameEngine();
 
@@ -48,15 +52,17 @@ define([
         // let gameboard = new GameBoard();
 
         // gameEngine.addEntity(gameboard);
-        //(game, x, y, img=null, ctx=null, scale=3, spriteWidth=50, spriteHeight=50)
-        gameEngine.addEntity(new Terrain(gameEngine, 100, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
-        //let camera = new Camera();
+        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, 1000, 1000, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary
         let player = new Hero(gameEngine, 200, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
-        gameEngine.addEntity(player);
-
-        let camera = new Camera(gameEngine, 0, 0, null, ctx, canvas.width, canvas.height, 5000, 5000) //Placeholder magic numbers until we decide on how to handle world boundary
         camera.follow(player);
+        
+        /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
         gameEngine.addEntity(camera);
+        gameEngine.addEntity(player);       
+
+        gameEngine.addEntity(new Terrain(gameEngine, 100, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
+        
+        
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
