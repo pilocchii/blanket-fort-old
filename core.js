@@ -78,14 +78,6 @@ define([
         // }
         // mapreader.readAsText("maps/testmap");
 
-        let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
-
-        // let mapreader = new FileReader();
-        // mapreader.onload = function(e) {
-        //     console.log(mapreader.result);
-        // }
-        // mapreader.readAsText("maps/testmap");
-
         // gameEngine.showOutlines = true;
 
         // let gameboard = new GameBoard();
