@@ -27,7 +27,7 @@ define([
                 this.spriteSheet = spriteSheet;
                 this.frameWidth = frameDimensions[0];
                 this.frameDuration = frameDuration;
-                this.frameHeight = frameDimensions[1] + 1;
+                this.frameHeight = frameDimensions[1]; //can't add 1 here. Messes up frames lower down the sprite sheet
                 this.row = row;
                 this.columnOffset = columnOffset;
                 this.sheetWidth = sheetWidth;
@@ -35,7 +35,7 @@ define([
                 this.totalTime = frameDuration * frames;
                 this.elapsedTime = 0;
                 this.loop = loop;
-                this.pause = false;
+                this.loops = 0;
                 this.scale = scale;
             }
 
@@ -46,7 +46,10 @@ define([
                     this.elapsedTime += tick;
                 }
                 if (this.isDone()) {
-                    if (this.loop) this.elapsedTime = 0;
+                    if (this.loop) {
+                        this.elapsedTime = 0;
+                        this.loops++;
+                    }
                 }
                 var frame = this.currentFrame();
                 var xindex = 0;
@@ -71,11 +74,11 @@ define([
                     // Draw image on the transformed context
                     // Note: after transforming [0,0] is visually [-width/2, 0]
                     // so the image needs to be offset accordingly when drawn
-
                 	ctx.drawImage(this.spriteSheet,
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
-                             -(this.frameWidth*2) + (this.frameWidth/2), y, // Offset dx
+                             -(this.frameWidth * 2) + (this.frameWidth / 2), // Offset dx
+                             y, 
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
 

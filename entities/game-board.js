@@ -1,5 +1,5 @@
 define([
-    'entity',
+    "entity",
 ],function(
     Entity,
 ){
@@ -9,7 +9,7 @@ define([
 
     
     **************/
-    class GameBoard extends Entity.Entity {
+    class GameBoard extends Entity {
 
         // so this prototype.call() is calling the Entity constructor with (game=null, x=0, y=0)
         constructor () {
