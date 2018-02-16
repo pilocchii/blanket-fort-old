@@ -78,7 +78,7 @@ define([
         gameEngine.addEntity(new Soldier_Shield(gameEngine, 200, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         gameEngine.addEntity(new Crow(gameEngine, 500, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         gameEngine.addEntity(new Dino(gameEngine, 700, 350, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        // gameEngine.addEntity(new Terrain(gameEngine, 300, 800, null, ctx));
+        //gameEngine.addEntity(new Terrain(gameEngine, 100, 600, 75, 75, [10,10], img=null, ctx=null, scale=null, tiles=null));
 
         gameEngine.init(ctx);
         gameEngine.start();

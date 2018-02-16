@@ -58,6 +58,3 @@ define([
 
     return Terrain;
 });
-
-
-

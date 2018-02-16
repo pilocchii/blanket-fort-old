@@ -175,10 +175,12 @@ define([
 
             for (let i = 0; i < this.entities.length; i++) {
                 let entity = this.entities[i];
-                for (let j = 1; j < this.entities.length; j++) {
+                for (let j = 0; j < this.entities.length; j++) {
                     let other = this.entities[j];
-                    if (entity != other && entity.isColliding(other)) {
-                        entity.collided(other)
+                    if (entity != other && entity.isColliding(other) != 'none') {
+                        let direction = entity.isColliding(other);
+                        entity.collided(other, direction);
+
                     }
                 }
                 

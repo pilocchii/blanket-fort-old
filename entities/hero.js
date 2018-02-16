@@ -38,7 +38,9 @@ define([
             this.boundWidth = 60;
             this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth/2);
-            this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight);
+            this.boundY = this.y + (this.spriteHeight*this.scale - this.boundHeight);
+            this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
+
 
             this.energy = 0;
 
@@ -129,10 +131,12 @@ define([
             }
 
             if (this.states.jumping) {
-                this.states.jumping = false; //TODO: Find a workaround to allow for easier "is jumping" checks
+                this.states.jumping = false;
+
                 if (this.jumpsLeft > 0 && this.jumpTimer == 0) {
                     this.jumpsLeft -= 1;
                     this.jumpTimer = this.jumpCooldown;
+                    this.yVelocity = 0;
                     this.yVelocity -= this.jumpStrength;
                 }
             }
@@ -182,7 +186,9 @@ define([
             // update velocities based on gravity and friction
             this.yVelocity += this.gravity * this.gravity;
             this.y += this.yVelocity;
+            this.lastBoundY = this.boundY;
             this.boundY += this.yVelocity;
+
         }
 
         draw(ctx) {
@@ -250,14 +256,41 @@ define([
 
         }
 
-        collided (other) {
+        collided (other, direction) {
             // collide with terrain
             if (other instanceof Terrain) {
-                this.y = other.boundY - this.spriteHeight*this.scale;
-                this.boundY = other.boundY - this.boundHeight;
-                this.yVelocity = 0;
-                this.jumpsLeft = this.maxJumps;
-                this.states.jumping = false;
+
+                // Hero above terrain
+                // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
+                if (direction === 'bottom') {
+                    this.boundY = other.boundY - this.boundHeight;
+                    this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
+                    this.yVelocity = 0;
+                    this.jumpsLeft = this.maxJumps;
+                    this.states.jumping = false;
+                }
+
+                // Hero jumps into terrain
+                else if (direction === 'top') {
+                    this.boundY = other.boundY + other.boundHeight;
+                    this.y = this.boundY - (this.spriteHeight*this.scale - this.boundHeight);
+                    this.lastBoundY = this.boundY;
+
+                }
+
+                // Hero collides with terrain to the left
+                else if (direction === 'left') {
+                    this.boundX = other.boundX + other.boundWidth;
+                    this.x = this.boundX - this.spriteWidth;
+                }
+
+                // Hero collides with terrain to the right
+                else if (direction === 'right') {
+                    this.boundX = other.boundX - this.boundWidth;
+                    this.x = this.boundX - this.spriteWidth;
+                }
+                //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
+                console.log(direction);
         }
 
         }
