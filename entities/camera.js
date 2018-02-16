@@ -48,8 +48,8 @@ define([
         update() {
             // Note: this logic feels HORRIBLY wrong, but it works for now, so yay?
             if (this.followed != null) {
-                this.xView = this.boundsCheck(-this.followed.x + this.canvasWidth/2, -this.worldWidth, this.worldWidth - this.canvasWidth);
-                this.yView = this.boundsCheck(-this.followed.y + this.canvasHeight/2, -this.worldHeight, this.worldHeight - this.canvasHeight);
+                this.xView = this.boundsCheck(-this.followed.x + this.canvasWidth, -this.worldWidth, this.worldWidth - this.canvasWidth);
+                this.yView = this.boundsCheck(-this.followed.y + this.canvasHeight, -this.worldHeight, this.worldHeight - this.canvasHeight);
             }
             
              console.log("xView: " + this.xView);
