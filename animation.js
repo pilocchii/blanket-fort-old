@@ -39,6 +39,8 @@ define([
                 this.scale = scale;
             }
 
+   
+
             drawFrame(tick, ctx, x, y, facingRight) {
                 if (this.pause) {//can be used to pause the animation a given frame (only useable in specific situations)
                     this.elapsedTime += 0;
@@ -57,6 +59,7 @@ define([
                 let drow = (this.row * this.frameHeight)
                 xindex = frame % this.sheetWidth;
                 yindex = Math.floor((frame) / this.sheetWidth);
+
 
                 // Draw facing left
                 if (!facingRight) {
@@ -94,6 +97,7 @@ define([
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
                 }
+                //ctx.translate(50, 50);
                 
             }
 

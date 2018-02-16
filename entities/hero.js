@@ -74,7 +74,48 @@ define([
 
         }
 
-        update() {
+
+        drawOutline (ctx) {
+            ctx.beginPath();
+            ctx.strokeStyle = "green";
+            ctx.rect(this.boundX, 
+                this.boundY, 
+                this.boundWidth, this.boundHeight);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+
+        drawImg (ctx) {
+            this.drawOutline(ctx);
+            if(this.yVelocity < 0) {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                
+            } else {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+
+
+            }
+        }
+
+
+        draw (ctx) {
+            if(this.yVelocity < 0) {
+                this.animation = this.animations.ascending;
+            }
+            else if (this.yVelocity > 0) {
+                this.animation = this.animations.descending;
+            }
+            else if (this.states.running && this.animation) {
+                this.animation = this.animations.run;
+            } else {
+                this.animation = this.animations.idle;
+            }
+            this.drawImg(ctx);
+            
+        }
+
+        update () {
             /////////// all button checks go here ///////////
             // check if button pressed
             // Moving left and right are mutually exclusive, thus else-if
@@ -293,7 +334,7 @@ define([
                     this.x = this.boundX - this.spriteWidth;
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
-                console.log(direction);
+                //console.log(direction);
         }
 
         }
