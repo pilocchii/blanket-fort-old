@@ -26,6 +26,7 @@ define([
             // used for simple rect hitbox
             this.boundX = null;
             this.boundY = null;
+            this.lastBoundY = null;
             this.boundWidth = null;
             this.boundHeight = null;
         }
@@ -71,6 +72,7 @@ define([
             let rect1 = {
                 "x" : this.boundX,
                 "y" : this.boundY,
+                "lastY" : this.lastBoundY,
                 "width" : this.boundWidth,
                 "height": this.boundHeight
             }
@@ -81,20 +83,39 @@ define([
                 "width" : other.boundWidth,
                 "height": other.boundHeight
             }
+            
+            // This is the same as Mariott's method, just formatted differently
+            let collision = 'none';
+            var dx = (rect1.x + rect1.width/2) - (rect2.x + rect2.width/2);
+            var dy = (rect1.y + rect1.height/2) - (rect2.y + rect2.height/2);
+            var lastdy = (rect1.lastY + rect1.height/2) - (rect2.y + rect2.height/2);
+            var width = (rect1.width + rect2.width) / 2;
+            var height = (rect1.height + rect2.height) / 2;
+            var crossWidth = width * dy;
+            var lastCrossWidth = width * lastdy;
+            var crossHeight = height * dx;
+            
+            // First check if rect1 and rect2 are close enough to even collide. Then check the intersection depths to determine which side was most involved in the collision.
+            if(Math.abs(dx) <= width && Math.abs(dy) <= height) {
 
-            if(rect1.x < rect2.x + rect2.width && 
-                rect1.x + rect1.width > rect2.x && 
-                rect1.y < rect2.y + rect2.height && 
-                rect1.height + rect1.y > rect2.y) {
-                // collision detected!
-                return true
+                //TODO store last bottom of rect1, compare to bound of rect2, determine if i should fall or not
+                if (crossWidth > crossHeight && lastCrossWidth > crossHeight) {
+                    (crossWidth < -(crossHeight)) && lastCrossWidth < -(crossHeight) ? collision = 'right' : collision = 'top';
+
+                } else {
+                    crossWidth > (-crossHeight) && lastCrossWidth > (-crossHeight) ? collision = 'left' : collision = 'bottom';
+                    // console.log("rect1 cur: " + rect1.y);
+                    // console.log("rect1 last: " + rect1.lastY);
+                    // console.log("rect2: " + rect2.y);
+
+                }
+
             }
-            return false
+        return collision;
 
         }
 
-        collided(other) {
-            //console.log(`${this.name} colliding with ${other.name}` )
+        collided(other, direction) {
         }
     } // end of Entity class
 
