@@ -58,7 +58,7 @@ define([
         console.log("canvas height: " + canvas.height);
 
         let gameEngine = new GameEngine();
-        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width/2,canvas.height/2, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary and camera
+        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width,canvas.height, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary and camera
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
         gameEngine.addEntity(camera);
 
