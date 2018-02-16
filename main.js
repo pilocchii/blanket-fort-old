@@ -15,6 +15,8 @@ require.config({
         "actor": "entities/actor",
         "animation": "animation",
         "game-board": "entities/game-board",
+        "hud": "hud",
+
         "entity": "entities/entity",
 
     	"terrain" : "entities/terrain",
