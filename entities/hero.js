@@ -42,7 +42,10 @@ define([
             this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
 
-            this.energy = 0;
+            this.maxHealth = 6;
+            this.maxEnergy = 6;
+            this.energy = this.maxEnergy;
+            this.health = this.maxHealth;
 
             this.states = {
                 "running": false,
