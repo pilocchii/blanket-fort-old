@@ -46,6 +46,7 @@ define([
 
 
         update() {
+            
             if (this.followed != null) {
 
                 if (-this.followed.x + this.canvasWidth/2 < 0) {
@@ -53,7 +54,7 @@ define([
                 }
 
                 else if (-this.followed.x + this.canvasWidth/2 > this.worldWidth - this.canvasWidth) {
-                    this.xView = this.worldWidth- this.canvasWidth;
+                    this.xView = this.worldWidth - this.canvasWidth;
                 }
                 else this.xView = -this.followed.x + this.canvasWidth/2;
 
@@ -67,6 +68,7 @@ define([
 
                 else this.yView = -this.followed.y + this.canvasHeight/2;
             
+                
             }
             
             // console.log("xView: " + this.xView);
