@@ -24,18 +24,22 @@ define([
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
 
-                this.centerX = x + ((spriteWidth * scale) / 2);
-                this.boundWidth = 90*this.scale;
-                this.boundHeight = 60*this.scale;
+                this.centerX = x + ((spriteWidth * scale) / 2) - spriteWidth;
+                this.boundWidth = 60*this.scale;
+                this.boundHeight = 50*this.scale;
                 this.boundX = this.centerX - (this.boundWidth / 2);
-                this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight);
+                this.boundY = this.y - this.boundHeight + (this.spriteHeight/2 - 10); //DS3DRAWCHANGE2
 
+                //Stats
+                this.yVelocity = 3;
                 this.health = 200;
+                this.damage = 100;
 
                 this.states = {
                     "idling": true,
                     "shooting": false,
                     "walking": false,
+                    "grounded": false,
                     "facingRight": true,
                 };
                 this.animations = {
@@ -85,6 +89,10 @@ define([
                         this.states.idling = true;
                     }
                 }
+                this.yVelocity += this.gravity * this.gravity;
+                this.y += this.yVelocity;
+                this.lastBoundY = this.boundY;
+                this.boundY += this.yVelocity;
             }
 
             draw(ctx) {
@@ -122,11 +130,47 @@ define([
                 this.drawImg(ctx);
             }
 
-            collided(other) {
-                // collide with terrain
-                if (other instanceof Projectile) {
-                    this.health -= 50;
+            collided(other, direction) {
+
+                if (other instanceof Terrain) {
+
+                    if (direction === 'bottom') {
+                        this.boundY = other.boundY - this.boundHeight;
+                        this.y = this.boundY + this.boundHeight - 20; //fix magic number (drawn slightly below hitbox without the 20 offset)
+                        this.yVelocity = 0;
+                        this.jumpsLeft = this.maxJumps;
+                        this.states.jumping = false;
+                    }
+
+                    else if (direction === 'top') {
+                        this.boundY = other.boundY + other.boundHeight;
+                        this.y = this.boundY + this.boundHeight;
+                        this.lastBoundY = this.boundY;
+
+                    }
+
+                    else if (direction === 'left') {
+                        this.boundX = other.boundX + other.boundWidth;
+                        this.x = this.boundX;
+                    }
+
+                    else if (direction === 'right') {
+                        this.boundX = other.boundX - this.boundWidth;
+                        this.x = this.boundX;
+                    }
                 }
+                else if (other instanceof Projectile) {
+                    this.health -= other.damage;
+                }
+            }
+
+
+            updateHitbox(fWidth, fHeight, bWidth, bHeight) {
+                this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth;
+                this.boundWidth = this.scale * bWidth;
+                this.boundHeight = this.scale * bHeight;
+                this.boundX = this.centerX - this.boundWidth / 2;
+                this.boundY = this.y - this.boundHeight;
             }
 
             drawOutline(ctx) {

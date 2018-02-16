@@ -1,13 +1,9 @@
 define([
     "actor",
     "animation",
-    "terrain",
-    "projectile",
 ], function (
     Actor,
     Animation,
-    Terrain,
-    Projectile,
     ) {
 
 
@@ -23,6 +19,5 @@ define([
                 super.update();
             }
         }
-
         return Enemy;
     });

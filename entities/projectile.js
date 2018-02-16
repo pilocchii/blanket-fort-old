@@ -22,17 +22,23 @@ define([
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
 
-                this.centerX = x + ((spriteWidth * scale) / 2);
+                this.centerX = x + ((spriteWidth * scale) / 2) - spriteWidth;
                 this.boundWidth = 50;
                 this.boundHeight = 50;
                 if (facingRight) {
-                    this.boundX = this.centerX - (this.boundWidth / 2) + 100;
-                    this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight) - 80;
+                    this.boundX = this.centerX - (this.boundWidth / 2) + 100; //+100 aligns with the gun
+                    this.boundY = this.y - this.boundHeight - (this.spriteHeight - 10); // the -10 offset accounts for the "padding" I added to each frame in the sprite sheet
                 }
                 else {
                     this.boundX = this.centerX - (this.boundWidth / 2) - 100;
-                    this.boundY = this.y + (this.spriteHeight * this.scale - this.boundHeight) - 80;
+                    this.boundY = this.y - this.boundHeight - (this.spriteHeight - 10);
                 }
+
+                //Stats
+                if (energized)
+                    this.damage = 200;
+                else
+                    this.damage = 50;
 
                 this.states = {
                     "green": !energized,
@@ -102,7 +108,7 @@ define([
                 if (other instanceof Terrain) {
                     this.removeFromWorld = true;
                 }
-                if (other instanceof Enemy) {
+                else if (other instanceof Enemy) {
                     this.removeFromWorld = true;
                 }
             }
@@ -120,11 +126,7 @@ define([
 
             drawImg(ctx) {
                 this.drawOutline(ctx);
-                if (this.yVelocity < 0) {
-                    this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-
-                } else this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
     }
 
