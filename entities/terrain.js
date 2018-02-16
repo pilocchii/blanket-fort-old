@@ -13,13 +13,12 @@ define([
             this.animation = null;
             this.tiles = tiles;
             this.scale = scale;
-            this.width = dimensions[0];
-            this.height = dimensions[1];
-
+            this.src_width = dimensions[0];
+            this.src_height = dimensions[1];
             this.boundX = this.x;
             this.boundY = this.y+6;
-            this.boundWidth = 75;
-            this.boundHeight = 75;
+            this.boundWidth = 96;
+            this.boundHeight = 96;
         }
 
         drawOutline (ctx) {
@@ -36,14 +35,15 @@ define([
             for (var i = 0; i < 1; i++) {
                 let col = this.tiles[0]
                 let row = this.tiles[1]
+                this.drawOutline(ctx);
                 ctx.drawImage(this.img, 
-                    (col * this.width),
-                    (row * this.height),
-                    this.width,
-                    this.height, 
-                    this.x + (i * this.width), this.y,
-                    this.width*this.scale, 
-                    this.height*this.scale
+                    (col * this.src_width),
+                    (row * this.src_height),
+                    this.src_width,
+                    this.src_height, 
+                    this.x, this.y,
+                    this.src_width*3, 
+                    this.src_height*3
                 );
             }
             }

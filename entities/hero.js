@@ -44,9 +44,10 @@ define([
             this.boundY = this.y - this.boundHeight;
             this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
-
-            this.energy = 0;
-            this.health = 600;
+            this.maxHealth = 6;
+            this.maxEnergy = 6;
+            this.energy = this.maxEnergy;
+            this.health = this.maxHealth;
 
             this.states = {
                 "running": false,
@@ -75,7 +76,48 @@ define([
 
         }
 
-        update() {
+
+        drawOutline (ctx) {
+            ctx.beginPath();
+            ctx.strokeStyle = "green";
+            ctx.rect(this.boundX, 
+                this.boundY, 
+                this.boundWidth, this.boundHeight);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+
+        drawImg (ctx) {
+            this.drawOutline(ctx);
+            if(this.yVelocity < 0) {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                
+            } else {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+
+
+            }
+        }
+
+
+        draw (ctx) {
+            if(this.yVelocity < 0) {
+                this.animation = this.animations.ascending;
+            }
+            else if (this.yVelocity > 0) {
+                this.animation = this.animations.descending;
+            }
+            else if (this.states.running && this.animation) {
+                this.animation = this.animations.run;
+            } else {
+                this.animation = this.animations.idle;
+            }
+            this.drawImg(ctx);
+            
+        }
+
+        update () {
             /////////// all button checks go here ///////////
             // check if button pressed
             // Moving left and right are mutually exclusive, thus else-if
@@ -209,6 +251,7 @@ define([
                 this.animation = this.animations.gunrun;
             }
             else if (this.states.shooting && this.yVelocity == 0 && this.animation) {//shooting
+
                 this.updateHitbox(70, 50, 20, 35);
                 this.animation = this.animations.shoot;
             }
@@ -230,6 +273,7 @@ define([
             }
             this.drawImg(ctx);
         }
+
 
         collided(other, direction) {
             // collide with terrain

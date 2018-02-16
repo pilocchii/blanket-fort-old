@@ -141,6 +141,7 @@ define([
                         this.states.turning = false;
                         this.states.facingRight = !this.states.facingRight;
                         //for demo
+                        console.log(this.states.facingRight);
                         this.states.idling = true;
                         //this.updateHitbox(50, 50, 45, 45);
                     }

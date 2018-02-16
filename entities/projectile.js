@@ -40,6 +40,7 @@ define([
                 else
                     this.damage = 50;
 
+
                 this.states = {
                     "green": !energized,
                     "blue": energized,

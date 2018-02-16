@@ -21,6 +21,7 @@ define([
                 this.boundWidth = 0;
                 this.boundHeight = 0;
                 this.boundX = this.centerX - (this.boundWidth / 2);
+
                 this.boundY = this.y - this.boundHeight - 500;
 
                 //Stats
@@ -40,6 +41,7 @@ define([
                 
                 if (this.states.active) {
                     if (this.animation.isDone()) {
+
                         this.animation.elapsedTime = 0;
                         this.states.active = false;
                         this.removeFromWorld = true;

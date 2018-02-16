@@ -39,6 +39,8 @@ define([
                 this.scale = scale;
             }
 
+   
+
             drawFrame(tick, ctx, x, y, facingRight) {
                 this.elapsedTime += tick;
                 if (this.isDone()) {
@@ -53,6 +55,7 @@ define([
                 let drow = (this.row * this.frameHeight)
                 xindex = frame % this.sheetWidth;
                 yindex = Math.floor((frame) / this.sheetWidth);
+
 
                 // Draw facing left
                 if (!facingRight) {
@@ -75,6 +78,7 @@ define([
                              -(this.frameWidth * 2) + (this.frameWidth / 2)
                                 + this.frameWidth, // Offset dx
                              y - this.scale*this.frameHeight + this.scale*10, //DS3DRAWCHANGES3
+
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
 
@@ -91,6 +95,7 @@ define([
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
                 }
+                //ctx.translate(50, 50);
                 
             }
 

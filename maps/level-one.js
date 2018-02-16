@@ -17,7 +17,7 @@ define([
 			this.ctx = ctx;
 			this.tilesheet = assetManager.getAsset("img/pipes.png");
 
-			this.tileSize = 75;
+			this.tileSize = 96;
 
 			this.tileMap = {
 				' ': null,
@@ -37,19 +37,17 @@ define([
 			}
 
 this.map = 
-`      [#]                 
-      [#]
-      [#]
-      [#]
-      [#] 
-      [#]
-      l-j       {____}
-                l----j
+`          []                                      
+          []
+          []
+          [] 
+          []        {____}
+          lj        l----j
+                    
                
-        
-  {_______}    {______}
-  [#######]    l------j
-_}[#######]`.split('\n');
+  {______}{}{___}{}    
+ {[######]lj[###]lj     
+{[[######]{}[###]                   `.split('\n');
 
 
 			this.constructTerrain();
