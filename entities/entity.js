@@ -94,7 +94,8 @@ define([
         }
 
         collided(other) {
-            console.log(`${this.name} colliding with ${other.name}` )
+            //Commented while hitboxes on projectiles do not exist (was cluttering console)
+            //console.log(`${this.name} colliding with ${other.name}` )
         }
     } // end of Entity class
 

@@ -1,11 +1,9 @@
 define([
     "terrain",
     "game-engine",
-    // "text!testmap"
 ],function(
     Terrain,
     GameEngine,
-    // testmap
 ){
 
 	class LevelOne {

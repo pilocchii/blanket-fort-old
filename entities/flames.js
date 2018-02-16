@@ -32,9 +32,7 @@ define([
     }
 
 
-    return {
-        "Flames": Flames,
-    };
+    return Flames;
 });
 
 
