@@ -43,6 +43,7 @@ define([
                 "spawnSS": "Numpad1",
             }
             this.spawnedSS = false;
+            this.score = 0;
         }
 
         /*
@@ -170,6 +171,10 @@ define([
 
             for (let i = this.entities.length - 1; i >= 0; --i) {
                 if (this.entities[i].removeFromWorld) {
+                    if (this.entities[i].hasOwnProperty("pointValue")) {
+                        this.score += this.entities[i].pointValue;
+                        console.log("score is now " + this.score);
+                    }
                     this.entities.splice(i, 1);
                 }
             }

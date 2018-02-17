@@ -13,7 +13,8 @@ define([
             this.hero = hero;
             this.healthbar = new HealthBar(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3, camera);
             this.energybar = new EnergyBar(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3, camera);
-            this.components = [this.healthbar, this.energybar]
+            this.scoreboard = new ScoreBoard(game_engine, dest_coordinates, scale, camera);
+            this.components = [this.healthbar, this.energybar, this.scoreboard];
         }
 
         update() {
@@ -33,6 +34,43 @@ define([
 
     }
 
+
+    class ScoreBoard {
+
+        constructor(game_engine, dest_coordinates, scale=3, camera) {
+            this.score = game_engine.score;
+            this.game_engine = game_engine;
+            this.camera = camera;
+            this.scale = scale;
+        }
+
+        update() {
+            this.score = this.game_engine.score;
+            this.dest_coords = [Math.abs(this.camera.xView) + 200, Math.abs(this.camera.yView) + 100]
+        }
+
+
+
+
+        draw(ctx) {
+            ctx.font = "italic bold 20px Verdana";
+            var gradient = ctx.createLinearGradient(0, 0, this.camera.canvasWidth, 0);
+            gradient.addColorStop("0","magenta");
+            gradient.addColorStop("0.5","blue");
+            gradient.addColorStop("1.0","green");
+            // Fill with gradient
+            ctx.fillStyle=gradient;
+            ctx.fillText("Score: " + this.score,
+                this.dest_coords[0] - 100, 
+                this.dest_coords[1] - 10
+            );
+        }
+    }
+
+
+    /*
+        ResourceBar superclass
+    */
     class ResourceBar {
 
         constructor(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3) {
