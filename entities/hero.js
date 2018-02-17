@@ -46,8 +46,12 @@ define([
 
             this.maxHealth = 6;
             this.maxEnergy = 6;
-            this.energy = this.maxEnergy;
+            this.energy = 4;
             this.health = 4;
+            this.energyCooldownTimer = 0;
+            this.energyCooldown = 60; 
+            this.slashEnergyCost = 2;
+            this.shootEnergyCost = 1;
 
             this.states = {
                 "running": false,
@@ -193,9 +197,10 @@ define([
 
             if (this.states.shooting) {
                 if (!this.states.shotlocked) {
-                    if (this.energy >= 75 && this.states.energized) {
+                    if (this.energy >= this.shootEnergyCost && this.states.energized) {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
-                        this.energy -= 75;
+                        this.energy -= this.shootEnergyCost;
+                        this.energyCooldownTimer = this.energyCooldown;
                     }
                     else {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false))
@@ -210,10 +215,12 @@ define([
             }
 
             if (this.states.slashing) {
-                if (this.animation.currentFrame() === 2 && this.states.energized && !this.states.shotlocked && this.energy >= 100) {
+                if (this.animation.currentFrame() === 2 && this.states.energized 
+                    && !this.states.shotlocked && this.energy >= this.maxEnergy/2) {
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                     this.states.shotlocked = true;
-                    this.energy -= 100;
+                    this.energy -= this.slashEnergyCost;
+                    this.energyCooldownTimer = this.energyCooldown;
                 }
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
@@ -222,7 +229,10 @@ define([
                 }
             }
 
-            if (this.energy < 200) {
+            if (this.energyCooldownTimer > 0) {
+                this.energyCooldownTimer--;
+            }
+            else if (this.energy < this.maxEnergy) {
                 this.energy++;
             }
 
