@@ -54,7 +54,8 @@ define([
         "img/pipes.png",
         "img/Enemies.png",
         "img/hud.png",
-        "img/healthpack.png"
+        "img/healthpack.png",
+        "img/energypack.png"
     ];
 
     let ASSET_MANAGER = new AssetManager(toload);
@@ -91,6 +92,8 @@ define([
         camera.follow(hero);
         gameEngine.addEntity(hero);  
         gameEngine.addEntity(new Item.HealthPack(gameEngine, 250, 1400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 350, 1400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
+
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
