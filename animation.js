@@ -39,7 +39,6 @@ define([
                 this.scale = scale;
             }
 
-   
 
             drawFrame(tick, ctx, x, y, facingRight) {
                 this.elapsedTime += tick;

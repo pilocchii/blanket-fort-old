@@ -32,6 +32,7 @@ require.config({
         "bullet": "entities/bullet",
         "shotblast": "entities/shotblast",
         "enemy": "entities/enemy",
+        "item": "entities/items/item"
     },
 
 

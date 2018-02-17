@@ -47,7 +47,7 @@ define([
             this.maxHealth = 6;
             this.maxEnergy = 6;
             this.energy = this.maxEnergy;
-            this.health = this.maxHealth;
+            this.health = 4;
 
             this.states = {
                 "running": false,
