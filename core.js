@@ -84,7 +84,7 @@ define([
 
         // gameEngine.addEntity(gameboard);
 
-        let hero = new Hero(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let hero = new Hero(gameEngine, 100, 1500, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         camera.follow(hero);
         gameEngine.addEntity(hero);  
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
