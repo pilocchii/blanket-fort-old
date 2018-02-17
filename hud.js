@@ -75,11 +75,12 @@ define([
     */
     class HealthBar extends ResourceBar {
 
-        constructor(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3) {
+        constructor(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3, camera) {
             super(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3);
             this.health = hero.health; // has room for 6 ticks
             this.width = 14; // the pixel art width
             this.hero = hero;
+            this.camera = camera;
 
             // bar segments
             this.top = this.resourceBarSegment(img, 
@@ -125,6 +126,8 @@ define([
 
         update() {
             this.health = this.hero.health;
+            this.dest_coords = [Math.abs(this.camera.xView) + 100, Math.abs(this.camera.yView) + 100]
+            console.log(this.dest_coords)
         }
         isColliding() {}
         collided() {}
