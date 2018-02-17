@@ -15,7 +15,6 @@ define([
             this.scale = scale;
             this.src_width = dimensions[0];
             this.src_height = dimensions[1];
-
             this.boundX = this.x;
             this.boundY = this.y+6;
             this.boundWidth = 96;
@@ -36,6 +35,7 @@ define([
             for (var i = 0; i < 1; i++) {
                 let col = this.tiles[0]
                 let row = this.tiles[1]
+                this.drawOutline(ctx);
                 ctx.drawImage(this.img, 
                     (col * this.src_width),
                     (row * this.src_height),

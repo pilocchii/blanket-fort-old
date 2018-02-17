@@ -2,8 +2,8 @@ define([
     'asset-manager',
     'game-engine',
     "game-board",
+    "camera",
     "hud",
-
     "entity",
     "terrain",
     "hero",
@@ -16,12 +16,14 @@ define([
     "crow",  
     "bullet",
     "shotblast",
+    "enemy",
+
 ], function(
     AssetManager,
     GameEngine,
     GameBoard,
+    Camera,
     Hud,
-
     Entity,
     Terrain,
     Hero,
@@ -34,6 +36,7 @@ define([
     Crow,  
     Bullet,
     Shotblast,
+    Enemy,
 ) {
 
     let init = function() {
@@ -57,8 +60,15 @@ define([
         console.log("starting up da sheild");
         let canvas = document.getElementById('gameWorld');
         let ctx = canvas.getContext('2d');
+        console.log("canvas width: " + canvas.width);
+        console.log("canvas height: " + canvas.height);
+        let vPortWidth = 300; // Distance from left side of screen
+        let vPortHeight = 500; // Distance from top of screen
 
         let gameEngine = new GameEngine();
+        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, vPortWidth, vPortHeight, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary and camera
+        /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
+        gameEngine.addEntity(camera);
 
         let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
 
@@ -73,18 +83,17 @@ define([
         // let gameboard = new GameBoard();
 
         // gameEngine.addEntity(gameboard);
-        //(game, x, y, img=null, ctx=null, scale=3, spriteWidth=50, spriteHeight=50)
-        // gameEngine.addEntity(new Terrain(gameEngine, 100, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
 
-        let hero = new Hero(gameEngine, 200, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
-        gameEngine.addEntity(hero);
+        let hero = new Hero(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        camera.follow(hero);
+        gameEngine.addEntity(hero);  
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
-        gameEngine.addEntity(new Soldier_Shield(gameEngine, 200, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Crow(gameEngine, 500, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Dino(gameEngine, 700, 350, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Terrain(gameEngine, 100, 600, 75, 75, [10,10], img=null, ctx=null, scale=null, tiles=null));
+        gameEngine.addEntity(new Soldier_Shield(gameEngine, 600, 700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 60, 550, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 1250, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+//        gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
 
         let hud = new Hud.HealthBar(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0,0], [100, 100], 3);
         gameEngine.addEntity(hud);
