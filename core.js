@@ -103,9 +103,9 @@ define([
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
-        gameEngine.addEntity(new Soldier_Shield(gameEngine, 600, 700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Soldier_Shield(gameEngine, 600, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         gameEngine.addEntity(new Crow(gameEngine, 60, 550, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Dino(gameEngine, 1250, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 1250, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 //        gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
 
         
