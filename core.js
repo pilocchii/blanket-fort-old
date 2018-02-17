@@ -66,15 +66,22 @@ define([
         let ctx = canvas.getContext('2d');
         console.log("canvas width: " + canvas.width);
         console.log("canvas height: " + canvas.height);
-        let vPortWidth = 300; // Distance from left side of screen
+        let vPortWidth = 500; // Distance from left side of screen
         let vPortHeight = 500; // Distance from top of screen
 
         let gameEngine = new GameEngine();
         let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, vPortWidth, vPortHeight, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary and camera
-        /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
         gameEngine.addEntity(camera);
+        
+        /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
+
+
+        
 
         let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
+
+        let hero = new Hero(gameEngine, 100, 1400, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let hud = new Hud.HealthBar(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0,0], [100, 100], 3, camera);
 
         // let mapreader = new FileReader();
         // mapreader.onload = function(e) {
@@ -88,7 +95,6 @@ define([
 
         // gameEngine.addEntity(gameboard);
 
-        let hero = new Hero(gameEngine, 100, 1400, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         camera.follow(hero);
         gameEngine.addEntity(hero);  
         gameEngine.addEntity(new Item.HealthPack(gameEngine, 250, 1400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
@@ -102,9 +108,8 @@ define([
         gameEngine.addEntity(new Dino(gameEngine, 1250, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 //        gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
 
-        let hud = new Hud.HealthBar(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0,0], [100, 1300], 3);
+        
         gameEngine.addEntity(hud);
-
         gameEngine.init(ctx);
         gameEngine.start();
     });
