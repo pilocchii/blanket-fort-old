@@ -27,10 +27,11 @@ define([
                 this.spriteHeight = spriteHeight;
 
                 this.centerX = x + ((spriteWidth * scale) / 2) - spriteWidth;
-                this.boundWidth = this.scale*45;
+                this.boundWidth = this.scale * 45;
                 this.boundHeight = this.scale * 45;
                 this.boundX = this.centerX - (this.boundWidth / 2);
                 this.boundY = this.y - this.boundHeight + (this.spriteHeight / 2 - 10);
+                this.updateHitbox(50, 50, 38, 40);
 
                 //Stats
                 this.health = 400;
@@ -49,14 +50,14 @@ define([
                     "facingRight": false,
                 };
                 this.animations = {
-                    "idle":                 new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 3, 6, true, this.scale),
-                    "turn":                 new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 3, 5, false, this.scale, 6),
-                    "block":                new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 3, 4, true, this.scale, 11),
-                    "run":                  new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 3, 12, true, this.scale), 
-                    "shoot_startup":        new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale),
-                    "shoot_active":         new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale, 5),
-                    "slash_start":          new Animation(this.img, [80, 60], 3, 9, 7, 9, false, this.scale),
-                    "slash_end":            new Animation(this.img, [100, 60], 4, 11, 7, 7, false, this.scale),
+                    "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 4, 6, true, this.scale),
+                    "turn": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 5, false, this.scale, 6),
+                    "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 4, true, this.scale, 11),
+                    "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 3, 12, true, this.scale),
+                    "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 5, 5, false, this.scale),
+                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 5, 5, false, this.scale, 5),
+                    "slash_start": new Animation(this.img, [80, 60], 3, 9, 4, 9, false, this.scale),
+                    "slash_end": new Animation(this.img, [100, 60], 4, 11, 4, 7, false, this.scale),
                 };
                 this.animation = this.animations.idle;
             }
@@ -69,7 +70,7 @@ define([
                         this.states.idling = false;
                         //for demo
                         this.states.running = true;
-                        //this.updateHitbox(50, 50, 45, 45);
+                        this.updateHitbox(50, 50, 38, 43);
                     }
                 }
                 if (this.states.running) { //running
@@ -79,7 +80,7 @@ define([
                         this.states.running = false;
                         //for demo
                         this.states.shooting_startup = true;
-                        //this.updateHitbox(50, 50, 45, 45);
+                        this.updateHitbox(50, 50, 38, 40);
                     }
                 }
                 if (this.states.shooting_startup) { //shooting start
@@ -87,7 +88,7 @@ define([
                         this.animation.elapsedTime = 0;
                         this.states.shooting_startup = false;
                         this.states.shooting_active = true;
-                        //this.updateHitbox(50, 50, 45, 45);
+                        this.updateHitbox(50, 50, 38, 40);
                     }
                 }
                 if (this.states.shooting_active) { //shooting active
@@ -103,7 +104,7 @@ define([
                         this.states.hasShot = false;
                         //for demo
                         this.states.slashing_start = true;
-                        this.updateHitbox(80, 60, 80, 50);
+                        this.updateHitbox(80, 60, 50, 40);
                     }
                 }
                 if (this.states.slashing_start) { //slashing start
@@ -111,7 +112,8 @@ define([
                         this.animation.elapsedTime = 0;
                         this.states.slashing_start = false;
                         this.states.slashing_end = true;
-                        this.updateHitbox(100, 60, 80, 50);
+                        this.updateHitbox(100, 60, 50, 40);
+                        console.log("fjdskla;ldjf");
                     }
                 }
                 if (this.states.slashing_end) { //slashing end
@@ -120,7 +122,7 @@ define([
                         this.states.slashing_end = false;
                         //for demo
                         this.states.blocking = true;
-                        this.updateHitbox(50, 50, 45, 45);
+                        this.updateHitbox(50, 50, 38, 40);
                     }
                 }
                 if (this.states.blocking) { //blocking
@@ -130,12 +132,11 @@ define([
                         this.animation.loops = 0;
                         this.states.blocking = false;
                         //for demo                        
-                        this.states.turning = true;
-                        //this.updateHitbox(50, 50, 45, 45);
+                        this.states.idling = true;
+                        this.updateHitbox(50, 50, 38, 40);
                     }
                 }
                 if (this.states.turning) { //turning
-                    //this.UpdateHitbox(50, 50, 45, 45);
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.turning = false;
@@ -143,7 +144,7 @@ define([
                         //for demo
                         console.log(this.states.facingRight);
                         this.states.idling = true;
-                        //this.updateHitbox(50, 50, 45, 45);
+                        this.updateHitbox(50, 50, 38, 40);
                     }
                 }
                 this.yVelocity += this.gravity * this.gravity;
