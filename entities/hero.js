@@ -6,6 +6,7 @@ define([
     "projectile-sword",
     "soldier-shield",
     "enemy",
+    "hurtbox",
 ], function (
     Actor,
     Animation,
@@ -14,6 +15,7 @@ define([
     Projectile_Sword,
     Soldier_Shield,
     Enemy,
+    Hurtbox,
 ){
 
 
@@ -40,7 +42,6 @@ define([
             this.boundWidth = 60;
             this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth / 2);
-            //DS3 2/16: Frame height is no longer subtracted in order to align hitbox with animation (see animation class draw image func)
             this.boundY = this.y - this.boundHeight;
             this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
@@ -73,48 +74,6 @@ define([
                 "slash": new Animation(this.img, [90, 60], 4, 11, 3, 11, false, this.scale), //80x50
                 "cleave": new Animation(this.img, [100, 70], 9, 13, 3, 13, false, this.scale), //80x60
             };
-
-        }
-
-
-        drawOutline (ctx) {
-            ctx.beginPath();
-            ctx.strokeStyle = "green";
-            ctx.rect(this.boundX, 
-                this.boundY, 
-                this.boundWidth, this.boundHeight);
-            ctx.stroke();
-            ctx.closePath();
-        }
-
-
-        drawImg (ctx) {
-            this.drawOutline(ctx);
-            if(this.yVelocity < 0) {
-                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                
-            } else {
-                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-
-
-            }
-        }
-
-
-        draw (ctx) {
-            if(this.yVelocity < 0) {
-                this.animation = this.animations.ascending;
-            }
-            else if (this.yVelocity > 0) {
-                this.animation = this.animations.descending;
-            }
-            else if (this.states.running && this.animation) {
-                this.animation = this.animations.run;
-            } else {
-                this.animation = this.animations.idle;
-            }
-            this.drawImg(ctx);
-            
         }
 
         update () {
@@ -212,12 +171,18 @@ define([
             if (this.states.slashing) {
                 if (this.animation.currentFrame() === 2 && this.states.energized && !this.states.shotlocked && this.energy >= 100) {
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
+                    console.log(this.boundX - this.x);
                     this.states.shotlocked = true;
                     this.energy -= 100;
+                }
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
+                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, 60, 45,
+                        90, 60, this.boundWidth, this.boundHeight, this.scale, 50, this.states.facingRight));
                 }
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.states.slashing = false;
+                    this.states.hasSlashed = false;
                     this.states.shotlocked = false;
                 }
             }
@@ -234,6 +199,8 @@ define([
 
             if (this.health <= 0) {
                 //this.removeFromWorld = true;
+                console.log("POW! Right in the kisser!");
+                this.health = 200;
             }
         }
 
@@ -317,7 +284,7 @@ define([
         }
 
         updateHitbox(fWidth, fHeight, bWidth, bHeight) {
-            this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth;
+            this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth + 5;
             this.boundWidth = this.scale * bWidth;
             this.boundHeight = this.scale * bHeight;
             this.boundX = this.centerX - this.boundWidth / 2;

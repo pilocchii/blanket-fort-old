@@ -17,6 +17,7 @@ define([
     "bullet",
     "shotblast",
     "enemy",
+    "hurtbox",
 
 ], function(
     AssetManager,
@@ -37,6 +38,7 @@ define([
     Bullet,
     Shotblast,
     Enemy,
+    Hurtbox,
 ) {
 
     let init = function() {

@@ -51,9 +51,7 @@ define([
                 this.xView = this.boundsCheck(-this.followed.x + this.canvasWidth, -this.worldWidth, this.worldWidth - this.canvasWidth);
                 this.yView = this.boundsCheck(-this.followed.y + this.canvasHeight, -this.worldHeight, this.worldHeight - this.canvasHeight);
             }
-            
-             console.log("xView: " + this.xView);
-             //console.log("yView: " + this.yView);
+           
 
         }
 
@@ -63,5 +61,4 @@ define([
 
     }
     return Camera;
-
 });
