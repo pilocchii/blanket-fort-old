@@ -17,6 +17,7 @@ define([
     "bullet",
     "shotblast",
     "enemy",
+    "item"
 
 ], function(
     AssetManager,
@@ -37,6 +38,7 @@ define([
     Bullet,
     Shotblast,
     Enemy,
+    Item
 ) {
 
     let init = function() {
@@ -51,7 +53,8 @@ define([
         "img/EnemySheet1.png",
         "img/pipes.png",
         "img/Enemies.png",
-        "img/hud.png"
+        "img/hud.png",
+        "img/healthpack.png"
     ];
 
     let ASSET_MANAGER = new AssetManager(toload);
@@ -84,9 +87,10 @@ define([
 
         // gameEngine.addEntity(gameboard);
 
-        let hero = new Hero(gameEngine, 100, 1500, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let hero = new Hero(gameEngine, 100, 1400, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         camera.follow(hero);
         gameEngine.addEntity(hero);  
+        gameEngine.addEntity(new Item.HealthPack(gameEngine, 250, 1400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
         // gameEngine.addEntity(new Leo(gameEngine, 200, 150, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Flames(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/Leo.png"), ctx));
         // gameEngine.addEntity(new Soldier(gameEngine, 100, 0, ASSET_MANAGER.getAsset("img/EnemySheet1.png"), ctx));
@@ -95,7 +99,7 @@ define([
         gameEngine.addEntity(new Dino(gameEngine, 1250, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 //        gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
 
-        let hud = new Hud.HealthBar(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0,0], [100, 100], 3);
+        let hud = new Hud.HealthBar(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0,0], [100, 1300], 3);
         gameEngine.addEntity(hud);
 
         gameEngine.init(ctx);

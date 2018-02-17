@@ -79,6 +79,7 @@ define([
             super(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3);
             this.health = hero.health; // has room for 6 ticks
             this.width = 14; // the pixel art width
+            this.hero = hero;
 
             // bar segments
             this.top = this.resourceBarSegment(img, 
@@ -122,7 +123,9 @@ define([
             ) 
         }
 
-        update() {}
+        update() {
+            this.health = this.hero.health;
+        }
         isColliding() {}
         collided() {}
 
