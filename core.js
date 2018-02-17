@@ -81,7 +81,7 @@ define([
         let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
 
         let hero = new Hero(gameEngine, 100, 1400, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
-        let hud = new Hud.HealthBar(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0,0], [100, 100], 3, camera);
+        let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0,0], [100, 100], 3, camera);
 
         // let mapreader = new FileReader();
         // mapreader.onload = function(e) {
