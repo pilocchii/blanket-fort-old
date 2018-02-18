@@ -50,7 +50,7 @@ define([
             this.energy = 4;
             this.health = 4;
             this.energyCooldownTimer = 0;
-            this.energyCooldown = 60; 
+            this.energyCooldown = 500; 
             this.slashEnergyCost = 3;
             this.shootEnergyCost = 2;
             this.dashEnergyCost = 1;
@@ -67,6 +67,7 @@ define([
                 "framelocked": false,
                 "energized": false,
                 "dashing": false,
+                "hasDashed": false,
             };
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale), //50x50
@@ -105,15 +106,22 @@ define([
                 this.states.shooting = true;
             }
             if (this.game.controlKeys[this.game.controls.cleave].active && !this.states.jumping && !this.states.framelocked) { //cleave
+                this.animation.elapsedTime = 0;
+                this.animation.loops = 0;
                 this.states.cleaving = true;
                 this.states.framelocked = true;
             }
             if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && !this.states.framelocked) { //slash
+                this.animation.elapsedTime = 0;
+                this.animation.loops = 0;
                 this.states.slashing = true;
                 this.states.framelocked = true;
             }
             if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0) {
                 this.states.dashing = true;
+                this.states.hasDashed = true;
+                this.states.running = false;
+                this.states.framelocked = true;
             }
 
             // check if button NOT pressed, if state is supposed to change...
@@ -130,7 +138,6 @@ define([
             if (this.jumpTimer > 0) {
                 this.jumpTimer -= 1;
             }
-
             // Running
             if (this.states.running) {
                 if (this.states.facingRight) {
@@ -141,10 +148,9 @@ define([
                     this.x -= this.movementSpeed;
                     this.centerX -= this.movementSpeed;
                     this.boundX -= this.movementSpeed;
-
                 }
             }
-
+            //Jumping
             if (this.states.jumping) {
                 this.states.jumping = false;
 
@@ -155,10 +161,9 @@ define([
                     this.yVelocity -= this.jumpStrength;
                 }
             }
-
+            //Cleaving
             if (this.states.cleaving) {
-                
-                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {//Upper hurtbbox
+                if (this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 6) {//Upper hurtbbox
                     if(this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -200, 0,
                             this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
@@ -166,7 +171,7 @@ define([
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - this.spriteWidth - 150, 0,
                             this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
                 }
-                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 11) {//Lower hurtbox
+                if (this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 11) {//Lower hurtbox
                     if (this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
                             this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
@@ -174,20 +179,19 @@ define([
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
                             this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
                 }
-
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.states.cleaving = false;
                     this.states.framelocked = false;
                 }
             }
-
-            if (this.states.shooting) { //Shooting
+            //Shooting
+            if (this.states.shooting) {
                 if (!this.states.shotlocked) {
                     if (this.energy >= this.shootEnergyCost && this.states.energized) {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
                         this.energy -= this.shootEnergyCost;
-                        this.energyCooldownTimer = this.energyCooldown;
+                        //this.energyCooldownTimer = this.energyCooldown;
                     }
                     else {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
@@ -201,14 +205,14 @@ define([
                     this.states.shotlocked = false;
                 }
             }
-
+            //Slashing
             if (this.states.slashing) {
                 if (this.animation.currentFrame() === 2 && this.states.energized 
                     && !this.states.shotlocked && this.energy >= this.maxEnergy/2) {
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                     this.states.shotlocked = true;
                     this.energy -= this.slashEnergyCost;
-                    this.energyCooldownTimer = this.energyCooldown;
+                    //this.energyCooldownTimer = this.energyCooldown;
                 }
                 if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {//Hurtbox
                     if (this.states.facingRight)//facing right
@@ -227,38 +231,33 @@ define([
                     this.states.framelocked = false;
                 }
             }
-
+            //Dashing
             if (this.states.dashing) {
                 this.yVelocity = 0;
-                this.gravity = 0;
-                if (!this.states.framelocked) {
+                if (this.states.hasDashed) {
+                    //this.energyCooldownTimer = this.energyCooldown;
+                    this.yVelocity = 0;
                     this.energy -= this.dashEnergyCost;
-                    this.states.framelocked = true;
+                    this.states.hasDashed = false;
                 }
-                this.yVelocity = 0;
-                if (this.states.facingRight) {
-                    this.x += 25;
-                    this.boundX += 25;
-                }
-                else {
-                    this.x -= 17
-                    this.boundX -= 17;
-                }
+
+                if (this.states.facingRight) {this.x += 17; this.boundX += 17;}
+                else { this.x -= 17; this.boundX -= 17; }
+
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.animation.loops = 0;
                     this.states.dashing = false;
                     this.states.framelocked = false;
-                    this.gravity = .9;
                 }
             }
-
+            //Energy Cooldown and Gain
             if (this.energyCooldownTimer > 0) {
                 this.energyCooldownTimer--;
             }
             else if (this.energy < this.maxEnergy) {
                 this.energy++;
-                this.energyCooldownTimer = 60;// Energy restores more slowly (one energy per cooldown)
+                this.energyCooldownTimer = this.energyCooldown;// Energy restores more slowly (one energy per cooldown)
             }
 
             // update velocities based on gravity and friction
@@ -267,10 +266,14 @@ define([
             this.lastBoundY = this.boundY;
             this.boundY += this.yVelocity;
 
+            //Health checks and position checks
             if (this.health <= 0) {
                 //this.removeFromWorld = true;
                 console.log("POW! Right in the kisser!");
                 this.health = 4;
+            }
+            if (this.y >= 5000) {
+                console.log("Falling into the abyss... You feel like a fool, don't you?");
             }
         }
 
@@ -304,7 +307,7 @@ define([
                 this.updateHitbox(80, 50, 20, 35);
                 this.animation = this.animations.slash;
             }
-            else if (this.states.dashing && this.animation) {
+            else if (this.states.dashing && this.animation) { //dashing
                 this.updateHitbox(40, 25, 10, 17);
                 this.animation = this.animations.dash;
             }

@@ -41,6 +41,7 @@ define([
                 this.facing = 1;
 
                 this.states = {
+                    "active": false, //currently unused
                     "idling": true,
                     "running": false,
                     "shooting_startup": false,
@@ -116,7 +117,6 @@ define([
                 }
                 if (this.states.shooting_active) { //shooting active
                     if (!this.states.hasShot) {
-                        console.log(this.game.hero.y + " " + this.game.hero.x);
                         this.game.addEntity(new Shotblast(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.game.addEntity(new Bullet(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.states.hasShot = true;
@@ -185,7 +185,6 @@ define([
                         this.states.facingRight = !this.states.facingRight;
                         this.facing *= -1; //see above statement
                         //for demo
-                        console.log(this.states.facingRight);
                         this.states.idling = true;
                         this.updateHitbox(50, 50, 38, 40);
                     }

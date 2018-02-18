@@ -55,7 +55,7 @@ define([
                     "fly":          new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 5, true, this.scale),
                     "attack":       new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 3, false, this.scale, 5),
                     "attack_final": new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 2, true, this.scale, 8),
-                    "hurt":         new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 1, 1, true, this.scale, 10),    
+                    "hurt":         new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 1, true, this.scale, 10),    
                     //TEMPORARY
                     //"hiding":       new Animation(this.img, [spriteWidth, spriteHeight], 8, 12, 1, 1, true, this.scale, 11),  
                 };
@@ -96,15 +96,14 @@ define([
                     if (Math.abs(this.y - this.game.hero.y) <= 200) { //stay away by 200
                         this.y -= 5;
                         this.boundY -= 5;
-                        this.animation.loops = 0;
                     }
                     else if (Math.abs(this.y - this.game.hero.y) >= 300) { //stay within 300
                         this.y += 5;
                         this.boundY += 5;
-                        this.animation.loops = 0;
                     }
                     //if (all of this stuff) ATTACK!!!
-                    if (Math.abs(this.x - this.game.hero.x) <= 700 && this.animation.loops > 1 && Math.random()*100 <= 10) { 
+                    if (Math.abs(this.x - this.game.hero.x) <= 700 && this.y - this.game.hero.y < 0
+                        && this.animation.loops > 2 && Math.random() * 100 <= 30) { 
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.attacking = true;

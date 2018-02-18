@@ -199,14 +199,6 @@ define([
                 }
                 
             }
-            ////ANIM TESTING
-            //if (this.controlKeys[this.controls.spawnSS].active && !this.spawnedSS) { //spawn soldier-shield
-            //    let img = new Image();
-            //    img.Source = "img/SoldierShield.png";
-            //    console.log("Check");
-            //    this.addEntity(new Soldier_Shield(this, 100, 100, img, this.ctx))
-            //    this.spawnedSS = true;
-            //}
         }
 
         /*

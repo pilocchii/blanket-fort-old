@@ -56,9 +56,6 @@ define([
                 if (other instanceof Terrain) {
                     console.log("clink");
                 }
-                else if (other instanceof Enemy) {
-                    this.ctx.strokeStyle = "blue";
-                }
             }
 
             drawOutline(ctx) {
