@@ -51,8 +51,9 @@ define([
             this.health = 4;
             this.energyCooldownTimer = 0;
             this.energyCooldown = 60; 
-            this.slashEnergyCost = 2;
-            this.shootEnergyCost = 1;
+            this.slashEnergyCost = 3;
+            this.shootEnergyCost = 2;
+            this.dashEnergyCost = 1;
 
             this.states = {
                 "running": false,
@@ -65,6 +66,7 @@ define([
                 "shotlocked": false,
                 "framelocked": false,
                 "energized": false,
+                "dashing": false,
             };
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale), //50x50
@@ -78,6 +80,7 @@ define([
                 "gunrun": new Animation(this.img, [60, 60], 1, 22, 3, 11, true, this.scale, 11), //50x50
                 "slash": new Animation(this.img, [90, 60], 4, 11, 3, 11, false, this.scale), //80x50
                 "cleave": new Animation(this.img, [100, 70], 9, 13, 3, 13, false, this.scale), //80x60
+                "dash": new Animation(this.img, [90, 60], 4, 11, 2, 11, false, 2),
             };
         }
 
@@ -92,7 +95,7 @@ define([
                 if (this.states.facingRight) { this.states.facingRight = false };
                 this.states.running = true;
             }
-            if (this.game.controlKeys[this.game.controls.energize].active) {
+            if (this.game.controlKeys[this.game.controls.energize].active) { //energize
                 this.states.energized = true;
             }
             if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping && !this.states.framelocked) { // jump
@@ -100,7 +103,6 @@ define([
             }
             if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked) { //shoot
                 this.states.shooting = true;
-                this.states.framelocked = true;
             }
             if (this.game.controlKeys[this.game.controls.cleave].active && !this.states.jumping && !this.states.framelocked) { //cleave
                 this.states.cleaving = true;
@@ -109,6 +111,9 @@ define([
             if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && !this.states.framelocked) { //slash
                 this.states.slashing = true;
                 this.states.framelocked = true;
+            }
+            if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0) {
+                this.states.dashing = true;
             }
 
             // check if button NOT pressed, if state is supposed to change...
@@ -153,7 +158,7 @@ define([
 
             if (this.states.cleaving) {
                 
-                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {//Upper hurtbbox
                     if(this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -200, 0,
                             this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
@@ -161,7 +166,7 @@ define([
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - this.spriteWidth - 150, 0,
                             this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
                 }
-                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 11) {
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 11) {//Lower hurtbox
                     if (this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
                             this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
@@ -177,7 +182,7 @@ define([
                 }
             }
 
-            if (this.states.shooting) {
+            if (this.states.shooting) { //Shooting
                 if (!this.states.shotlocked) {
                     if (this.energy >= this.shootEnergyCost && this.states.energized) {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
@@ -205,11 +210,11 @@ define([
                     this.energy -= this.slashEnergyCost;
                     this.energyCooldownTimer = this.energyCooldown;
                 }
-                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
-                    if (this.states.facingRight)
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {//Hurtbox
+                    if (this.states.facingRight)//facing right
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
                             this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
-                    else
+                    else //facing left
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 -this.spriteWidth -120, 100,
                             this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
 
@@ -223,11 +228,37 @@ define([
                 }
             }
 
+            if (this.states.dashing) {
+                this.yVelocity = 0;
+                this.gravity = 0;
+                if (!this.states.framelocked) {
+                    this.energy -= this.dashEnergyCost;
+                    this.states.framelocked = true;
+                }
+                this.yVelocity = 0;
+                if (this.states.facingRight) {
+                    this.x += 25;
+                    this.boundX += 25;
+                }
+                else {
+                    this.x -= 17
+                    this.boundX -= 17;
+                }
+                if (this.animation.isDone()) {
+                    this.animation.elapsedTime = 0;
+                    this.animation.loops = 0;
+                    this.states.dashing = false;
+                    this.states.framelocked = false;
+                    this.gravity = .9;
+                }
+            }
+
             if (this.energyCooldownTimer > 0) {
                 this.energyCooldownTimer--;
             }
             else if (this.energy < this.maxEnergy) {
                 this.energy++;
+                this.energyCooldownTimer = 60;// Energy restores more slowly (one energy per cooldown)
             }
 
             // update velocities based on gravity and friction
@@ -244,11 +275,11 @@ define([
         }
 
         draw(ctx) {
-            if (this.yVelocity < 0 && !this.states.shooting) {//ascending
+            if (this.yVelocity < 0 && !this.states.shooting && !this.states.dashing) {//ascending
                 this.updateHitbox(50, 50, 20, 35);
                 this.animation = this.animations.ascend;
             }
-            else if (this.yVelocity > 0 && !this.states.shooting) {//descending
+            else if (this.yVelocity > 0 && !this.states.shooting && !this.states.dashing) {//descending
                 this.updateHitbox(50, 50, 20, 35);
                 this.animation = this.animations.descend;
             }
@@ -273,6 +304,10 @@ define([
                 this.updateHitbox(80, 50, 20, 35);
                 this.animation = this.animations.slash;
             }
+            else if (this.states.dashing && this.animation) {
+                this.updateHitbox(40, 25, 10, 17);
+                this.animation = this.animations.dash;
+            }
             else {
                 this.updateHitbox(50, 50, 20, 35);
                 this.animation = this.animations.idle;
@@ -290,7 +325,8 @@ define([
                 if (direction === 'bottom') {
                     this.boundY = other.boundY - this.boundHeight;
                     this.y = this.boundY + this.boundHeight; //DS3DRAWCHANGE1:
-                    this.yVelocity = 0;
+                    if(this.yVelocity > 0) //DS3 2/18: stops Hero from becoming grounded when jumping onto a platform when he grazes the side
+                        this.yVelocity = 0;
                     this.jumpsLeft = this.maxJumps;
                     this.states.jumping = false;
                 }
@@ -300,7 +336,7 @@ define([
                     this.boundY = other.boundY + other.boundHeight;
                     this.y = this.boundY + this.boundHeight;
                     this.lastBoundY = this.boundY;
-
+                    this.yVelocity = 1; //DS3 2/18: Causes Hero to immediately descend when hitting a ceiling
                 }
 
                 // Hero collides with terrain to the left

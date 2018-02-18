@@ -3,11 +3,15 @@ define([
     "animation",
     "terrain",
     "hurtbox",
+    "projectile",
+
 ], function (
     Enemy,
     Animation,
     Terrain,
     Hurtbox,
+    Projectile,
+
     ) {
 
 
@@ -31,6 +35,7 @@ define([
                 this.boundY = this.y - this.boundHeight;
 
                 //Stats
+                this.health = 150;
                 this.damage = 1;
                 this.facing = 1;
 
@@ -62,6 +67,9 @@ define([
                     this.states.facingRight = false;
                     this.facing = -1;
                 }
+                if (this.states.hurt) {
+
+                }
                 if (this.states.hiding) {
                     if (Math.abs(this.x - this.game.hero.x) <= 500 && Math.abs(this.y - this.game.hero.y) <= 350) {
                         //disable states
@@ -73,22 +81,15 @@ define([
                     }
                 }
                 if (this.states.flying) { //this.updateHitbox(50, 40, 20, 15);
-                    if (Math.abs(this.x - this.game.hero.x) >= 300) {
+                    if (Math.abs(this.x - this.game.hero.x) >= 300) { //chase in x direction
                         this.x += this.facing * 2;
                         this.boundX += this.facing * 2;
                     }
-                    if (Math.abs(this.y - this.game.hero.y) >= 1) {
+                    if (Math.abs(this.y - this.game.hero.y) >= 50) { //chase in y direction
                         var ydir = Math.abs(this.y - this.game.hero.y) / (this.y - this.game.hero.y);
                         this.y -= ydir*3;
                         this.boundY -= ydir*3;
                     }
-                    //if (this.animation.loops > 3) {
-                    //    this.animation.elapsedTime = 0;
-                    //    this.animation.loops = 0;
-                    //    this.states.flying = false;
-                    //    //for demo
-                    //    this.states.attacking = true;
-                    //}
                 }
                 if (this.states.attacking) {
                     this.y -= 1;
@@ -137,15 +138,29 @@ define([
                     }
                 }
                 if (this.states.hurt) {
-                    if (this.animation.loops > 3) {
+                    if (this.health <= 0) {
+                        if (Math.random() < .5) {
+                            this.y += Math.random() * 5;
+                            this.x += Math.random() * 5
+                        } else {
+                            this.y -= Math.random() * 5;
+                            this.x -= Math.random() * 5;
+                        }
+                    }
+                    if (this.animation.loops > 2) {
+                        //reset animation
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
+                        //disable states
                         this.states.hurt = false;
+                        //enable states
                         this.states.flying = true;
-                        this.y = this.origy;
-                        this.x = this.origx;
-                        this.updateHitbox(50, 40, 20, 15);
                         this.states.facingRight = !this.states.facingRight;
+                        //update hitbox
+                        this.updateHitbox(50, 40, 20, 15);
+                        if (this.health <= 0) {
+                            this.removeFromWorld = true;
+                        }
                     }
                 }
             }
@@ -179,34 +194,32 @@ define([
                 if (other instanceof Terrain) {
                     if (direction === 'bottom') {
                         this.boundY = other.boundY - this.boundHeight;
-                        this.y = this.boundY + this.boundHeight; //DS3DRAWCHANGE1:
+                        this.y = this.boundY + this.boundHeight;
                         this.yVelocity = 0;
                         this.jumpsLeft = this.maxJumps;
                         this.states.jumping = false;
                     }
-
-                    // Hero jumps into terrain
                     else if (direction === 'top') {
                         this.boundY = other.boundY + other.boundHeight;
                         this.y = this.boundY + this.boundHeight;
                         this.lastBoundY = this.boundY;
-
                     }
-
-                    // Hero collides with terrain to the left
                     else if (direction === 'left') {
                         this.boundX = other.boundX + other.boundWidth;
                         this.x = this.boundX;
                     }
-
-                    // Hero collides with terrain to the right
                     else if (direction === 'right') {
                         this.boundX = other.boundX - this.boundWidth;
                         this.x = this.boundX;
                     }
-
                 }
-
+                if (other instanceof Projectile) {
+                    this.health -= other.damage;
+                    this.states.flying = false;
+                    this.states.attacking = false;
+                    this.states.hiding = false;
+                    this.states.hurt = true;
+                }
             }
 
             drawOutline(ctx) {
