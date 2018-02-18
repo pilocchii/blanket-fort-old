@@ -47,8 +47,12 @@ define([
 
             this.maxHealth = 6;
             this.maxEnergy = 6;
-            this.energy = this.maxEnergy;
-            this.health = this.maxHealth;
+            this.energy = 4;
+            this.health = 4;
+            this.energyCooldownTimer = 0;
+            this.energyCooldown = 60; 
+            this.slashEnergyCost = 2;
+            this.shootEnergyCost = 1;
 
             this.states = {
                 "running": false,
@@ -66,7 +70,7 @@ define([
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale), //50x50
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 22, 3, 11, true, this.scale), //50x50
                 //Takeoff?
-                "ascend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 8, 3, 5, true, this.scale, 2), //50x50
+                "ascend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 8, 3, 4, true, this.scale, 2), //50x50
                 "descend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 14, 3, 4, true, this.scale, 8), //50x50
                 //Land?
                 "airshoot": new Animation(this.img, [spriteWidth, spriteHeight], 2, 20, 3, 6, false, this.scale, 14), //50x50
@@ -175,9 +179,10 @@ define([
 
             if (this.states.shooting) {
                 if (!this.states.shotlocked) {
-                    if (this.energy >= 75 && this.states.energized) {
+                    if (this.energy >= this.shootEnergyCost && this.states.energized) {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
-                        this.energy -= 75;
+                        this.energy -= this.shootEnergyCost;
+                        this.energyCooldownTimer = this.energyCooldown;
                     }
                     else {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
@@ -193,10 +198,12 @@ define([
             }
 
             if (this.states.slashing) {
-                if (this.animation.currentFrame() === 2 && this.states.energized && !this.states.shotlocked && this.energy >= 100) {
+                if (this.animation.currentFrame() === 2 && this.states.energized 
+                    && !this.states.shotlocked && this.energy >= this.maxEnergy/2) {
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                     this.states.shotlocked = true;
-                    this.energy -= 100;
+                    this.energy -= this.slashEnergyCost;
+                    this.energyCooldownTimer = this.energyCooldown;
                 }
                 if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
                     if (this.states.facingRight)
@@ -216,7 +223,10 @@ define([
                 }
             }
 
-            if (this.energy < 200) {
+            if (this.energyCooldownTimer > 0) {
+                this.energyCooldownTimer--;
+            }
+            else if (this.energy < this.maxEnergy) {
                 this.energy++;
             }
 
