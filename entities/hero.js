@@ -59,6 +59,7 @@ define([
                 "grounded": false,
                 "slashing": false,
                 "shotlocked": false,
+                "framelocked": false,
                 "energized": false,
             };
             this.animations = {
@@ -72,7 +73,7 @@ define([
                 "shoot": new Animation(this.img, [80, 60], 3, 3, 6, 3, false, this.scale), //80x60
                 "gunrun": new Animation(this.img, [60, 60], 1, 22, 3, 11, true, this.scale, 11), //50x50
                 "slash": new Animation(this.img, [90, 60], 4, 11, 3, 11, false, this.scale), //80x50
-                "cleave": new Animation(this.img, [100, 70], 9, 13, 10, 13, false, this.scale), //80x60
+                "cleave": new Animation(this.img, [100, 70], 9, 13, 3, 13, false, this.scale), //80x60
             };
         }
 
@@ -80,27 +81,30 @@ define([
             /////////// all button checks go here ///////////
             // check if button pressed
             // Moving left and right are mutually exclusive, thus else-if
-            if (this.game.controlKeys[this.game.controls.right].active) { //run right
+            if (this.game.controlKeys[this.game.controls.right].active && !this.states.framelocked) { //run right
                 if (!this.states.facingRight) { this.states.facingRight = true };
                 this.states.running = true;
-            } else if (this.game.controlKeys[this.game.controls.left].active) { //run left
+            } else if (this.game.controlKeys[this.game.controls.left].active && !this.states.framelocked) { //run left
                 if (this.states.facingRight) { this.states.facingRight = false };
                 this.states.running = true;
             }
             if (this.game.controlKeys[this.game.controls.energize].active) {
                 this.states.energized = true;
             }
-            if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
+            if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping && !this.states.framelocked) { // jump
                 this.states.jumping = true;
             }
-            if (this.game.controlKeys[this.game.controls.shoot].active) { //shoot
+            if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked) { //shoot
                 this.states.shooting = true;
+                this.states.framelocked = true;
             }
-            if (this.game.controlKeys[this.game.controls.cleave].active && !this.states.jumping && !this.states.shooting) { //cleave
+            if (this.game.controlKeys[this.game.controls.cleave].active && !this.states.jumping && !this.states.framelocked) { //cleave
                 this.states.cleaving = true;
+                this.states.framelocked = true;
             }
-            if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && !this.states.shooting) { //slash
+            if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && !this.states.framelocked) { //slash
                 this.states.slashing = true;
+                this.states.framelocked = true;
             }
 
             // check if button NOT pressed, if state is supposed to change...
@@ -145,7 +149,7 @@ define([
 
             if (this.states.cleaving) {
                 
-                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 7) {
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
                     if(this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -200, 0,
                             this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
@@ -165,6 +169,7 @@ define([
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.states.cleaving = false;
+                    this.states.framelocked = false;
                 }
             }
 
@@ -182,6 +187,7 @@ define([
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.states.shooting = false;
+                    this.states.framelocked = false;
                     this.states.shotlocked = false;
                 }
             }
@@ -189,7 +195,6 @@ define([
             if (this.states.slashing) {
                 if (this.animation.currentFrame() === 2 && this.states.energized && !this.states.shotlocked && this.energy >= 100) {
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
-                    console.log(this.boundX - this.x);
                     this.states.shotlocked = true;
                     this.energy -= 100;
                 }
@@ -207,6 +212,7 @@ define([
                     this.states.slashing = false;
                     this.states.hasSlashed = false;
                     this.states.shotlocked = false;
+                    this.states.framelocked = false;
                 }
             }
 
