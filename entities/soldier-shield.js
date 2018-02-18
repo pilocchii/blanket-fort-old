@@ -37,7 +37,7 @@ define([
 
                 //Stats
                 this.health = 400;
-                this.damage = 3;
+                this.damage = 1;
                 this.facing = 1;
 
                 // Behavior parameters
@@ -102,7 +102,7 @@ define([
                         && this.animation.loops >= 2) { //shot cooldown based on idle time (measured by animation loops)
 
                         if (Math.abs(this.x - this.game.hero.x) <= 600
-                                && Math.random()*100 <= 50
+                                && Math.random()*100 <= 10
                                 && this.runAwayCooldownTimer == 0) {
                             console.log("running away")
                             this.runAwayTimer = this.runAwayTime;

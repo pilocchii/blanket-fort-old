@@ -136,10 +136,10 @@ define([
                     //Spawn Hurtbox
                     if(this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, -45, 10,
-                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, this.damage, this.states.facingRight));
+                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, this.damage, this.states.facingRight, true));
                     else
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, -45 - this.spriteWidth - 30, 10,
-                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, this.damage, this.states.facingRight));
+                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, this.damage, this.states.facingRight, true));
 
                     //state finished
                     if (this.animation.loops > 3) {
@@ -168,7 +168,7 @@ define([
                             this.x -= Math.random() * 5;
                         }
                     }
-                    if (this.animation.loops > 6) {
+                    if (this.animation.loops > 8) {
                         //reset animation
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
@@ -240,6 +240,7 @@ define([
                     this.health -= other.damage;
                     this.states.flying = false;
                     this.states.attacking = false;
+                    this.states.attacking_final = false;
                     this.states.hiding = false;
                     this.states.hurt = true;
                 }

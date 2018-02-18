@@ -361,15 +361,17 @@ define([
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
             }
 
-            if (this.damageCooldownTimer <= 0) {
-
+            if (this.damageCooldownTimer <= 0) { //If Hero can take damage, check if
                 if (other instanceof Enemy) {
                     this.health -= other.damage;
                     this.damageCooldownTimer = this.damageCooldown;
-                }
-                if (other instanceof Hurtbox && other.isEnemy) {
-                    this.health -= other.damage;
-                    this.damageCooldownTimer = this.damageCooldown;
+                } 
+                if (other instanceof Hurtbox) {
+                    other.hasOwnProperty("isEnemy");
+                    if (other.isEnemy) {
+                        this.health -= other.damage;
+                        this.damageCooldownTimer = this.damageCooldown;
+                    }
                 }
             }
         }
