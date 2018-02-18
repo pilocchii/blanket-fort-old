@@ -10,41 +10,39 @@ define([
     Enemy,
     ) {
 
+    /* For copy paste jobs:
+        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, offX, offY,
+            this.spriteWidth/2, this.spriteHeight/2, hurtWidth, hurtHeight, this.scale, this.damage, this.states.facingRight));   
+     */
 
         class Hurtbox extends Actor {
 
             //Note that img is required for super(), even though Hurtbox is never animated.
-            constructor(game, ctx = null, x, y, offX, offY, boxWidth, boxHeight, boundWidth, boundHeight, scale = 3, damage, facingRight = true, img = null) {
+            constructor(game, ctx = null, x, y, offX, offY, parentWidth, parentHeight, hurtWidth, hurtHeight, scale = 3, damage, facingRight = true, isEnemy = false, img = null) {
                 super(game, x, y, img, ctx);
-                if (facingRight) { this.x += offX } else { this.x -= (2*boundWidth + offX); }
-                this.y += offY;
                 this.movementSpeed = 0;
                 this.scale = scale;
+                this.isEnemy = isEnemy;
 
-                this.centerX = this.x + ((boxWidth * scale) / 2) - boxWidth;
-                this.boundWidth = boundWidth;
-                this.boundHeight = boundHeight;
-                this.boundX = this.centerX + (this.boundWidth / 2);
-                this.boundY = this.y - this.boundHeight - (boxHeight - 10);
+                this.hurtWidth = hurtWidth;
+                this.hurtHeight = hurtHeight;
 
+                this.y = y - this.hurtHeight;
+                this.boundY = y - this.hurtHeight + offY;
+                this.boundX = x + parentWidth + this.hurtWidth + offX;
                 //Stats
                 this.damage = damage;
                 this.frames = 1;
 
 
                 this.states = {
-                    "active": true,
                     "facingRight": facingRight,
-                };
-                this.animations = {
-
                 };
             }
 
             update() {
-                //hitbox persists for a single frame.
-                //Keeping this as an if in case we want semi-persistent hurtboxes
-                if (this.frames === 1) {
+                //hitbox persists for two ticks. (two prevents random hitbox "gaps")
+                if (this.frames === 0) {
                     this.removeFromWorld = true;
                 }
                 this.frames--;
@@ -69,7 +67,7 @@ define([
                 ctx.strokeStyle = "red";
                 ctx.rect(this.boundX,
                     this.boundY,
-                    this.boundWidth, this.boundHeight);
+                    this.hurtWidth, this.hurtHeight);
                 ctx.stroke();
                 ctx.closePath();
             }

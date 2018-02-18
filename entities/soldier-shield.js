@@ -5,6 +5,7 @@ define([
     "bullet",
     "terrain",
     "projectile",
+    "hurtbox",
 ], function (
     Enemy,
     Animation,
@@ -12,6 +13,7 @@ define([
     Bullet,
     Terrain,
     Projectile,
+    Hurtbox,
     ) {
 
 
@@ -50,14 +52,14 @@ define([
                     "facingRight": false,
                 };
                 this.animations = {
-                    "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 4, 6, true, this.scale),
-                    "turn": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 5, false, this.scale, 6),
-                    "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 4, true, this.scale, 11),
-                    "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 3, 12, true, this.scale),
-                    "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 5, 5, false, this.scale),
-                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 5, 5, false, this.scale, 5),
-                    "slash_start": new Animation(this.img, [80, 60], 3, 9, 4, 9, false, this.scale),
-                    "slash_end": new Animation(this.img, [100, 60], 4, 11, 4, 7, false, this.scale),
+                    "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 1, 6, true, this.scale),
+                    "turn": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 1, 5, false, this.scale, 6),
+                    "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 1, 4, true, this.scale, 11),
+                    "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 1, 12, true, this.scale),
+                    "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 1, 5, false, this.scale),
+                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 1, 5, false, this.scale, 5),
+                    "slash_start": new Animation(this.img, [80, 60], 3, 9, 7, 9, false, this.scale),
+                    "slash_end": new Animation(this.img, [100, 60], 4, 11, 7, 7, false, this.scale),
                 };
                 this.animation = this.animations.idle;
             }
@@ -108,15 +110,30 @@ define([
                     }
                 }
                 if (this.states.slashing_start) { //slashing start
+                    if (this.animation.currentFrame() === 8) {
+                        if(!this.states.facingRight)
+                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
+                                    this.spriteWidth, this.spriteHeight, 80, 80, this.scale, this.damage, !this.states.facingRight, true));
+                        else
+                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
+                                this.spriteWidth, this.spriteHeight, 80, 80, this.scale, this.damage, !this.states.facingRight, true));
+                    }
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.slashing_start = false;
                         this.states.slashing_end = true;
                         this.updateHitbox(100, 60, 50, 40);
-                        console.log("fjdskla;ldjf");
                     }
                 }
                 if (this.states.slashing_end) { //slashing end
+                    if (this.animation.currentFrame() >= 0 && this.animation.currentFrame() <= 1) {
+                        if(!this.states.facingRight)
+                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
+                                this.spriteWidth, this.spriteHeight, 80, 80, this.scale, this.damage, !this.states.facingRight, true));
+                        else
+                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
+                                this.spriteWidth, this.spriteHeight, 80, 80, this.scale, this.damage, !this.states.facingRight, true));
+                    }
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.slashing_end = false;
@@ -134,6 +151,7 @@ define([
                         //for demo                        
                         this.states.idling = true;
                         this.updateHitbox(50, 50, 38, 40);
+                        this.states.facingRight = !this.states.facingRight;
                     }
                 }
                 if (this.states.turning) { //turning

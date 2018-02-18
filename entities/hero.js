@@ -157,7 +157,7 @@ define([
                         this.energy -= 75;
                     }
                     else {
-                        this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false))
+                        this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
                     }
                     this.states.shotlocked = true;
                 }
@@ -176,8 +176,13 @@ define([
                     this.energy -= 100;
                 }
                 if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
-                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, 60, 45,
-                        90, 60, this.boundWidth, this.boundHeight, this.scale, 50, this.states.facingRight));
+                    if (this.states.facingRight)
+                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+                    else
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 -this.spriteWidth -120, 100,
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+
                 }
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
