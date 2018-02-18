@@ -40,6 +40,12 @@ define([
                 this.damage = 3;
                 this.facing = 1;
 
+                // Behavior parameters
+                this.runAwayCooldown = 300;
+                this.runAwayCooldownTimer = 0;
+                this.runAwayTime = 75;
+                this.runAwayTimer = 0;
+
                 this.states = {
                     "active": false, //currently unused
                     "idling": true,
@@ -52,6 +58,7 @@ define([
                     "blocking": false,
                     "turning": false,
                     "facingRight": false,
+                    "runningAway": false,
                 };
                 this.animations = {
                     "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 6, true, this.scale),
@@ -66,35 +73,80 @@ define([
                 this.animation = this.animations.idle;
             }
 
+
             update() {
+
                 /**** BEGIN BEHAVIOR CODE ****/
-            if (this.states.idling) { //idling - This is where most behavior will start, and most will return. 
-                if (this.game.hero.x > this.x && this.states.facingRight) {
+
+                if (this.states.idling && !this.states.runningAway) { //idling - This is where most behavior will start, and most will return. 
+                   if (this.game.hero.x > this.x && this.states.facingRight) {
                     this.updateHitbox(50, 50, 38, 40);
                     this.states.turning = true;
                     this.states.idling = false;
+                    }
+                    else if (this.game.hero.x < this.x && !this.states.facingRight) {
+                        this.updateHitbox(50, 50, 38, 40);
+                        this.states.turning = true;
+                        this.states.idling = false;
+                    }
+                    //Slash when in range
+                    if (Math.abs(this.x - this.game.hero.x) <= 250 && Math.abs(this.y - this.game.hero.y) < 50
+                            && Math.random()*100 <= 5) { //added random activation as a test.
+                        this.states.slashing_start = true;
+                        this.states.idling = false;
+                        this.updateHitbox(80, 60, 50, 40);
+                    }
+                    //Shoot at this range
+                    if (Math.abs(this.x - this.game.hero.x) >= 200 
+                        && Math.abs(this.x - this.game.hero.x) <= 1000
+                        && this.animation.loops >= 2) { //shot cooldown based on idle time (measured by animation loops)
+
+                        if (Math.abs(this.x - this.game.hero.x) <= 600
+                                && Math.random()*100 <= 50
+                                && this.runAwayCooldownTimer == 0) {
+                            console.log("running away")
+                            this.runAwayTimer = this.runAwayTime;
+                            this.runAwayCooldownTimer = this.runAwayCooldown;
+                            this.states.runningAway = true;
+                            this.states.turning = false;
+                            this.states.idling = false;
+                        } else {
+                            this.animation.loops = 0;
+                            this.states.shooting_startup = true;
+                            this.states.idling = false;
+                            this.updateHitbox(50, 50, 38, 40);
+                        }       
+                    }
                 }
-                else if (this.game.hero.x < this.x && !this.states.facingRight) {
-                    this.updateHitbox(50, 50, 38, 40);
-                    this.states.turning = true;
-                    this.states.idling = false;
+                
+
+                /**** UPDATE BEHAVIOR PARAMS ****/
+                if (this.runAwayCooldownTimer > 0) {
+                    this.runAwayCooldownTimer -= 1;
                 }
-                //Slash when in range
-                if (Math.abs(this.x - this.game.hero.x) <= 250 && Math.abs(this.y - this.game.hero.y) < 50
-                        && Math.random()*100 <= 5) { //added random activation as a test.
-                    this.states.slashing_start = true;
-                    this.states.idling = false;
-                    this.updateHitbox(80, 60, 50, 40);
+                if (this.runAwayTimer > 0) {
+                    this.runAwayTimer -= 1;
                 }
-                //Shoot at this range
-                if (Math.abs(this.x - this.game.hero.x) >= 200 && Math.abs(this.x - this.game.hero.x) <= 1000
-                    && this.animation.loops >= 2) { //shot cooldown based on idle time (measured by animation loops)
-                    this.animation.loops = 0;
-                    this.states.shooting_startup = true;
-                    this.states.idling = false;
-                    this.updateHitbox(50, 50, 38, 40);
+
+                /**** END BEHAVIOR CODE ****/
+
+                if (this.states.runningAway) {
+                    if (this.runAwayTimer == this.runAwayTime-1) {
+                        this.states.turning = true;
+                    }
+                    if (this.runAwayTimer == 0) {
+                        this.states.runningAway = false;
+                        this.states.running = false;
+                        this.states.turning = true;
+                        // this.states.idling = true;
+                    }
+                    else if (this.runAwayTimer > 0 && !this.states.turning) {
+                        this.states.running = true;
+                        this.states.idling = false;
+                    } 
+
                 }
-                } /**** END BEHAVIOR CODE ****/
+
                 if (this.states.running) { //running
                     this.x += this.facing * this.movementSpeed;
                     this.boundX += this.facing * this.movementSpeed;
