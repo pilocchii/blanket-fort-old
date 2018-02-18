@@ -27,7 +27,6 @@ define([
                 this.hurtWidth = hurtWidth;
                 this.hurtHeight = hurtHeight;
 
-                this.y = y - this.hurtHeight;
                 this.boundY = y - this.hurtHeight + offY;
                 this.boundX = x + parentWidth + this.hurtWidth + offX;
                 //Stats

@@ -112,11 +112,11 @@ define([
                 if (this.states.slashing_start) { //slashing start
                     if (this.animation.currentFrame() === 8) {
                         if(!this.states.facingRight)
-                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
-                                    this.spriteWidth, this.spriteHeight, 80, 80, this.scale, this.damage, !this.states.facingRight, true));
+                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 40, 100,
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
                         else
-                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
-                                this.spriteWidth, this.spriteHeight, 80, 80, this.scale, this.damage, !this.states.facingRight, true));
+                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 85, 100,
+                                this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
                     }
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
@@ -128,11 +128,11 @@ define([
                 if (this.states.slashing_end) { //slashing end
                     if (this.animation.currentFrame() >= 0 && this.animation.currentFrame() <= 1) {
                         if(!this.states.facingRight)
-                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
-                                this.spriteWidth, this.spriteHeight, 80, 80, this.scale, this.damage, !this.states.facingRight, true));
+                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 25, 100,
+                                this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
                         else
-                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
-                                this.spriteWidth, this.spriteHeight, 80, 80, this.scale, this.damage, !this.states.facingRight, true));
+                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 80, 100,
+                                this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
                     }
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;

@@ -72,7 +72,7 @@ define([
                 "shoot": new Animation(this.img, [80, 60], 3, 3, 6, 3, false, this.scale), //80x60
                 "gunrun": new Animation(this.img, [60, 60], 1, 22, 3, 11, true, this.scale, 11), //50x50
                 "slash": new Animation(this.img, [90, 60], 4, 11, 3, 11, false, this.scale), //80x50
-                "cleave": new Animation(this.img, [100, 70], 9, 13, 3, 13, false, this.scale), //80x60
+                "cleave": new Animation(this.img, [100, 70], 9, 13, 10, 13, false, this.scale), //80x60
             };
         }
 
@@ -144,6 +144,24 @@ define([
             }
 
             if (this.states.cleaving) {
+                
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 7) {
+                    if(this.states.facingRight)
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -200, 0,
+                            this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
+                    else
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - this.spriteWidth - 150, 0,
+                            this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
+                }
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 11) {
+                    if (this.states.facingRight)
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+                    else
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+                }
+
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.states.cleaving = false;
@@ -177,7 +195,7 @@ define([
                 }
                 if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
                     if (this.states.facingRight)
-                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
                             this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
                     else
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 -this.spriteWidth -120, 100,
