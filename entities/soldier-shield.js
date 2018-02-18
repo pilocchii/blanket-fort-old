@@ -38,6 +38,7 @@ define([
                 //Stats
                 this.health = 400;
                 this.damage = 1;
+                this.facing = 1;
 
                 this.states = {
                     "idling": true,
@@ -65,37 +66,47 @@ define([
             }
 
             update() {
-                if (this.states.idling) { //idling
-                    if (this.game.hero.x > this.x && this.states.facingRight) {
-                        this.updateHitbox(50, 50, 38, 40);
-                        this.states.turning = true;
-                        this.states.idling = false;
-                    }
-                    else if(this.game.hero.x < this.x && !this.states.facingRight){
-                        this.updateHitbox(50, 50, 38, 40);
-                        this.states.turning = true;
-                        this.states.idling = false;
-                    }
-                    //if (this.animation.loops > 3) {
-                    //    this.animation.elapsedTime = 0;
-                    //    this.animation.loops = 0;
-                    //    this.states.idling = false;
-                    //    //for demo
-                    //    this.states.running = true;
-                    //    this.updateHitbox(50, 50, 38, 43);
-                    //}
+                /**** BEGIN BEHAVIOR CODE ****/
+            if (this.states.idling) { //idling - This is where most behavior will start, and most will return. 
+                if (this.game.hero.x > this.x && this.states.facingRight) {
+                    this.updateHitbox(50, 50, 38, 40);
+                    this.states.turning = true;
+                    this.states.idling = false;
                 }
+                else if (this.game.hero.x < this.x && !this.states.facingRight) {
+                    this.updateHitbox(50, 50, 38, 40);
+                    this.states.turning = true;
+                    this.states.idling = false;
+                }
+                //Slash when in range
+                if (Math.abs(this.x - this.game.hero.x) <= 250 && Math.abs(this.y - this.game.hero.y) < 50
+                        && Math.random()*100 <= 5) { //added random activation as a test.
+                    this.states.slashing_start = true;
+                    this.states.idling = false;
+                    this.updateHitbox(80, 60, 50, 40);
+                }
+                //Shoot at this range
+                if (Math.abs(this.x - this.game.hero.x) >= 200 && Math.abs(this.x - this.game.hero.x) <= 1000
+                    && this.animation.loops >= 2) { //shot cooldown based on idle time (measured by animation loops)
+                    this.animation.loops = 0;
+                    this.states.shooting_startup = true;
+                    this.states.idling = false;
+                    this.updateHitbox(50, 50, 38, 40);
+                }
+                } /**** END BEHAVIOR CODE ****/
                 if (this.states.running) { //running
-                    if (this.animation.loops > 3) {
+                    this.x += this.facing * this.movementSpeed;
+                    this.boundX += this.facing * this.movementSpeed;
+                    if (this.animation.loops >= 1) {
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.running = false;
+                        this.states.idle = true;
                         //for demo
-                        this.states.shooting_startup = true;
-                        this.updateHitbox(50, 50, 38, 40);
+                        //this.states.shooting_startup = true;
                     }
                 }
-                if (this.states.shooting_startup) { //shooting start
+                if (this.states.shooting_startup) { //shooting start: this.updateHitbox(50, 50, 38, 40);
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.shooting_startup = false;
@@ -115,12 +126,14 @@ define([
                         this.animation.loops = 0;
                         this.states.shooting_active = false;
                         this.states.hasShot = false;
+                        this.states.idling = true;
                         //for demo
-                        this.states.slashing_start = true;
-                        this.updateHitbox(80, 60, 50, 40);
+                        //this.states.slashing_start = true;
+                        this.updateHitbox(50, 50, 38, 40);
+                        
                     }
                 }
-                if (this.states.slashing_start) { //slashing start
+                if (this.states.slashing_start) { //slashing start  this.updateHitbox(80, 60, 50, 40);
                     if (this.animation.currentFrame() === 8) {
                         if(!this.states.facingRight)
                             this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 40, 100,
@@ -149,7 +162,7 @@ define([
                         this.animation.elapsedTime = 0;
                         this.states.slashing_end = false;
                         //for demo
-                        this.states.blocking = true;
+                        this.states.idling = true;
                         this.updateHitbox(50, 50, 38, 40);
                     }
                 }
@@ -170,6 +183,7 @@ define([
                         this.animation.elapsedTime = 0;
                         this.states.turning = false;
                         this.states.facingRight = !this.states.facingRight;
+                        this.facing *= -1; //see above statement
                         //for demo
                         console.log(this.states.facingRight);
                         this.states.idling = true;

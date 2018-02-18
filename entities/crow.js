@@ -53,13 +53,13 @@ define([
             update() {
                 if (this.states.flying) {
                     //this.updateHitbox(50, 40, 20, 15);
-                    if (this.animation.loops > 3) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.flying = false;
-                        //for demo
-                        this.states.attacking = true;
-                    }
+                    //if (this.animation.loops > 3) {
+                    //    this.animation.elapsedTime = 0;
+                    //    this.animation.loops = 0;
+                    //    this.states.flying = false;
+                    //    //for demo
+                    //    this.states.attacking = true;
+                    //}
                 }
                 if (this.states.attacking) {
                     this.y -= 1;
