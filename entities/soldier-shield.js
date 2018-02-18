@@ -41,7 +41,7 @@ define([
                 this.facing = 1;
 
                 // Behavior parameters
-                this.runAwayCooldown = 300;
+                this.runAwayCooldown = 250;
                 this.runAwayCooldownTimer = 0;
                 this.runAwayTime = 75;
                 this.runAwayTimer = 0;
@@ -221,8 +221,14 @@ define([
                 if (this.states.blocking) { //blocking
                     //this.UpdateHitbox(50, 50, 45, 45);
                     // a little knockback
-                    this.x += 2;
-                    this.boundX += 2;
+                    if (this.states.facingRight) {
+                        this.x += 2;
+                        this.boundX += 2;
+                    } else {
+                        this.x -= 2;
+                        this.boundX -= 2;
+                    }
+                    
                     
                     if (this.animation.loops > 0) {
                         this.animation.elapsedTime = 0;
@@ -319,11 +325,18 @@ define([
                     }
                 }
                 if (other instanceof Projectile) {
-                    if (direction == 'left' && (this.states.idling || this.states.blocking)) {
-                        console.log("blocked!");
-                        this.states.blocking = true;
-                        this.states.idling = false;
+                    // blocking from left & right
+                    if (this.states.idling || this.states.blocking) {
+                        if (direction == 'left' && other.x < this.x) {
+                            this.states.blocking = true;
+                            this.states.idling = false;
+                        } 
+                        else if (direction == 'right' && other.x > this.x)
+                            this.states.blocking = true;
+                            this.states.idling = false;
                     } else {
+                        // blood or something goes here
+                        // this.game.addEntity(...)
                         this.health -= other.damage;
                         console.log("OUCH!")
                     }
