@@ -112,7 +112,7 @@ define([
             }
 
             /*COLLISION*/
-            collided(other) { //commented is for eventual implementation of projectile "armor"/toughness.
+            collided(other, direction) { //commented is for eventual implementation of projectile "armor"/toughness.
                 if (other instanceof Terrain) {
                     this.removeFromWorld = true;
                 }

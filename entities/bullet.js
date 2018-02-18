@@ -79,7 +79,7 @@ define([
                 this.drawImg(ctx);
             }
 
-            collided(other) {
+            collided(other, direction) {
                 // collide with terrain
                 if (other instanceof Terrain) {
                     this.removeFromWorld = true;

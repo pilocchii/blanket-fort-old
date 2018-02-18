@@ -47,13 +47,16 @@ define([
 
             this.maxHealth = 6;
             this.maxEnergy = 6;
-            this.energy = 4;
+            this.energy = 6;
             this.health = 4;
-            this.energyCooldownTimer = 0;
-            this.energyCooldown = 500; 
             this.slashEnergyCost = 3;
             this.shootEnergyCost = 2;
             this.dashEnergyCost = 1;
+            //Timers
+            this.damageCooldownTimer = 0;
+            this.damageCooldown = 20;
+            this.energyCooldownTimer = 0;
+            this.energyCooldown = 240; 
 
             this.states = {
                 "running": false,
@@ -79,8 +82,8 @@ define([
                 "airshoot": new Animation(this.img, [spriteWidth, spriteHeight], 2, 20, 3, 6, false, this.scale, 14), //50x50
                 "shoot": new Animation(this.img, [80, 60], 3, 3, 6, 3, false, this.scale), //80x60
                 "gunrun": new Animation(this.img, [60, 60], 1, 22, 3, 11, true, this.scale, 11), //50x50
-                "slash": new Animation(this.img, [90, 60], 4, 11, 3, 11, false, this.scale), //80x50
-                "cleave": new Animation(this.img, [100, 70], 9, 13, 3, 13, false, this.scale), //80x60
+                "slash": new Animation(this.img, [90, 60], 4, 11, 2, 11, false, this.scale), //80x50
+                "cleave": new Animation(this.img, [100, 70], 9, 13, 2, 13, false, this.scale), //80x60
                 "dash": new Animation(this.img, [90, 60], 4, 11, 2, 11, false, 2),
             };
         }
@@ -89,6 +92,7 @@ define([
             /////////// all button checks go here ///////////
             // check if button pressed
             // Moving left and right are mutually exclusive, thus else-if
+            // this.setStates(running, jumping, shooting, cleaving, facingRight, grounded, slashing, shotlocked, framelocked, energized, dashing, hasDashed)
             if (this.game.controlKeys[this.game.controls.right].active && !this.states.framelocked) { //run right
                 if (!this.states.facingRight) { this.states.facingRight = true };
                 this.states.running = true;
@@ -111,13 +115,12 @@ define([
                 this.states.cleaving = true;
                 this.states.framelocked = true;
             }
-            if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && !this.states.framelocked) { //slash
+            if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && (!this.states.framelocked || this.states.dashing)) { //slash
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
-                this.states.slashing = true;
-                this.states.framelocked = true;
+                this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
             }
-            if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0) {
+            if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { //dash
                 this.states.dashing = true;
                 this.states.hasDashed = true;
                 this.states.running = false;
@@ -251,7 +254,7 @@ define([
                     this.states.framelocked = false;
                 }
             }
-            //Energy Cooldown and Gain
+            //Timer Checks
             if (this.energyCooldownTimer > 0) {
                 this.energyCooldownTimer--;
             }
@@ -259,6 +262,8 @@ define([
                 this.energy++;
                 this.energyCooldownTimer = this.energyCooldown;// Energy restores more slowly (one energy per cooldown)
             }
+            if (this.damageCooldownTimer > 0)
+                this.damageCooldownTimer--;
 
             // update velocities based on gravity and friction
             this.yVelocity += this.gravity * this.gravity;
@@ -279,7 +284,7 @@ define([
 
         draw(ctx) {
             if (this.yVelocity < 0 && !this.states.shooting && !this.states.dashing) {//ascending
-                this.updateHitbox(50, 50, 20, 35);
+                this.updateHitbox(50, 50, 20, 30, 0, -20);
                 this.animation = this.animations.ascend;
             }
             else if (this.yVelocity > 0 && !this.states.shooting && !this.states.dashing) {//descending
@@ -356,17 +361,40 @@ define([
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
             }
 
-            if (other instanceof Enemy) {
-                this.health -= other.damage;
+            if (this.damageCooldownTimer <= 0) {
+
+                if (other instanceof Enemy) {
+                    this.health -= other.damage;
+                    this.damageCooldownTimer = this.damageCooldown;
+                }
+                if (other instanceof Hurtbox && other.isEnemy) {
+                    this.health -= other.damage;
+                    this.damageCooldownTimer = this.damageCooldown;
+                }
             }
         }
 
-        updateHitbox(fWidth, fHeight, bWidth, bHeight) {
+        updateHitbox(fWidth, fHeight, bWidth, bHeight, offX = 0, offY = 0) {
             this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth + 5;
             this.boundWidth = this.scale * bWidth;
             this.boundHeight = this.scale * bHeight;
-            this.boundX = this.centerX - this.boundWidth / 2;
-            this.boundY = this.y - this.boundHeight;
+            this.boundX = this.centerX - this.boundWidth / 2 + offX;
+            this.boundY = this.y - this.boundHeight + offY;
+        }
+
+        setStates(running, jumping, shooting, cleaving, facingRight, grounded, slashing, shotlocked, framelocked, energized, dashing, hasDashed) {
+            this.states.running = running;
+            this.states.jumping = jumping;
+            this.states.shooting = shooting;
+            this.states.cleaving = cleaving;
+            this.states.facingRight = facingRight;
+            this.states.grounded = grounded;
+            this.states.slashing = slashing;
+            this.states.shotlocked = shotlocked;
+            this.states.framelocked = framelocked;
+            this.states.energized = energized;
+            this.states.dashing = dashing;
+            this.states.hasDashed = hasDashed;
         }
 
         drawOutline (ctx) {

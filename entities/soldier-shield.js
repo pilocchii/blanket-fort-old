@@ -37,7 +37,7 @@ define([
 
                 //Stats
                 this.health = 400;
-                this.damage = 1;
+                this.damage = 3;
                 this.facing = 1;
 
                 this.states = {
@@ -266,7 +266,6 @@ define([
                 if (other instanceof Projectile) {
                     this.health -= other.damage;
                 }
-
             }
 
             drawOutline(ctx) {
