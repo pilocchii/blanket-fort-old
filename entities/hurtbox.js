@@ -51,13 +51,10 @@ define([
                 this.drawImg(ctx);
             }
 
-            collided(other) {
+            collided(other, direction) {
                 // collide with terrain
                 if (other instanceof Terrain) {
                     console.log("clink");
-                }
-                else if (other instanceof Enemy) {
-                    this.ctx.strokeStyle = "blue";
                 }
             }
 
