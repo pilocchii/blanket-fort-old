@@ -1,9 +1,11 @@
 define([
     'actor',
     'animation',
+    "hurtbox",
 ], function (
     Actor,
     Animation,
+    Hurtbox,
     ) {
 
 
@@ -17,11 +19,12 @@ define([
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
 
-                this.centerX = x + ((spriteWidth * scale) / 2);
-                this.boundWidth = 0;
-                this.boundHeight = 0;
+                this.centerX = x + ((spriteWidth * scale) / 2) - spriteWidth;
+                this.boundWidth = 180;
+                this.boundHeight = 120;
                 this.boundX = this.centerX - (this.boundWidth / 2);
                 this.boundY = this.y - this.boundHeight;
+                this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
                 //Stats
 
@@ -32,16 +35,26 @@ define([
                     "facingRight": facingRight
                 };
                 this.animations = {
-                    "start": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 2, 2, false, this.scale, 11),
-                    "stable": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 6, 1, true, this.scale, 13),
-                    "recovery": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 6, 4, false, this.scale, 14),
+                    "start": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 15, 2, false, this.scale, 11),
+                    "stable": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 15, 1, true, this.scale, 13),
+                    "recovery": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 15, 4, false, this.scale, 14),
                 };
                 this.animation = this.animations.start;
             }
 
             update() {
                 //TODO
-                if (this.states.facingRight) { this.x += this.movementSpeed; } else { this.x -= this.movementSpeed; }
+
+                if (this.states.facingRight) {
+                    this.x += this.movementSpeed;
+                    this.boundX += this.movementSpeed;
+
+                } else {
+                    this.x -= this.movementSpeed;
+                    this.boundX -= this.movementSpeed;
+                    
+                }
+
                 if (this.states.starting) {
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
@@ -63,6 +76,15 @@ define([
                         this.removeFromWorld = true;
                     }
                 }
+                if (!this.states.recovering) {//Hurtbox  active unless in recovery frames
+                    if(this.states.facingRight)
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100, 100,
+                            this.spriteWidth, this.spriteHeight, 150, 100, this.scale, 50, this.states.facingRight));
+                    else
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - this.spriteWidth - 200, 100,
+                            this.spriteWidth, this.spriteHeight, 150, 100, this.scale, 50, this.states.facingRight));  
+                }
+
             };
 
             draw(ctx) {
@@ -90,7 +112,7 @@ define([
 
 
             drawImg(ctx) {
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
         }

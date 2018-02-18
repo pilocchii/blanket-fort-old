@@ -6,6 +6,7 @@ define([
     "projectile-sword",
     "soldier-shield",
     "enemy",
+    "hurtbox",
 ], function (
     Actor,
     Animation,
@@ -14,6 +15,7 @@ define([
     Projectile_Sword,
     Soldier_Shield,
     Enemy,
+    Hurtbox,
 ){
 
 
@@ -40,7 +42,6 @@ define([
             this.boundWidth = 60;
             this.boundHeight = 110;
             this.boundX = this.centerX - (this.boundWidth / 2);
-            //DS3 2/16: Frame height is no longer subtracted in order to align hitbox with animation (see animation class draw image func)
             this.boundY = this.y - this.boundHeight;
             this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
@@ -62,6 +63,7 @@ define([
                 "grounded": false,
                 "slashing": false,
                 "shotlocked": false,
+                "framelocked": false,
                 "energized": false,
             };
             this.animations = {
@@ -77,75 +79,36 @@ define([
                 "slash": new Animation(this.img, [90, 60], 4, 11, 3, 11, false, this.scale), //80x50
                 "cleave": new Animation(this.img, [100, 70], 9, 13, 3, 13, false, this.scale), //80x60
             };
-
-        }
-
-
-        drawOutline (ctx) {
-            ctx.beginPath();
-            ctx.strokeStyle = "green";
-            ctx.rect(this.boundX, 
-                this.boundY, 
-                this.boundWidth, this.boundHeight);
-            ctx.stroke();
-            ctx.closePath();
-        }
-
-
-        drawImg (ctx) {
-            this.drawOutline(ctx);
-            if(this.yVelocity < 0) {
-                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                
-            } else {
-                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-
-
-            }
-        }
-
-
-        draw (ctx) {
-            if(this.yVelocity < 0) {
-                this.animation = this.animations.ascending;
-            }
-            else if (this.yVelocity > 0) {
-                this.animation = this.animations.descending;
-            }
-            else if (this.states.running && this.animation) {
-                this.animation = this.animations.run;
-            } else {
-                this.animation = this.animations.idle;
-            }
-            this.drawImg(ctx);
-            
         }
 
         update () {
             /////////// all button checks go here ///////////
             // check if button pressed
             // Moving left and right are mutually exclusive, thus else-if
-            if (this.game.controlKeys[this.game.controls.right].active) { //run right
+            if (this.game.controlKeys[this.game.controls.right].active && !this.states.framelocked) { //run right
                 if (!this.states.facingRight) { this.states.facingRight = true };
                 this.states.running = true;
-            } else if (this.game.controlKeys[this.game.controls.left].active) { //run left
+            } else if (this.game.controlKeys[this.game.controls.left].active && !this.states.framelocked) { //run left
                 if (this.states.facingRight) { this.states.facingRight = false };
                 this.states.running = true;
             }
             if (this.game.controlKeys[this.game.controls.energize].active) {
                 this.states.energized = true;
             }
-            if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping) { // jump
+            if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping && !this.states.framelocked) { // jump
                 this.states.jumping = true;
             }
-            if (this.game.controlKeys[this.game.controls.shoot].active) { //shoot
+            if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked) { //shoot
                 this.states.shooting = true;
+                this.states.framelocked = true;
             }
-            if (this.game.controlKeys[this.game.controls.cleave].active && !this.states.jumping && !this.states.shooting) { //cleave
+            if (this.game.controlKeys[this.game.controls.cleave].active && !this.states.jumping && !this.states.framelocked) { //cleave
                 this.states.cleaving = true;
+                this.states.framelocked = true;
             }
-            if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && !this.states.shooting) { //slash
+            if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && !this.states.framelocked) { //slash
                 this.states.slashing = true;
+                this.states.framelocked = true;
             }
 
             // check if button NOT pressed, if state is supposed to change...
@@ -189,9 +152,28 @@ define([
             }
 
             if (this.states.cleaving) {
+                
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
+                    if(this.states.facingRight)
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -200, 0,
+                            this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
+                    else
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - this.spriteWidth - 150, 0,
+                            this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
+                }
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 11) {
+                    if (this.states.facingRight)
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+                    else
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+                }
+
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.states.cleaving = false;
+                    this.states.framelocked = false;
                 }
             }
 
@@ -203,13 +185,14 @@ define([
                         this.energyCooldownTimer = this.energyCooldown;
                     }
                     else {
-                        this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false))
+                        this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
                     }
                     this.states.shotlocked = true;
                 }
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.states.shooting = false;
+                    this.states.framelocked = false;
                     this.states.shotlocked = false;
                 }
             }
@@ -222,10 +205,21 @@ define([
                     this.energy -= this.slashEnergyCost;
                     this.energyCooldownTimer = this.energyCooldown;
                 }
+                if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {
+                    if (this.states.facingRight)
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+                    else
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 -this.spriteWidth -120, 100,
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+
+                }
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.states.slashing = false;
+                    this.states.hasSlashed = false;
                     this.states.shotlocked = false;
+                    this.states.framelocked = false;
                 }
             }
 
@@ -244,6 +238,8 @@ define([
 
             if (this.health <= 0) {
                 //this.removeFromWorld = true;
+                console.log("POW! Right in the kisser!");
+                this.health = 200;
             }
         }
 
@@ -327,7 +323,7 @@ define([
         }
 
         updateHitbox(fWidth, fHeight, bWidth, bHeight) {
-            this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth;
+            this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth + 5;
             this.boundWidth = this.scale * bWidth;
             this.boundHeight = this.scale * bHeight;
             this.boundX = this.centerX - this.boundWidth / 2;

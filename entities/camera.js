@@ -63,5 +63,4 @@ define([
 
     }
     return Camera;
-
 });

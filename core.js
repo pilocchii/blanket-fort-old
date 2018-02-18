@@ -17,7 +17,9 @@ define([
     "bullet",
     "shotblast",
     "enemy",
-    "item"
+    "hurtbox",
+    "item",
+
 
 ], function(
     AssetManager,
@@ -38,7 +40,8 @@ define([
     Bullet,
     Shotblast,
     Enemy,
-    Item
+    Hurtbox,
+    Item,
 ) {
 
     let init = function() {
@@ -78,6 +81,7 @@ define([
 
         
 
+
         let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
 
         let hero = new Hero(gameEngine, 100, 1400, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
@@ -95,6 +99,7 @@ define([
 
         // gameEngine.addEntity(gameboard);
 
+
         camera.follow(hero);
         gameEngine.addEntity(hero);  
         gameEngine.addEntity(new Item.HealthPack(gameEngine, 250, 1400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
@@ -107,7 +112,6 @@ define([
         gameEngine.addEntity(new Crow(gameEngine, 60, 550, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         gameEngine.addEntity(new Dino(gameEngine, 1250, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 //        gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
-
         
         gameEngine.addEntity(hud);
         gameEngine.init(ctx);

@@ -2,10 +2,12 @@ define([
     "enemy",
     "animation",
     "terrain",
+    "hurtbox",
 ], function (
     Enemy,
     Animation,
     Terrain,
+    Hurtbox,
     ) {
 
 
@@ -62,8 +64,16 @@ define([
                 if (this.states.attacking) {
                     this.y -= 1;
                     this.boundY -= 1;
-                    this.x -= 2;
-                    this.boundX -= 2;
+                    if (this.states.facingRight) {
+                        this.x -= 2;
+                        this.boundX -= 2;
+                    }
+                    else {
+                        this.x += 2;
+                        this.boundX += 2;
+                    }
+                    
+                    
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.attacking = false;
@@ -75,8 +85,21 @@ define([
                 if (this.states.attacking_final) {
                     this.y += 3;
                     this.boundY += 3;
-                    this.x += 5;
-                    this.boundX += 5;
+                    if (this.states.facingRight) {
+                        this.x += 5;
+                        this.boundX += 5;
+                    }
+                    else {
+                        this.x -= 5;
+                        this.boundX -= 5;
+                    }
+                    if(this.states.facingRight)
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, -45, 10,
+                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, this.damage, this.states.facingRight));
+                    else
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, -45 - this.spriteWidth - 30, 10,
+                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, this.damage, this.states.facingRight));
+
                     if (this.animation.loops > 3) {
                         this.states.attacking_final = false;
                         this.animation.elapsedTime = 0;
@@ -93,6 +116,7 @@ define([
                         this.y = this.origy;
                         this.x = this.origx;
                         this.updateHitbox(50, 40, 20, 15);
+                        this.states.facingRight = !this.states.facingRight;
                     }
                 }
             }
