@@ -89,9 +89,9 @@ define([
         let hero = new Hero(gameEngine, 200, 700, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         camera.follow(hero);
         gameEngine.addEntity(hero);  
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 700, 700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Soldier_Shield(gameEngine, 700, 700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 250, 550, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Dino(gameEngine, 1250, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 1250, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
         let hud = new Hud.HealthBar(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0,0], [100, 100], 3);
         gameEngine.addEntity(hud);

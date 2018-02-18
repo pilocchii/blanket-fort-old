@@ -43,13 +43,13 @@ define([
                     "facingRight": true,
                 };
                 this.animations = {
-                    "idle":             new Animation(this.img, [90, 60], 6, 13, 25, 1, true, this.scale, 12),
-                    "walk_straight":    new Animation(this.img, [90, 60], 6, 13, 15, 6, true, this.scale),
-                    "walk_down":        new Animation(this.img, [90, 60], 6, 13, 15, 6, true, this.scale, 6),
-                    "walk_up":          new Animation(this.img, [90, 70], 6, 12, 15, 6, true, this.scale),//90x70
-                    "shoot_up":         new Animation(this.img, [90, 70], 6, 12, 15, 2, false, this.scale, 6),//90x70
-                    "shoot_diagonal":   new Animation(this.img, [90, 70], 6, 12, 15, 2, false, this.scale, 8),//90x70
-                    "shoot_straight":   new Animation(this.img, [90, 70], 6, 12, 15, 2, false, this.scale, 10),//90x70
+                    "idle":             new Animation(this.img, [90, 60], 6, 13, 5, 1, true, this.scale, 12),
+                    "walk_straight":    new Animation(this.img, [90, 60], 6, 13, 7, 6, true, this.scale),
+                    "walk_down":        new Animation(this.img, [90, 60], 6, 13, 7, 6, true, this.scale, 6),
+                    "walk_up":          new Animation(this.img, [90, 70], 6, 18, 7, 6, true, this.scale),//90x70
+                    "shoot_up":         new Animation(this.img, [90, 70], 6, 18, 7, 4, false, this.scale, 6),//90x70
+                    "shoot_diagonal":   new Animation(this.img, [90, 70], 6, 18, 7, 4, false, this.scale, 10),//90x70
+                    "shoot_straight":   new Animation(this.img, [90, 70], 6, 18, 7, 4, false, this.scale, 14),//90x70
                     
                 };
                 this.animation = this.animations.idle;

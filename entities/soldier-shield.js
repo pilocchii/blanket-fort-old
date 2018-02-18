@@ -52,14 +52,14 @@ define([
                     "facingRight": false,
                 };
                 this.animations = {
-                    "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 1, 6, true, this.scale),
-                    "turn": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 1, 5, false, this.scale, 6),
-                    "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 1, 4, true, this.scale, 11),
-                    "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 1, 12, true, this.scale),
-                    "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 1, 5, false, this.scale),
-                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 1, 5, false, this.scale, 5),
-                    "slash_start": new Animation(this.img, [80, 60], 3, 9, 7, 9, false, this.scale),
-                    "slash_end": new Animation(this.img, [100, 60], 4, 11, 7, 7, false, this.scale),
+                    "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 6, true, this.scale),
+                    "turn": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 4, 5, false, this.scale, 6),
+                    "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 4, true, this.scale, 11),
+                    "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 3, 12, true, this.scale),
+                    "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale),
+                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale, 5),
+                    "slash_start": new Animation(this.img, [80, 60], 3, 9, 3, 9, false, this.scale),
+                    "slash_end": new Animation(this.img, [100, 60], 4, 11, 3, 7, false, this.scale),
                 };
                 this.animation = this.animations.idle;
             }
