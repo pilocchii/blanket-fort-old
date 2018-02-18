@@ -68,7 +68,7 @@ define([
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale), //50x50
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 22, 3, 11, true, this.scale), //50x50
                 //Takeoff?
-                "ascend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 8, 3, 5, true, this.scale, 2), //50x50
+                "ascend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 8, 3, 4, true, this.scale, 2), //50x50
                 "descend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 14, 3, 4, true, this.scale, 8), //50x50
                 //Land?
                 "airshoot": new Animation(this.img, [spriteWidth, spriteHeight], 2, 20, 3, 6, false, this.scale, 14), //50x50
