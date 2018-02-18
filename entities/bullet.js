@@ -34,7 +34,7 @@ define([
                 }
 
                 //Stats
-                this.damage = 50;
+                this.damage = 2;
 
                 this.states = {
                     "active": true,

@@ -37,7 +37,7 @@ define([
 
                 //Stats
                 this.health = 400;
-                this.damage = 50;
+                this.damage = 1;
 
                 this.states = {
                     "idling": true,

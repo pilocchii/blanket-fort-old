@@ -43,11 +43,10 @@ define([
                 "jump": "Space",
                 "right": "KeyD",
                 "left": "KeyA",
-                "shoot": "KeyE",
-                "slash": "KeyR",
-                "cleave": "KeyF",
+                "shoot": "Numpad1",
+                "slash": "Numpad5",
+                "cleave": "Numpad6",
                 "energize": "KeyW",
-                "spawnSS": "Numpad1",
             }
             this.spawnedSS = false;
             this.score = 0;

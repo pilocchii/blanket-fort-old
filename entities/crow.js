@@ -31,7 +31,7 @@ define([
                 this.boundY = this.y - this.boundHeight;
 
                 //Stats
-                this.damage = 100;
+                this.damage = 1;
 
 
                 this.states = {

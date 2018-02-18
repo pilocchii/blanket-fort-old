@@ -239,7 +239,7 @@ define([
             if (this.health <= 0) {
                 //this.removeFromWorld = true;
                 console.log("POW! Right in the kisser!");
-                this.health = 200;
+                this.health = 4;
             }
         }
 
