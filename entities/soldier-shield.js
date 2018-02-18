@@ -79,12 +79,12 @@ define([
                 /**** BEGIN BEHAVIOR CODE ****/
 
                 if (this.states.idling && !this.states.runningAway) { //idling - This is where most behavior will start, and most will return. 
-                   if (this.game.hero.x > this.x && this.states.facingRight) {
-                    this.updateHitbox(50, 50, 38, 40);
-                    this.states.turning = true;
-                    this.states.idling = false;
+                    if (this.game.hero.x > this.x && this.states.facingRight  && !this.states.blocking) {
+                        this.updateHitbox(50, 50, 38, 40);
+                        this.states.turning = true;
+                        this.states.idling = false;
                     }
-                    else if (this.game.hero.x < this.x && !this.states.facingRight) {
+                    else if (this.game.hero.x < this.x && !this.states.facingRight  && !this.states.blocking) {
                         this.updateHitbox(50, 50, 38, 40);
                         this.states.turning = true;
                         this.states.idling = false;
@@ -220,14 +220,17 @@ define([
                 }
                 if (this.states.blocking) { //blocking
                     //this.UpdateHitbox(50, 50, 45, 45);
-                    if (this.animation.loops > 2) {
+                    // a little knockback
+                    this.x += 2;
+                    this.boundX += 2;
+                    
+                    if (this.animation.loops > 0) {
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.blocking = false;
                         //for demo                        
                         this.states.idling = true;
                         this.updateHitbox(50, 50, 38, 40);
-                        this.states.facingRight = !this.states.facingRight;
                     }
                 }
                 if (this.states.turning) { //turning
@@ -316,7 +319,14 @@ define([
                     }
                 }
                 if (other instanceof Projectile) {
-                    this.health -= other.damage;
+                    if (direction == 'left' && (this.states.idling || this.states.blocking)) {
+                        console.log("blocked!");
+                        this.states.blocking = true;
+                        this.states.idling = false;
+                    } else {
+                        this.health -= other.damage;
+                        console.log("OUCH!")
+                    }
                 }
             }
 
