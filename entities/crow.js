@@ -32,14 +32,15 @@ define([
 
                 //Stats
                 this.damage = 1;
+                this.facing = 1;
 
 
                 this.states = {
-                    "flying": false,
+                    "flying": true,
                     "attacking": false,
                     "attacking_final": false,
                     "hurt": false,
-                    "hiding": true,
+                    "hiding": false,
                     "facingRight": true,
                 };
                 this.animations = {
@@ -53,6 +54,14 @@ define([
             }
 
             update() {
+                if (this.x - this.game.hero.x < 0) {
+                    this.states.facingRight = true;
+                    this.facing = 1;
+                }
+                else {
+                    this.states.facingRight = false;
+                    this.facing = -1;
+                }
                 if (this.states.hiding) {
                     if (Math.abs(this.x - this.game.hero.x) <= 500 && Math.abs(this.y - this.game.hero.y) <= 350) {
                         //disable states
@@ -64,13 +73,22 @@ define([
                     }
                 }
                 if (this.states.flying) { //this.updateHitbox(50, 40, 20, 15);
-                    if (this.animation.loops > 3) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.flying = false;
-                        //for demo
-                        this.states.attacking = true;
+                    if (Math.abs(this.x - this.game.hero.x) >= 300) {
+                        this.x += this.facing * 2;
+                        this.boundX += this.facing * 2;
                     }
+                    if (Math.abs(this.y - this.game.hero.y) >= 1) {
+                        var ydir = Math.abs(this.y - this.game.hero.y) / (this.y - this.game.hero.y);
+                        this.y -= ydir*3;
+                        this.boundY -= ydir*3;
+                    }
+                    //if (this.animation.loops > 3) {
+                    //    this.animation.elapsedTime = 0;
+                    //    this.animation.loops = 0;
+                    //    this.states.flying = false;
+                    //    //for demo
+                    //    this.states.attacking = true;
+                    //}
                 }
                 if (this.states.attacking) {
                     this.y -= 1;
