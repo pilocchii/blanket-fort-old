@@ -3,11 +3,13 @@ define([
     "terrain",
     "animation",
     "hero",
+    "projectile",
 ], function (
     Enemy,
     Terrain,
     Animation,
     Hero,
+    Projectile,
     ) {
 
 
@@ -16,6 +18,7 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 7;
+                this.pointValue = -5;
                 if (!facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
@@ -34,7 +37,8 @@ define([
                 }
 
                 //Stats
-                this.damage = 2;
+                this.damage = 1;
+                this.health = 150;
 
                 this.states = {
                     "active": true,
@@ -59,7 +63,7 @@ define([
                         this.x -= this.movementSpeed;
                         this.boundX -= this.movementSpeed;
                     }
-                    if (this.animation.loops > 1) {
+                    if (this.animation.loops > 7) {
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.steady = false;
@@ -81,6 +85,12 @@ define([
                     this.removeFromWorld = true;
                 }
                 else if (other instanceof Hero) {
+                    this.removeFromWorld = true;
+                }
+                else if (other instanceof Projectile) {
+                    this.health -= other.damage;
+                }
+                if (this.health <= 0) {
                     this.removeFromWorld = true;
                 }
             }

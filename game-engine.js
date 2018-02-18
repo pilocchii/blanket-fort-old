@@ -47,6 +47,7 @@ define([
                 "slash": "Numpad5",
                 "cleave": "Numpad6",
                 "energize": "KeyW",
+                "dash": "Numpad4",
             }
             this.spawnedSS = false;
             this.score = 0;

@@ -3,11 +3,13 @@ define([
     'animation',
     "terrain",
     "enemy",
+    "bullet",
 ], function (
     Actor,
     Animation,
     Terrain,
     Enemy,
+    Bullet,
     ) {
 
 
@@ -16,7 +18,7 @@ define([
             //Added energized (BEFORE DIMENSIONS) to choose correct projectile
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, energized, spriteWidth = 60, spriteHeight = 60) {
                 super(game, x, y, img, ctx);
-                this.movementSpeed = 7;
+                this.movementSpeed = 13;
                 if (facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
@@ -35,10 +37,15 @@ define([
                 }
 
                 //Stats
-                if (energized)
+                if (energized) {
                     this.damage = 200;
-                else
+                    this.health = 2;
+                }
+                else {
                     this.damage = 50;
+                    this.health = 1;
+                }
+                    
 
 
                 this.states = {
@@ -104,14 +111,20 @@ define([
                 }
             }
 
-            collided(other) {
-                // collide with terrain
+            /*COLLISION*/
+            collided(other) { //commented is for eventual implementation of projectile "armor"/toughness.
                 if (other instanceof Terrain) {
                     this.removeFromWorld = true;
                 }
+                //else if (other instanceof Bullet) {
+                //    this.health -= other.damage;
+                //}
                 else if (other instanceof Enemy) {
                     this.removeFromWorld = true;
                 }
+                //if (this.health <= 0) {
+                //    this.removeFromWorld = true;
+                //} 
             }
 
             drawOutline(ctx) {
