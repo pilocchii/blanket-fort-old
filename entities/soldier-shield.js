@@ -65,15 +65,25 @@ define([
             }
 
             update() {
-                if (this.states.idling) { //idling                   
-                    if (this.animation.loops > 3) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                if (this.states.idling) { //idling
+                    if (this.game.hero.x > this.x && this.states.facingRight) {
+                        this.updateHitbox(50, 50, 38, 40);
+                        this.states.turning = true;
                         this.states.idling = false;
-                        //for demo
-                        this.states.running = true;
-                        this.updateHitbox(50, 50, 38, 43);
                     }
+                    else if(this.game.hero.x < this.x && !this.states.facingRight){
+                        this.updateHitbox(50, 50, 38, 40);
+                        this.states.turning = true;
+                        this.states.idling = false;
+                    }
+                    //if (this.animation.loops > 3) {
+                    //    this.animation.elapsedTime = 0;
+                    //    this.animation.loops = 0;
+                    //    this.states.idling = false;
+                    //    //for demo
+                    //    this.states.running = true;
+                    //    this.updateHitbox(50, 50, 38, 43);
+                    //}
                 }
                 if (this.states.running) { //running
                     if (this.animation.loops > 3) {
@@ -95,6 +105,7 @@ define([
                 }
                 if (this.states.shooting_active) { //shooting active
                     if (!this.states.hasShot) {
+                        console.log(this.game.hero.y + " " + this.game.hero.x);
                         this.game.addEntity(new Shotblast(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.game.addEntity(new Bullet(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.states.hasShot = true;

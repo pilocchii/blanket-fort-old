@@ -1,9 +1,11 @@
 define([
     "asset-manager",
     'soldier-shield',
+    "hero",
 ], function (
     AssetManager,
     Soldier_Shield,
+    Hero,
 ){
 
      /***************
@@ -11,7 +13,7 @@ define([
     ****************/
     class GameEngine {
 
-        constructor () {
+        constructor (hero) {
             this.entities = [];
             this.ctx = null;
             this.click = null;
@@ -30,6 +32,11 @@ define([
                 "KeyF": { "active": false },
                 "KeyE": { "active": false },
                 "Numpad1": { "active": false },
+                "Numpad2": { "active": false },
+                "Numpad3": { "active": false },
+                "Numpad4": { "active": false },
+                "Numpad5": { "active": false },
+                "Numpad6": { "active": false },
             }
             // control mapping
             this.controls = {
@@ -44,6 +51,7 @@ define([
             }
             this.spawnedSS = false;
             this.score = 0;
+            this.hero = hero;
         }
 
         /*
