@@ -104,15 +104,15 @@ define([
         //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 350, 1400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
 
 
-        gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Crow(gameEngine, 2000, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 2000, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         
-        gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1000, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1000, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        gameEngine.addEntity(new Soldier_Shield(gameEngine, 1500, 150, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1500, 150, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        //gameEngine.addEntity(new Dino(gameEngine, 1250, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 1250, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
         
         gameEngine.addEntity(hud);

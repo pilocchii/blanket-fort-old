@@ -17,7 +17,7 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
-                this.movementSpeed = 7;
+                this.movementSpeed = 3;
                 this.pointValue = -5;
                 this.y -= 70
                 if (!facingRight) { this.x -= 100; } else { this.x += 100 };//offset to match gun
@@ -49,27 +49,35 @@ define([
                     "rocket": new Animation(this.img, [90, 60], 6, 20, 5, 7, true, this.scale, 13),
                 };
                 this.animation = this.animations.rocket;
+                if (this.states.facingRight) { this.facing = 1; } else { this.facing = -1;}
             }
 
             update() {
                 //TODO
-
+                if (this.x - this.game.hero.x < 0) {
+                    this.states.facingRight = true;
+                    this.facing = 1;
+                }
+                else {
+                    this.states.facingRight = false;
+                    this.facing = -1;
+                }
                 if (this.states.active) {//TODO Tracking behavior
-                    if (this.states.facingRight) {
-                        this.x += this.movementSpeed;
-                        this.boundX += this.movementSpeed;
-                        //this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y,
-                        //    0, 0, this.spriteWidth, this.spriteHeight, 10, 10, this.scale, 50, this.facingRight));
-                    } else {
-                        this.x -= this.movementSpeed;
-                        this.boundX -= this.movementSpeed;
-                    }
-                    if (this.animation.loops > 7) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.steady = false;
-                        this.removeFromWorld = true;
-                    }
+                        this.x += this.facing*this.movementSpeed;
+                        this.boundX += this.facing*this.movementSpeed;
+                        if (this.y - this.game.hero.y > 0) {// below hero;
+                            this.y -= 2;
+                            this.boundY -= 2;
+                        }
+                        else {
+                            this.y += 2;
+                            this.boundY += 2;
+                        }
+                    //if (this.animation.loops > 7) {
+                    //    this.animation.elapsedTime = 0;
+                    //    this.animation.loops = 0;
+                    //    this.removeFromWorld = true;
+                    //}
                 }
             };
 

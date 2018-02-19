@@ -219,22 +219,7 @@ define([
             collided(other, direction) {
                 // collide with terrain
                 if (other instanceof Terrain) {
-                    //if (direction === 'bottom') {
-                    //    this.y -= 5;
-                    //    this.boundY -= 5;
-                    //}
-                    //else if (direction === 'top') {
-                    //    this.y += 5;
-                    //    this.boundY += 5;
-                    //}
-                    //else if (direction === 'left') {
-                    //    this.x += 5;
-                    //    this.boundX += 5;
-                    //}
-                    //else if (direction === 'right') {
-                    //    this.x -= 5;
-                    //    this.boundX -= 5;
-                    //}
+                    //null
                 }
                 if (other instanceof Projectile) {
                     this.health -= other.damage;

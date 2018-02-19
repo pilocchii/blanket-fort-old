@@ -273,9 +273,7 @@ define([
 
             //Health checks and position checks
             if (this.health <= 0) {
-                //this.removeFromWorld = true;
-                console.log("POW! Right in the kisser!");
-                this.health = 4;
+                this.removeFromWorld = true;
             }
             if (this.y >= 5000) {
                 console.log("Falling into the abyss... You feel like a fool, don't you?");

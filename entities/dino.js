@@ -15,7 +15,7 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60) {
                 super(game, x, y, img, ctx);
-                this.movementSpeed = 7;
+                this.movementSpeed = 2;
                 this.hero = this.game.hero;
                 this.y = y;
                 this.x = x;
@@ -44,12 +44,13 @@ define([
                     "shooting": false,
                     "walking": true,
                     "grounded": false,
+                    "patrolling": true,
                     "framelocked": false,
                     "facingRight": true,
                 };
                 this.animations = {
                     "idle":             new Animation(this.img, [90, 60], 6, 13, 5, 1, true, this.scale, 12),
-                    "walk_straight":    new Animation(this.img, [90, 60], 6, 13, 7, 6, true, this.scale),
+                    "walk_straight":    new Animation(this.img, [90, 60], 6, 13, 9, 6, true, this.scale),
                     //"walk_down":        new Animation(this.img, [90, 60], 6, 13, 7, 6, true, this.scale, 6),
                     //"walk_up":          new Animation(this.img, [90, 70], 6, 18, 7, 6, true, this.scale),//90x70
                     //"shoot_up":         new Animation(this.img, [90, 70], 6, 18, 7, 4, false, this.scale, 6),//90x70
@@ -62,7 +63,8 @@ define([
             update() {
                 /****BEGIN BEHAVIOR****/
                 //Turn towards Hero
-                if (!this.states.framelocked) {
+                if (!this.states.framelocked && !this.states.patrolling) {
+                    this.states.patrolling = true;
                     if (this.x - this.game.hero.x < 0) {
                         this.states.facingRight = true;
                         this.facing = 1;
@@ -73,7 +75,9 @@ define([
                     }
                 }
                 if (this.states.walking) {
-                    if (this.animation.loops > 1) {
+                    this.x += this.facing * this.movementSpeed;
+                    if (this.animation.loops > 5) {
+                        this.states.patrolling = false;
                         if (Math.abs(this.x - this.hero.x) <= 750 && this.shotCooldownTimer <= 0 && this.yVelocity == 0) {
                             this.animation.elapsedTime = 0;
                             this.animation.loops = 0;
