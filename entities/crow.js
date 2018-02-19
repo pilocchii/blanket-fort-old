@@ -38,7 +38,9 @@ define([
                 this.health = 150;
                 this.damage = 0;
                 this.facing = 1;
-                this.attackAngle = 5;
+                this.attackAngle1 = 2;
+                this.attackAngle2 = 10;
+                this.rand = 0;
 
 
                 this.states = {
@@ -114,24 +116,32 @@ define([
                     this.y -= 4;
                     this.boundY -= 4;
                     this.x -= this.facing*7;
-                    this.boundX -= this.facing*7;
-                    
+                    this.boundX -= this.facing*7;                    
                     
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
                         this.states.attacking = false;
                         //randomly determine angle of attack (makes prediction harder)
                         //min attack angle of 2
-                        this.attackAngle = 2 + Math.random() * 8; 
+                        //this.attackAngle = 2 + Math.random() * 8; 
+                        this.rand = Math.floor(Math.random() * 2);
                         this.states.attacking_final = true;
                     }
                 }
                 if (this.states.attacking_final) {
-                    //update position
-                    this.y += this.attackAngle;
-                    this.boundY += this.attackAngle;
+                    if(this.rand === 0) {
+                        this.y += this.attackAngle1;
+                        this.boundY += this.attackAngle1;
+                    }
+                    else {
+                        this.y += this.attackAngle2;
+                        this.boundY += this.attackAngle2;
+                    }
+                    console.log(this.rand);
                     this.x += this.facing * 17;
                     this.boundX += this.facing * 17;
+                    //console.log("y: " + this.y);
+
 
                     //Spawn Hurtbox
                     if(this.states.facingRight)
