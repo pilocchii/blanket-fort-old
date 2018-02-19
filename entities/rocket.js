@@ -29,7 +29,7 @@ define([
                 this.boundWidth = 30;
                 this.boundHeight = 30;
                 if (facingRight) {
-                    this.boundX = this.centerX - (this.boundWidth / 2) + 180; //+100 aligns with the gun
+                    this.boundX = this.centerX - (this.boundWidth / 2) + 120; //+100 aligns with the gun
                     this.boundY = this.y - this.boundHeight - (this.spriteHeight);
                 }
                 else {

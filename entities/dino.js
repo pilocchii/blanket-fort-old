@@ -13,7 +13,7 @@ define([
 
         class Dino extends Enemy {
 
-            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60) {
+            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60, patrolDistance = 400) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 2;
                 this.hero = this.game.hero;
@@ -30,6 +30,9 @@ define([
                 this.boundY = this.y - this.boundHeight + (this.spriteHeight / 2 - 10);
                 this.facing = 1;
 
+                this.startX = x;
+                this.maxX = this.startX + patrolDistance; //Change this to alter dino's patrol distance
+                
                 //Timers
                 this.shotCooldown = 90;
                 this.shotCooldownTimer = 0;
@@ -63,22 +66,23 @@ define([
             update() {
                 /****BEGIN BEHAVIOR****/
                 //Turn towards Hero
-                if (!this.states.framelocked && !this.states.patrolling) {
-                    this.states.patrolling = true;
-                    if (this.x - this.game.hero.x < 0) {
+                // if (!this.states.framelocked && !this.states.patrolling) {
+                //     this.states.patrolling = true;
+                    if (this.x < this.startX) {
                         this.states.facingRight = true;
                         this.facing = 1;
                     }
-                    else if ( true ) {
+                    if (this.x > this.maxX ) {
                         this.states.facingRight = false;
                         this.facing = -1;
                     }
-                }
+                // }
                 if (this.states.walking) {
+
                     this.x += this.facing * this.movementSpeed;
                     if (this.animation.loops > 5) {
                         this.states.patrolling = false;
-                        if (Math.abs(this.x - this.hero.x) <= 750 && this.shotCooldownTimer <= 0 && this.yVelocity == 0) {
+                        if (this.shotCooldownTimer <= 0 && this.yVelocity == 0) {
                             this.animation.elapsedTime = 0;
                             this.animation.loops = 0;
                             this.states.shooting = true;
@@ -88,6 +92,8 @@ define([
 
                 }
                 if (this.states.shooting) {
+                    if(this.x < this.hero.x) this.states.facingRight = true;
+                    else this.states.facingRight = false;
                     if (!this.states.framelocked) {
                         this.game.addEntity(new Rocket(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.states.framelocked = true;
@@ -113,7 +119,7 @@ define([
                 this.lastBoundY = this.boundY;
                 this.boundY += this.yVelocity;
 
-                console.log(this.y);
+                //console.log(this.y);
                 //Health checks
                 if (this.health <= 0) {
                     this.removeFromWorld = true;

@@ -34,11 +34,8 @@ require.config({
         "shotblast": "entities/shotblast",
         "enemy": "entities/enemy",
         "hurtbox": "entities/hurtbox",
-        "item": "entities/items/item"
-
+        "item": "entities/items/item",
     },
-
-
 });
 
 
