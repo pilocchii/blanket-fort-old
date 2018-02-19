@@ -78,7 +78,10 @@ define([
 
                 /**** BEGIN BEHAVIOR CODE ****/
 
-                if (this.states.idling && !this.states.runningAway) { //idling - This is where most behavior will start, and most will return. 
+                //idling - This is where most behavior will start, and most will return.
+                if (this.states.idling && !this.states.runningAway 
+                    && Math.abs(this.x - this.game.hero.x) < this.sightRadius[0]
+                    && Math.abs(this.y - this.game.hero.y) < this.sightRadius[1]) {  
                     if (this.game.hero.x > this.x && this.states.facingRight  && !this.states.blocking) {
                         this.updateHitbox(50, 50, 38, 40);
                         this.states.turning = true;
@@ -99,7 +102,7 @@ define([
                     //Shoot at this range
                     if (Math.abs(this.x - this.game.hero.x) >= 200 
                         && Math.abs(this.x - this.game.hero.x) <= 1000
-                        && this.animation.loops >= 2) { //shot cooldown based on idle time (measured by animation loops)
+                        && this.animation.loops >= 3) { //shot cooldown based on idle time (measured by animation loops)
 
                         if (Math.abs(this.x - this.game.hero.x) <= 600
                                 && Math.random()*100 <= 10
