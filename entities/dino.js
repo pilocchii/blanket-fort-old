@@ -23,10 +23,10 @@ define([
                 this.spriteHeight = spriteHeight;
 
                 this.centerX = x + ((spriteWidth * scale) / 2) - spriteWidth;
-                this.boundWidth = 60*this.scale;
-                this.boundHeight = 50*this.scale;
+                this.boundWidth = this.scale * 45;
+                this.boundHeight = this.scale * 45;
                 this.boundX = this.centerX - (this.boundWidth / 2);
-                this.boundY = this.y - this.boundHeight + (this.spriteHeight / 2 - 10); //DS3DRAWCHANGE2
+                this.boundY = this.y - this.boundHeight + (this.spriteHeight / 2 - 10);
                 this.facing = 1;
 
                 //Timers
@@ -38,9 +38,9 @@ define([
 
                 this.states = {
                     "active": true,
-                    "idling": true,
+                    "idling": false,
                     "shooting": false,
-                    "walking": false,
+                    "walking": true,
                     "grounded": false,
                     "framelocked": false,
                     "facingRight": true,
