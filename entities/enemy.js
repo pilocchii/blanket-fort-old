@@ -13,6 +13,7 @@ define([
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 0;
                 this.pointValue = 10;
+                this.sightRadius = [900, 300] // x, y distance from current location
                 //for demo
             }
 
