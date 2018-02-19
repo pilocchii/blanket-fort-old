@@ -13,7 +13,7 @@ define([
 
         class Dino extends Enemy {
 
-            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60) {
+            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60, patrolDistance = 400) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 2;
                 this.hero = this.game.hero;
@@ -31,7 +31,7 @@ define([
                 this.facing = 1;
 
                 this.startX = x;
-                this.maxX = this.startX + 400; //Change this to alter dino's patrol distance
+                this.maxX = this.startX + patrolDistance; //Change this to alter dino's patrol distance
                 
                 //Timers
                 this.shotCooldown = 90;
