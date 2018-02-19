@@ -36,7 +36,7 @@ define([
 
                 //Stats
                 this.health = 150;
-                this.damage = 1;
+                this.damage = 0;
                 this.facing = 1;
                 this.attackAngle = 5;
 
@@ -102,7 +102,7 @@ define([
                         this.boundY += 5;
                     }
                     //if (all of this stuff) ATTACK!!!
-                    if (Math.abs(this.x - this.game.hero.x) <= 700 && this.y - this.game.hero.y < 0
+                    if (Math.abs(this.x - this.game.hero.x) <= 700 && this.y - this.game.hero.y < -200 && (this.y - this.game.hero.y) > -300
                         && this.animation.loops > 2 && Math.random() * 100 <= 30) { 
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
@@ -136,10 +136,10 @@ define([
                     //Spawn Hurtbox
                     if(this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, -45, 10,
-                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, this.damage, this.states.facingRight, true));
+                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, 1, this.states.facingRight, true));
                     else
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.x, this.y, -45 - this.spriteWidth - 30, 10,
-                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, this.damage, this.states.facingRight, true));
+                            this.spriteWidth, this.spriteHeight, 40, 40, this.scale, 1, this.states.facingRight, true));
 
                     //state finished
                     if (this.animation.loops > 3) {
