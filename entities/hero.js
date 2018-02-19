@@ -278,6 +278,8 @@ define([
             if (this.y >= 5000) {
                 console.log("Falling into the abyss... You feel like a fool, don't you?");
             }
+            console.log("x: " + this.x);
+            console.log("y: " + this.y);
         }
 
         draw(ctx) {
