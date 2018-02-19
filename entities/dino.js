@@ -17,7 +17,8 @@ define([
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 7;
                 this.hero = this.game.hero;
-
+                this.y = y;
+                this.x = x;
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
@@ -35,6 +36,7 @@ define([
                 //Stats
                 this.health = 200;
                 this.damage = 3;
+                this.yVelocity = 0;
 
                 this.states = {
                     "active": true,
@@ -54,7 +56,7 @@ define([
                     "shoot_diagonal":   new Animation(this.img, [90, 70], 6, 18, 7, 4, false, this.scale, 10),//90x70
                     //"shoot_straight":   new Animation(this.img, [90, 70], 6, 18, 7, 4, false, this.scale, 14),//90x70                    
                 };
-                this.animation = this.animations.idle;
+                this.animation = this.animations.walk_straight;
             }
 
             update() {
@@ -70,20 +72,16 @@ define([
                         this.facing = -1;
                     }
                 }
-                if (this.states.idling && this.states.active) {//FROM: Idle
-                    //If Hero is within X and Dino can shoot, shoot!
-                    if (Math.abs(this.x - this.hero.x) <= 750 && this.shotCooldownTimer <= 0) {
-                        this.states.shooting = true;
-                    }
-                    else {
-                        this.states.walking = true;
-                    }
-                }
                 if (this.states.walking) {
-                    if (Math.abs(this.x - this.hero.x) <= 750 && this.shotCooldownTimer <= 0) {
-                        this.states.shooting = true;
-                        this.states.walking = false;
+                    if (this.animation.loops > 1) {
+                        if (Math.abs(this.x - this.hero.x) <= 750 && this.shotCooldownTimer <= 0 && this.yVelocity == 0) {
+                            this.animation.elapsedTime = 0;
+                            this.animation.loops = 0;
+                            this.states.shooting = true;
+                            this.states.walking = false;
+                        }
                     }
+
                 }
                 if (this.states.shooting) {
                     if (!this.states.framelocked) {
@@ -92,6 +90,7 @@ define([
                     }
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
+                        this.animation.loops = 0;
                         this.states.shooting = false;    
                         this.shotCooldownTimer = this.shotCooldown;
                         this.states.walking = true;
@@ -101,7 +100,7 @@ define([
 
                 //Timers
                 if (this.shotCooldownTimer > 0) {
-                    this.shotCooldownTimer--;
+                    this.shotCooldownTimer -= 1;
                 }
 
                 //Apply Gravity
@@ -110,6 +109,7 @@ define([
                 this.lastBoundY = this.boundY;
                 this.boundY += this.yVelocity;
 
+                console.log(this.y);
                 //Health checks
                 if (this.health <= 0) {
                     this.removeFromWorld = true;
@@ -118,32 +118,32 @@ define([
 
             draw(ctx) {
                 if (this.states.idling) {
-                    //console.log("idle");
                     this.animation = this.animations.idle;
                 }
                 if (this.states.walking) {
+                    this.updateHitbox(90, 60, 80, 60)
                     this.animation = this.animations.walk_straight;
                 }
                 if (this.states.shooting) {
-                    //console.log("shoot diagonal");
+                    this.updateHitbox(90, 70, 80, 60)
                     this.animation = this.animations.shoot_diagonal;   
                 }
                 this.drawImg(ctx);
             }
 
             collided(other, direction) {
-                if (direction === 'bottom') {
-                    this.boundY = other.boundY - this.boundHeight;
-                    this.y = this.boundY + this.boundHeight - 20; //fix magic number (drawn slightly below hitbox without the 20 offset)
-                    this.yVelocity = 0;
-                    this.jumpsLeft = this.maxJumps;
-                    this.states.jumping = false;
-                }
+                if (other instanceof Terrain) {
+                    if (direction === 'bottom') {
+                        this.boundY = other.boundY - this.boundHeight;
+                        this.y = this.boundY + this.boundHeight; //fix magic number (drawn slightly below hitbox without the 20 offset)
+                        this.yVelocity = 0;
+                    }
 
-                else if (direction === 'top') {
-                    this.boundY = other.boundY + other.boundHeight;
-                    this.y = this.boundY + this.boundHeight;
-                    this.lastBoundY = this.boundY;
+                    else if (direction === 'top') {
+                        this.boundY = other.boundY + other.boundHeight;
+                        this.y = this.boundY + this.boundHeight;
+                        this.lastBoundY = this.boundY;
+                    }
                 }
             }
 

@@ -19,7 +19,8 @@ define([
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 7;
                 this.pointValue = -5;
-                if (!facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
+                this.y -= 70
+                if (!facingRight) { this.x -= 100; } else { this.x += 100 };//offset to match gun
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
@@ -28,12 +29,12 @@ define([
                 this.boundWidth = 30;
                 this.boundHeight = 30;
                 if (facingRight) {
-                    this.boundX = this.centerX - (this.boundWidth / 2) - 2 * this.spriteWidth; //+100 aligns with the gun
-                    this.boundY = this.y - this.boundHeight - (this.spriteHeight) - 7; // -7 for pixel padding
+                    this.boundX = this.centerX - (this.boundWidth / 2) + 180; //+100 aligns with the gun
+                    this.boundY = this.y - this.boundHeight - (this.spriteHeight);
                 }
                 else {
-                    this.boundX = this.centerX - (this.boundWidth / 2) + 2 * this.spriteWidth;
-                    this.boundY = this.y - this.boundHeight - (this.spriteHeight) - 7; // -7 for pixel padding
+                    this.boundX = this.centerX - (this.boundWidth / 2) + 2 * this.spriteWidth - 180;
+                    this.boundY = this.y - this.boundHeight - (this.spriteHeight);
                 }
 
                 //Stats
