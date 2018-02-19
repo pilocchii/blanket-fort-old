@@ -15,7 +15,7 @@ define([
             this.spriteWidth/2, this.spriteHeight/2, hurtWidth, hurtHeight, this.scale, this.damage, this.states.facingRight));   
      */
 
-        class Hurtbox extends Actor {
+        class Hurtbox_Hero extends Actor {
 
             //Note that img is required for super(), even though Hurtbox is never animated.
             constructor(game, ctx = null, x, y, offX, offY, parentWidth, parentHeight, hurtWidth, hurtHeight, scale = 3, damage, facingRight = true, isEnemy = false, img = null) {
