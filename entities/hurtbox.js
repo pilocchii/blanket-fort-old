@@ -24,11 +24,11 @@ define([
                 this.scale = scale;
                 this.isEnemy = isEnemy;
 
-                this.hurtWidth = hurtWidth;
-                this.hurtHeight = hurtHeight;
+                this.boundWidth = hurtWidth;
+                this.boundHeight = hurtHeight;
 
-                this.boundY = y - this.hurtHeight + offY;
-                this.boundX = x + parentWidth + this.hurtWidth + offX;
+                this.boundY = y - this.boundHeight + offY;
+                this.boundX = x + parentWidth + this.boundWidth + offX;
                 //Stats
                 this.damage = damage;
                 this.frames = 1;
@@ -63,7 +63,7 @@ define([
                 ctx.strokeStyle = "red";
                 ctx.rect(this.boundX,
                     this.boundY,
-                    this.hurtWidth, this.hurtHeight);
+                    this.boundWidth, this.boundHeight);
                 ctx.stroke();
                 ctx.closePath();
             }
@@ -73,7 +73,6 @@ define([
                 this.drawOutline(ctx);
             }
         }
-
         return Hurtbox;
     });
 
