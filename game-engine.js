@@ -142,7 +142,7 @@ define([
         Adds an entity to the game
         */
         addEntity (entity) {
-            console.log('added entity');
+            //console.log('added entity');
             this.entities.push(entity);
         }
 
