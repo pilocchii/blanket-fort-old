@@ -112,7 +112,9 @@ define([
 
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1500, 150, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        gameEngine.addEntity(new Dino(gameEngine, 1250, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 2130, 1530, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 152, 770, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+
         //gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
         
         gameEngine.addEntity(hud);
