@@ -33,8 +33,7 @@ require.config({
         "rocket": "entities/rocket",
         "shotblast": "entities/shotblast",
         "enemy": "entities/enemy",
-        "hurtbox-hero": "entities/hurtbox-hero",
-        "hurtbox-enemy": "entities/hurtbox-enemy",
+        "hurtbox": "entities/hurtbox",
         "item": "entities/items/item",
     },
 });
