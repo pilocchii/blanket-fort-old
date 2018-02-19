@@ -30,6 +30,7 @@ require.config({
         "crow": "entities/crow",
         "dino": "entities/dino",
         "bullet": "entities/bullet",
+        "rocket": "entities/rocket",
         "shotblast": "entities/shotblast",
         "enemy": "entities/enemy",
         "hurtbox": "entities/hurtbox",

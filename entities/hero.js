@@ -368,6 +368,7 @@ define([
                 } 
                 if (other instanceof Hurtbox) {
                     other.hasOwnProperty("isEnemy");
+                    other.hasOwnProperty("damage");
                     if (other.isEnemy) {
                         this.health -= other.damage;
                         this.damageCooldownTimer = this.damageCooldown;
