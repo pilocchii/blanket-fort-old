@@ -58,7 +58,7 @@ define([
         /* Draws this entity. Called every cycle of the game engine. */
         draw (ctx) {
             if (this.game.showOutlines && this.boundX) {
-                drawOutline(ctx)
+                //drawOutline(ctx)
             }
             if (this.img) {
                 this.animation.drawFrame(this.clockTick, ctx, this.x, this.y, true);
