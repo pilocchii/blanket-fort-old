@@ -37,7 +37,7 @@ define([
                 this.sightRadius[0] = 500;
                 this.sightRadius[1] = 700;
                 this.health = 100;
-                this.damage = 0;
+                this.damage = 1;
                 this.facing = 1;
                 this.attackAngle1 = 2;
                 this.attackAngle2 = 10;
