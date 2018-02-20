@@ -2,10 +2,14 @@ define([
     'actor',
     'animation',
     "hurtbox",
+    "bullet",
+    "terrain",
 ], function (
     Actor,
     Animation,
     Hurtbox,
+    Bullet,
+    Terrain,
     ) {
 
 
@@ -27,7 +31,8 @@ define([
                 this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
                 //Stats
-
+                this.health = 5;
+                this.damage = 500;
                 this.states = {
                     "starting": true,
                     "stablized": false,
@@ -35,9 +40,9 @@ define([
                     "facingRight": facingRight
                 };
                 this.animations = {
-                    "start": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 15, 2, false, this.scale, 11),
-                    "stable": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 15, 1, true, this.scale, 13),
-                    "recovery": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 15, 4, false, this.scale, 14),
+                    "start": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 7, 2, false, this.scale, 11),
+                    "stable": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 7, 1, true, this.scale, 13),
+                    "recovery": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 4, 18, 7, 4, false, this.scale, 14),
                 };
                 this.animation = this.animations.start;
             }
@@ -79,10 +84,10 @@ define([
                 if (!this.states.recovering) {//Hurtbox  active unless in recovery frames
                     if(this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100, 100,
-                            this.spriteWidth, this.spriteHeight, 150, 100, this.scale, 50, this.states.facingRight));
+                            this.spriteWidth, this.spriteHeight, 150, 100, this.scale, this.damage, this.states.facingRight));
                     else
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - this.spriteWidth - 200, 100,
-                            this.spriteWidth, this.spriteHeight, 150, 100, this.scale, 50, this.states.facingRight));  
+                            this.spriteWidth, this.spriteHeight, 150, 100, this.scale, this.damage, this.states.facingRight));  
                 }
 
             };
@@ -99,6 +104,18 @@ define([
                 }
                 this.drawImg(ctx);
             }
+
+            //collided(other, direction) {
+            //    if (other instanceof Terrain) {
+            //        this.removeFromWorld = true;
+            //    }
+            //    else if (other instanceof Bullet) {
+            //        this.health -= other.damage;
+            //    }
+            //    if (this.health <= 0) {
+            //        this.removeFromWorld = true;
+            //    }
+            //}
 
             drawOutline(ctx) {
                 ctx.beginPath();

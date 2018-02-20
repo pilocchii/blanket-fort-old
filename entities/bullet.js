@@ -4,12 +4,14 @@ define([
     "animation",
     "hero",
     "projectile",
+    "hurtbox",
 ], function (
     Enemy,
     Terrain,
     Animation,
     Hero,
     Projectile,
+    Hurtbox,
     ) {
 
 
@@ -18,7 +20,6 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 7;
-                this.pointValue = -5;
                 if (!facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
@@ -89,6 +90,13 @@ define([
                 }
                 else if (other instanceof Projectile) {
                     this.health -= other.damage;
+                }
+                else if (other instanceof Hurtbox) {
+                    other.hasOwnProperty("isEnemy");
+                    other.hasOwnProperty("damage");
+                    if (!other.isEnemy) {
+                        this.removeFromWorld = true;
+                    }
                 }
                 if (this.health <= 0) {
                     this.removeFromWorld = true;

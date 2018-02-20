@@ -3,17 +3,21 @@ define([
     "animation",
     "terrain",
     "rocket",
+    "projectile",
+    "hurtbox",
 ], function (
     Enemy,
     Animation,
     Terrain,
     Rocket,
+    Projectile,
+    Hurtbox,
     ) {
 
 
         class Dino extends Enemy {
 
-            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60, patrolDistance = 400) {
+            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60, patrolDistance = 0, shotTimeOffset = 0) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 2;
                 this.hero = this.game.hero;
@@ -24,30 +28,32 @@ define([
                 this.spriteHeight = spriteHeight;
 
                 this.centerX = x + ((spriteWidth * scale) / 2) - spriteWidth;
-                this.boundWidth = this.scale * 45;
-                this.boundHeight = this.scale * 45;
+                this.boundWidth = this.scale * 35;
+                this.boundHeight = this.scale * 35;
                 this.boundX = this.centerX - (this.boundWidth / 2);
-                this.boundY = this.y - this.boundHeight + (this.spriteHeight / 2 - 10);
+                this.boundY = this.y - this.boundHeight + (this.spriteHeight / 2);
                 this.facing = 1;
 
                 this.startX = x;
                 this.maxX = this.startX + patrolDistance; //Change this to alter dino's patrol distance
                 
                 //Timers
-                this.shotCooldown = 90;
-                this.shotCooldownTimer = 0;
+                this.shotCooldown = 500;
+                this.shotCooldownTimer = shotTimeOffset;
                 //Stats
                 this.health = 200;
-                this.damage = 3;
+                this.damage = 1;
                 this.yVelocity = 0;
+                this.sightRadius[0] = 1500;
+                this.sightRadius[1] = 1000;
 
                 this.states = {
                     "active": true,
-                    "idling": false,
+                    "idling": true,
                     "shooting": false,
-                    "walking": true,
+                    "walking": false,
                     "grounded": false,
-                    "patrolling": true,
+                    "patrolling": false,
                     "framelocked": false,
                     "facingRight": true,
                 };
@@ -60,7 +66,10 @@ define([
                     "shoot_diagonal":   new Animation(this.img, [90, 70], 6, 18, 7, 4, false, this.scale, 10),//90x70
                     //"shoot_straight":   new Animation(this.img, [90, 70], 6, 18, 7, 4, false, this.scale, 14),//90x70                    
                 };
-                this.animation = this.animations.walk_straight;
+                if (patrolDistance > 0) {
+                    this.states.patrolling = true;
+                }
+                this.animation = this.animations.idle;
             }
 
             update() {
@@ -68,32 +77,52 @@ define([
                 //Turn towards Hero
                 // if (!this.states.framelocked && !this.states.patrolling) {
                 //     this.states.patrolling = true;
-                    if (this.x < this.startX) {
+                if (this.states.patrolling && !this.states.shooting) {
+                    this.states.walking = true;
+                    if (this.x <= this.startX) {
                         this.states.facingRight = true;
                         this.facing = 1;
                     }
-                    if (this.x > this.maxX ) {
+                    if (this.x >= this.maxX) {
                         this.states.facingRight = false;
                         this.facing = -1;
                     }
+                }
+                else {
+                    if (this.x - this.game.hero.x < 0) {
+                        this.states.facingRight = true;
+                        this.facing = 1;
+                    }
+                    else {
+                        this.states.facingRight = false;
+                        this.facing = -1;
+                    }
+                }
+
                 // }
                 if (this.states.walking) {
 
                     this.x += this.facing * this.movementSpeed;
-                    if (this.animation.loops > 5) {
-                        this.states.patrolling = false;
-                        if (this.shotCooldownTimer <= 0 && this.yVelocity == 0) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
-                            this.states.shooting = true;
-                            this.states.walking = false;
-                        }
+
+                    if (this.shotCooldownTimer <= 0 && this.yVelocity === 0
+                        && (Math.abs(this.maxX - this.x) <= 5 || Math.abs(this.startX - this.x) <= 5)
+                            && Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0] && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]) {
+                        this.animation.elapsedTime = 0;
+                        this.animation.loops = 0;
+                        this.states.shooting = true;
+                        this.states.walking = false;
                     }
 
+
+                }
+                else if (this.states.idling) {
+                    if (this.shotCooldownTimer <= 0 && this.yVelocity === 0 && Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0] && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]) {
+                        this.states.shooting = true;
+                        this.states.idling = false;
+                    }                        
                 }
                 if (this.states.shooting) {
-                    if(this.x < this.hero.x) this.states.facingRight = true;
-                    else this.states.facingRight = false;
+
                     if (!this.states.framelocked) {
                         this.game.addEntity(new Rocket(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.states.framelocked = true;
@@ -103,7 +132,10 @@ define([
                         this.animation.loops = 0;
                         this.states.shooting = false;    
                         this.shotCooldownTimer = this.shotCooldown;
-                        this.states.walking = true;
+                        if (this.states.patrolling)
+                            this.states.walking = true;
+                        else
+                            this.states.idling = true;
                         this.states.framelocked = false;
                     }
                 }
@@ -128,14 +160,15 @@ define([
 
             draw(ctx) {
                 if (this.states.idling) {
+                    this.updateHitbox(90, 60, 50, 45)
                     this.animation = this.animations.idle;
                 }
                 if (this.states.walking) {
-                    this.updateHitbox(90, 60, 80, 60)
+                    this.updateHitbox(90, 60, 50, 45, -this.facing * 10)
                     this.animation = this.animations.walk_straight;
                 }
                 if (this.states.shooting) {
-                    this.updateHitbox(90, 70, 80, 60)
+                    this.updateHitbox(90, 70, 50, 45, -this.facing * 10)
                     this.animation = this.animations.shoot_diagonal;   
                 }
                 this.drawImg(ctx);
@@ -154,16 +187,39 @@ define([
                         this.y = this.boundY + this.boundHeight;
                         this.lastBoundY = this.boundY;
                     }
+                    else if (direction === 'left') {
+                        this.boundX = other.boundX + other.boundWidth;
+                        this.x = this.boundX + 87;
+                        this.states.facingRight = true;
+                        this.facing = -1;
+                    }
+                    else if (direction === 'left') {
+                        this.boundX = other.boundX + other.boundWidth;
+                        this.x = this.boundX - 87;
+                        this.states.facingRight = false;
+                        this.facing = 1;
+                    }
+                }
+                if (other instanceof Projectile) {
+                    this.health -= other.damage;
+                }
+                if (other instanceof Hurtbox) {
+                    other.hasOwnProperty("isEnemy");
+                    other.hasOwnProperty("damage");
+                    // blocking from left & right
+                    if (!other.isEnemy) {
+                        this.health -= other.damage;
+                    }
                 }
             }
 
 
-            updateHitbox(fWidth, fHeight, bWidth, bHeight) {
+            updateHitbox(fWidth, fHeight, bWidth, bHeight, offX = 0, offY = 0) {
                 this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth;
                 this.boundWidth = this.scale * bWidth;
                 this.boundHeight = this.scale * bHeight;
-                this.boundX = this.centerX - this.boundWidth / 2;
-                this.boundY = this.y - this.boundHeight;
+                this.boundX = this.centerX - this.boundWidth / 2 + offX;
+                this.boundY = this.y - this.boundHeight + offY;
             }
 
             drawOutline(ctx) {

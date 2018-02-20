@@ -100,19 +100,22 @@ define([
 
         camera.follow(hero);
         gameEngine.addEntity(hero);  
-        gameEngine.addEntity(new Item.HealthPack(gameEngine, 250, 1400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
-        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 350, 1400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.HealthPack(gameEngine, 2935, 1200, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 2965, 1200, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.HealthPack(gameEngine, 300, 400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 330, 400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
 
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 2000, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+
+        gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+
         
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1000, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1000, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1500, 150, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-
-        //gameEngine.addEntity(new Dino(gameEngine, 2130, 1530, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Dino(gameEngine, 152, 770, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 2130, 1061, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
+        gameEngine.addEntity(new Dino(gameEngine, 1986, 582, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
         //gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
         

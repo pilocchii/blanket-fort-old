@@ -47,9 +47,9 @@ define([
 
             this.maxHealth = 6;
             this.maxEnergy = 6;
-            this.energy = 6;
-            this.health = 4;
-            this.slashEnergyCost = 3;
+            this.energy = 5;
+            this.health = 5;
+            this.slashEnergyCost = 4;
             this.shootEnergyCost = 2;
             this.dashEnergyCost = 1;
             //Timers
@@ -57,6 +57,8 @@ define([
             this.damageCooldown = 20;
             this.energyCooldownTimer = 0;
             this.energyCooldown = 240; 
+            this.velocityCooldown = 2;
+            this.velocityCooldownTimer = 0;
 
             this.states = {
                 "running": false,
@@ -64,7 +66,7 @@ define([
                 "shooting": false,
                 "cleaving": false,
                 "facingRight": true,
-                "grounded": false,
+                "grounded": true,
                 "slashing": false,
                 "shotlocked": false,
                 "framelocked": false,
@@ -109,13 +111,13 @@ define([
             if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked) { //shoot
                 this.states.shooting = true;
             }
-            if (this.game.controlKeys[this.game.controls.cleave].active && !this.states.jumping && !this.states.framelocked) { //cleave
+            if (this.game.controlKeys[this.game.controls.cleave].active && this.states.grounded && !this.states.framelocked) { //cleave
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
                 this.states.cleaving = true;
                 this.states.framelocked = true;
             }
-            if (this.game.controlKeys[this.game.controls.slash].active && !this.states.jumping && (!this.states.framelocked || this.states.dashing)) { //slash
+            if (this.game.controlKeys[this.game.controls.slash].active && this.states.grounded && (!this.states.framelocked || this.states.dashing)) { //slash
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
                 this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
@@ -123,6 +125,8 @@ define([
             if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { //dash
                 this.states.dashing = true;
                 this.states.hasDashed = true;
+                this.damageCooldownTimer = 18;
+                console.log("heeey-oh!")
                 this.states.running = false;
                 this.states.framelocked = true;
             }
@@ -168,19 +172,19 @@ define([
             if (this.states.cleaving) {
                 if (this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 6) {//Upper hurtbbox
                     if(this.states.facingRight)
-                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -200, 0,
-                            this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -230, 0,
+                            this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 150, this.states.facingRight));
                     else
-                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - this.spriteWidth - 150, 0,
-                            this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 50, this.states.facingRight));
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -70 - this.spriteWidth - 150, 0,
+                            this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 150, this.states.facingRight));
                 }
                 if (this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 11) {//Lower hurtbox
                     if (this.states.facingRight)
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
-                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 150, this.states.facingRight));
                     else
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
-                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 50, this.states.facingRight));
+                            this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 150, this.states.facingRight));
                 }
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
@@ -262,8 +266,21 @@ define([
                 this.energy++;
                 this.energyCooldownTimer = this.energyCooldown;// Energy restores more slowly (one energy per cooldown)
             }
-            if (this.damageCooldownTimer > 0)
+            if (this.damageCooldownTimer > 0) {
                 this.damageCooldownTimer--;
+                console.log(this.damageCooldownTimer);
+            }
+
+            if (this.yVelocity === 0 && this.velocityCooldownTimer > 0) {
+                this.velocityCooldownTimer--;
+            }
+            else if (this.yVelocity === 0 && this.velocityCooldownTimer === 0) {
+                this.states.grounded = true;
+            }
+            else if (this.yVelocity != 0) {
+                this.velocityCooldownTimer = this.velocityCooldown;
+                this.states.grounded = false;
+            }
 
             // update velocities based on gravity and friction
             this.yVelocity += this.gravity * this.gravity;
@@ -273,13 +290,8 @@ define([
 
             //Health checks and position checks
             if (this.health <= 0) {
-                this.removeFromWorld = true;
+                //this.removeFromWorld = true;
             }
-            if (this.y >= 5000) {
-                console.log("Falling into the abyss... You feel like a fool, don't you?");
-            }
-            console.log("x: " + this.x);
-            console.log("y: " + this.y);
         }
 
         draw(ctx) {
@@ -313,7 +325,7 @@ define([
                 this.animation = this.animations.slash;
             }
             else if (this.states.dashing && this.animation) { //dashing
-                this.updateHitbox(40, 25, 10, 17);
+                this.updateHitbox(40, 25, 30, 15, 0, -10);
                 this.animation = this.animations.dash;
             }
             else {

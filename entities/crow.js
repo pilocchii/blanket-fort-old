@@ -11,7 +11,6 @@ define([
     Terrain,
     Hurtbox,
     Projectile,
-
     ) {
 
 
@@ -35,7 +34,9 @@ define([
                 this.boundY = this.y - this.boundHeight;
 
                 //Stats
-                this.health = 150;
+                this.sightRadius[0] = 500;
+                this.sightRadius[1] = 700;
+                this.health = 100;
                 this.damage = 0;
                 this.facing = 1;
                 this.attackAngle1 = 2;
@@ -76,7 +77,7 @@ define([
                     }
                 }
                 if (this.states.hiding) {
-                    if (Math.abs(this.x - this.game.hero.x) <= 800) {
+                    if (Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0] && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]) {
                         //disable states
                         this.states.hiding = false;
                         //enable states
@@ -124,7 +125,7 @@ define([
                         //randomly determine angle of attack (makes prediction harder)
                         //min attack angle of 2
                         //this.attackAngle = 2 + Math.random() * 8; 
-                        this.rand = Math.floor(Math.random() * 2);
+                        this.rand = Math.floor(Math.random() * 3);
                         this.states.attacking_final = true;
                     }
                 }
@@ -161,9 +162,11 @@ define([
                 }
                 if (this.states.recovering) { //after attack is finished
                     //fly away
-                    this.x += this.facing*7;
-                    this.boundX += this.facing*7;
-                    if (Math.abs(this.x - this.game.hero.x) >= 300) {
+                    this.x += this.facing * 7;
+                    this.boundX += this.facing * 7;
+                    this.y -= 5;
+                    this.boundY -= 5;
+                    if (Math.abs(this.x - this.game.hero.x) >= 500) {
                         this.states.recovering = false;
                         this.states.flying = true;
                     }
@@ -231,13 +234,25 @@ define([
                 if (other instanceof Terrain) {
                     //null
                 }
-                if (other instanceof Projectile) {
+                if (other instanceof Projectile && !this.states.hurt) {
                     this.health -= other.damage;
                     this.states.flying = false;
                     this.states.attacking = false;
                     this.states.attacking_final = false;
                     this.states.hiding = false;
                     this.states.hurt = true;
+                }
+                if (other instanceof Hurtbox && !this.states.hurt) {
+                    other.hasOwnProperty("isEnemy");
+                    other.hasOwnProperty("damage");
+                    if (!other.isEnemy) {
+                        this.health -= 50;
+                        this.states.flying = false;
+                        this.states.attacking = false;
+                        this.states.attacking_final = false;
+                        this.states.hiding = false;
+                        this.states.hurt = true;
+                    }
                 }
             }
 

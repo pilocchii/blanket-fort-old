@@ -17,8 +17,8 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
-                this.movementSpeed = 3;
-                this.pointValue = -5;
+                this.xSpeed = 4;
+                this.ySpeed = 2;
                 this.y -= 70
                 if (!facingRight) { this.x -= 100; } else { this.x += 100 };//offset to match gun
                 this.scale = scale;
@@ -58,26 +58,26 @@ define([
                     this.states.facingRight = true;
                     this.facing = 1;
                 }
-                else {
+                else /*if(this.x - this.game.hero.x > this.xSpeed - 4)*/ {
                     this.states.facingRight = false;
                     this.facing = -1;
                 }
                 if (this.states.active) {//TODO Tracking behavior
-                        this.x += this.facing*this.movementSpeed;
-                        this.boundX += this.facing*this.movementSpeed;
-                        if (this.y - this.game.hero.y > 0) {// below hero;
-                            this.y -= 2;
-                            this.boundY -= 2;
+                        this.x +=       this.facing * this.xSpeed + this.facing * Math.floor(Math.abs(this.x - this.game.hero.x) / 400) * 1.5;
+                        this.boundX +=  this.facing * this.xSpeed + this.facing * Math.floor(Math.abs(this.x - this.game.hero.x) / 400) * 1.5;
+                        if (this.y - this.game.hero.y >= 0) {// below hero;
+                            this.y -=       this.ySpeed + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
+                            this.boundY -=  this.ySpeed + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
                         }
-                        else {
-                            this.y += 2;
-                            this.boundY += 2;
+                        else {// above hero
+                            this.y +=       this.ySpeed + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
+                            this.boundY +=  this.ySpeed + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
                         }
-                    //if (this.animation.loops > 7) {
-                    //    this.animation.elapsedTime = 0;
-                    //    this.animation.loops = 0;
-                    //    this.removeFromWorld = true;
-                    //}
+                    if (this.animation.loops > 15) {
+                        this.animation.elapsedTime = 0;
+                        this.animation.loops = 0;
+                        this.removeFromWorld = true;
+                    }
                 }
             };
 
@@ -91,9 +91,13 @@ define([
             collided(other, direction) {
                 // collide with terrain
                 if (other instanceof Terrain) {
-                    this.removeFromWorld = true;
+                    if (this.animation.loops > 3)
+                        this.removeFromWorld = true;
                 }
                 else if (other instanceof Hero) {
+                    this.removeFromWorld = true;
+                }
+                else if (other instanceof Projectile) {
                     this.removeFromWorld = true;
                 }
             }
