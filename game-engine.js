@@ -154,8 +154,16 @@ define([
         draw (drawCallback) {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
             this.ctx.save();
-            for (let i = 0; i < this.entities.length; i++) {
+            this.entities[0].draw(this.ctx);
+            for (let i = 1; i < this.entities.length; i++) {
+                //Draw only what is within the canvas view (numbers are negative because the camera is weird like that.
+                //postive numbers would screw the translate process)
+                if(-this.entities[i].x - this.entities[i].boundWidth < this.entities[0].xView 
+                && -this.entities[i].x > this.entities[0].xView - this.ctx.canvas.width 
+                && -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
+                && -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height) {
                 this.entities[i].draw(this.ctx);
+                }
             }
             if (drawCallback) {
                 drawCallback(this);

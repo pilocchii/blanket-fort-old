@@ -69,11 +69,9 @@ define([
         let ctx = canvas.getContext('2d');
         console.log("canvas width: " + canvas.width);
         console.log("canvas height: " + canvas.height);
-        let vPortWidth = 500; // Distance from left side of screen
-        let vPortHeight = 500; // Distance from top of screen
 
         let gameEngine = new GameEngine();
-        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, vPortWidth, vPortHeight, canvas.width, canvas.height) //Placeholder magic numbers until we decide on how to handle world boundary and camera
+        let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width, canvas.height, 3000, 3000) //Placeholder magic numbers until we decide on how to handle world boundary and camera
         gameEngine.addEntity(camera);
         
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
