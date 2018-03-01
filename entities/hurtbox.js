@@ -18,11 +18,12 @@ define([
         class Hurtbox extends Actor {
 
             //Note that img is required for super(), even though Hurtbox is never animated.
-            constructor(game, ctx = null, x, y, offX, offY, parentWidth, parentHeight, hurtWidth, hurtHeight, scale = 3, damage, facingRight = true, isEnemy = false, img = null) {
+            constructor(game, ctx = null, x, y, offX, offY, parentWidth, parentHeight, hurtWidth, hurtHeight, scale = 3, damage, facingRight = true, isEnemy = false, damageType = "health", frames = 1, img = null) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 0;
                 this.scale = scale;
                 this.isEnemy = isEnemy;
+                this.damageType = damageType;
 
                 this.boundWidth = hurtWidth;
                 this.boundHeight = hurtHeight;
@@ -31,7 +32,7 @@ define([
                 this.boundX = x + parentWidth + this.boundWidth + offX;
                 //Stats
                 this.damage = damage;
-                this.frames = 1;
+                this.frames = frames;
 
 
                 this.states = {
@@ -70,7 +71,7 @@ define([
 
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
             }
         }
         return Hurtbox;
