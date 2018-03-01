@@ -24,14 +24,6 @@ define([
         constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=60, spriteHeight=60) {
             super(game, x, y, img, ctx);
             this.origY = this.y; //For jumping
-            //this.y = y - spriteHeight*scale;
-            this.movementSpeed = (8);
-
-            this.jumpStrength = (20);
-            this.jumpsLeft = 2;
-            this.maxJumps = 2;
-            this.jumpTimer = 0;
-            this.jumpCooldown = 20;
 
             this.scale = scale;
             this.spriteWidth = spriteWidth;
@@ -45,6 +37,14 @@ define([
             this.boundY = this.y - this.boundHeight;
             this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
+            this.movementSpeed = (8);
+            this.dashSpeed = 17
+            this.jumpStrength = (20);
+            this.jumpsLeft = 2;
+            this.maxJumps = 2;
+            this.jumpTimer = 0;
+            this.jumpCooldown = 20;
+
             this.maxHealth = 6;
             this.maxEnergy = 6;
             this.energy = 5;
@@ -52,6 +52,7 @@ define([
             this.slashEnergyCost = 4;
             this.shootEnergyCost = 2;
             this.dashEnergyCost = 1;
+            
             //Timers
             this.damageCooldownTimer = 0;
             this.damageCooldown = 20;
@@ -86,7 +87,7 @@ define([
                 "gunrun": new Animation(this.img, [60, 60], 1, 22, 3, 11, true, this.scale, 11), //50x50
                 "slash": new Animation(this.img, [90, 60], 4, 11, 2, 11, false, this.scale), //80x50
                 "cleave": new Animation(this.img, [100, 70], 9, 13, 2, 13, false, this.scale), //80x60
-                "dash": new Animation(this.img, [90, 60], 4, 11, 2, 11, false, 2),
+                "dash": new Animation(this.img, [60, 60], 5, 7, 3, 7, false, this.scale),
             };
         }
 
@@ -125,8 +126,7 @@ define([
             if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { //dash
                 this.states.dashing = true;
                 this.states.hasDashed = true;
-                this.damageCooldownTimer = 18;
-                console.log("heeey-oh!")
+                this.damageCooldownTimer = 19;
                 this.states.running = false;
                 this.states.framelocked = true;
             }
@@ -248,8 +248,8 @@ define([
                     this.states.hasDashed = false;
                 }
 
-                if (this.states.facingRight) {this.x += 17; this.boundX += 17;}
-                else { this.x -= 17; this.boundX -= 17; }
+                if (this.states.facingRight) {this.x += this.dashSpeed; this.boundX += this.dashSpeed;}
+                else { this.x -= this.dashSpeed; this.boundX -= this.dashSpeed; }
 
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
@@ -325,7 +325,7 @@ define([
                 this.animation = this.animations.slash;
             }
             else if (this.states.dashing && this.animation) { //dashing
-                this.updateHitbox(40, 25, 30, 15, 0, -10);
+                this.updateHitbox(60, 60, 45, 15, 0, -10);
                 this.animation = this.animations.dash;
             }
             else {
@@ -424,7 +424,7 @@ define([
 
 
         drawImg (ctx) {
-            //this.drawOutline(ctx);
+            this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }

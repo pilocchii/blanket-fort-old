@@ -35,6 +35,8 @@ require.config({
         "enemy": "entities/enemy",
         "hurtbox": "entities/hurtbox",
         "item": "entities/items/item",
+        "bomb": "entities/bomb",
+        "hand": "entities/hand",
     },
 });
 

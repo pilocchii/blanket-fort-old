@@ -20,7 +20,7 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 7;
-                if (!facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
+                if (facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
@@ -28,13 +28,12 @@ define([
                 this.centerX = x + ((spriteWidth * scale) / 2) - spriteWidth;
                 this.boundWidth = 30;
                 this.boundHeight = 30;
-                if (facingRight) {
+                this.boundY = this.y - this.boundHeight - (this.spriteHeight) - 7;
+                if (!facingRight) {
                     this.boundX = this.centerX - (this.boundWidth / 2) - 2*this.spriteWidth; //+100 aligns with the gun
-                    this.boundY = this.y - this.boundHeight - (this.spriteHeight) -7; // -7 for pixel padding
                 }
                 else {
                     this.boundX = this.centerX - (this.boundWidth / 2) + 2*this.spriteWidth;
-                    this.boundY = this.y - this.boundHeight - (this.spriteHeight) -7; // -7 for pixel padding
                 }
 
                 //Stats
@@ -43,7 +42,7 @@ define([
 
                 this.states = {
                     "active": true,
-                    "facingRight": !facingRight,
+                    "facingRight": facingRight,
                 };
                 this.animations = {
                     "bullet": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 20, 2, true, this.scale, 16),
