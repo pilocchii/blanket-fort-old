@@ -70,7 +70,7 @@ define([
                     "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 15, 4, true, this.scale, 11),
                     "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 3, 12, true, this.scale),
                     "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale),
-                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale, 5),
+                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 4, 5, false, this.scale, 5),
                     "slash_start": new Animation(this.img, [100, 60], 3, 16, 3, 9, false, this.scale),
                     "slash_end": new Animation(this.img, [100, 60], 3, 16, 3, 7, false, this.scale, 9),
                 };
@@ -238,11 +238,11 @@ define([
                         //this.UpdateHitbox(50, 50, 45, 45);
                         // a little knockback
                         if (this.states.facingRight) {
-                            this.x += 1;
-                            this.boundX += 1;
-                        } else {
                             this.x -= 1;
                             this.boundX -= 1;
+                        } else {
+                            this.x += 1;
+                            this.boundX += 1;
                         }
 
 
@@ -380,6 +380,8 @@ define([
                                 // blood or something goes here
                                 // this.game.addEntity(...)
                                 this.health -= other.damage;
+                                //Automatically dies to Hero's hurtbox (sword) attacks
+                                //this.removeFromWorld = true;
                                 console.log("OUCH!")
                             }
                         }

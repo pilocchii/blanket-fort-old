@@ -43,13 +43,13 @@ define([
                 "jump": "Space",
                 "right": "KeyD",
                 "left": "KeyA",
-                "shoot": "Numpad1",
+                "shoot": "Numpad4",
                 "slash": "Numpad5",
                 "cleave": "Numpad6",
                 "energize": "KeyW",
-                "dash": "Numpad2",
+                "dash": "Numpad1",
+                "getPos": "KeyE",
             }
-            this.spawnedSS = false;
             this.score = 0;
             this.hero = hero;
         }
@@ -202,10 +202,12 @@ define([
                     if (entity != other && entity.isColliding(other) != 'none') {
                         let direction = entity.isColliding(other);
                         entity.collided(other, direction);
-
                     }
                 }
                 
+            }
+            if (this.controlKeys[this.controls.getPos].active) {
+                console.log("x: " + this.hero.x + ", y: " + this.hero.y);
             }
         }
 

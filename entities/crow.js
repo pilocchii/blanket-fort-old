@@ -37,7 +37,7 @@ define([
                 this.sightRadius[0] = 500;
                 this.sightRadius[1] = 700;
                 this.health = 100;
-                this.damage = 1;
+                this.damage = 0;
                 this.facing = 1;
                 this.attackAngle1 = 2;
                 this.attackAngle2 = 10;
@@ -45,28 +45,26 @@ define([
 
 
                 this.states = {
-                    "active": false,
+                    "active": true,
                     "flying": false,
                     "attacking": false,
                     "attacking_final": false,
                     "recovering": false,
                     "hurt": false,
-                    "hiding": true,
-                    "facingRight": true,
+                    "idling": true,
+                    "facingRight": false,
                 };
                 this.animations = {                   
                     "fly":          new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 5, true, this.scale),
                     "attack":       new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 3, false, this.scale, 5),
                     "attack_final": new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 2, true, this.scale, 8),
                     "hurt":         new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 1, true, this.scale, 10),    
-                    //TEMPORARY
-                    //"hiding":       new Animation(this.img, [spriteWidth, spriteHeight], 8, 12, 1, 1, true, this.scale, 11),  
                 };
-                this.animation = null;
+                this.animation = this.animations.fly;
             }
 
             update() {
-                if (!this.states.hiding && !this.states.recovering && !this.states.attacking_final) {
+                if (!this.states.recovering && !this.states.attacking_final) {
                     if (this.x - this.game.hero.x < 0) {
                         this.states.facingRight = true;
                         this.facing = 1;
@@ -76,17 +74,12 @@ define([
                         this.facing = -1;
                     }
                 }
-                if (this.states.hiding) {
+                if (this.states.idling) {
                     if (Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0] && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]) {
                         //disable states
-                        this.states.hiding = false;
+                        this.states.idling = false;
                         //enable states
                         this.states.flying = true;
-                        this.states.active = true;
-                        //update hitbox
-                        this.updateHitbox(50, 40, 20, 15);      
-                        //PREVENTS BUG, BUT AGAINST THE BEST PRACTICE CODING GUIDLINES
-                        this.animation = this.animations.fly;
                     }
                 }
                 if (this.states.flying) { //this.updateHitbox(50, 40, 20, 15);
@@ -138,7 +131,6 @@ define([
                         this.y += this.attackAngle2;
                         this.boundY += this.attackAngle2;
                     }
-                    console.log(this.rand);
                     this.x += this.facing * 17;
                     this.boundX += this.facing * 17;
                     //console.log("y: " + this.y);
@@ -183,6 +175,7 @@ define([
                     }
                     if (this.animation.loops > 8) {
                         //reset animation
+                        this.damage = 1;
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         //disable states
@@ -200,7 +193,7 @@ define([
             }
 
             draw(ctx) {
-                if (this.states.flying) {
+                if (this.states.flying || this.states.idling || this.states.recovering) {
                     this.animation = this.animations.fly;
                 }
                 if (this.states.attacking) {
@@ -209,15 +202,9 @@ define([
                 if (this.states.attacking_final) {
                     this.animation = this.animations.attack_final;
                 }
-                if (this.states.recovering) {
-                    this.animation = this.animations.fly;
-                }
                 if (this.states.hurt) {
                     this.animation = this.animations.hurt;
                 }
-                //if (this.states.hiding) {
-                //    this.animation = this.animations.hiding;
-                //}
                 this.drawImg(ctx);
             }
 
@@ -234,15 +221,15 @@ define([
                 if (other instanceof Terrain) {
                     //null
                 }
-                if (other instanceof Projectile && !this.states.hurt) {
+                if (other instanceof Projectile && !this.states.hurt && !this.states.idling) {
                     this.health -= other.damage;
                     this.states.flying = false;
                     this.states.attacking = false;
                     this.states.attacking_final = false;
-                    this.states.hiding = false;
+                    this.states.idling = false;
                     this.states.hurt = true;
                 }
-                if (other instanceof Hurtbox && !this.states.hurt) {
+                if (other instanceof Hurtbox && !this.states.hurt && !this.states.idling) {
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");
                     if (!other.isEnemy) {
@@ -250,7 +237,7 @@ define([
                         this.states.flying = false;
                         this.states.attacking = false;
                         this.states.attacking_final = false;
-                        this.states.hiding = false;
+                        this.states.idling = false;
                         this.states.hurt = true;
                     }
                 }

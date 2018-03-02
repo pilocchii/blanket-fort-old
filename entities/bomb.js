@@ -17,9 +17,9 @@ define([
 
     class Bomb extends Enemy {
 
-        constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 40, spriteHeight = 30, facingRight = false, yVelocity = -20) {
+        constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 40, spriteHeight = 30, facingRight = false, xVelocity = 7, yVelocity = -20) {
             super(game, x, y, img, ctx);
-            this.movementSpeed = 7;
+            this.xVelocity = xVelocity;
 
             this.scale = scale;
             this.spriteWidth = spriteWidth;
@@ -34,10 +34,10 @@ define([
             //Stats
             this.sightRadius[0] = 500;
             this.sightRadius[1] = 700;
-            this.health = 100;
+            this.health = 50;
             this.damage = 0;
             this.launchtime = 25;
-            this.countdown = 5;
+            this.countdown = 4;
             this.startup = 3;
             this.yVelocity = yVelocity;
             this.friction = .03;
@@ -53,9 +53,9 @@ define([
             };
             this.animations = {
                 "launch": new Animation(this.img, [spriteWidth, spriteHeight], 9, 17, 5, 1, true, this.scale, 11),
-                "activate": new Animation(this.img, [spriteWidth, spriteHeight], 9, 17, 10, 2, true, this.scale, 12),
+                "activate": new Animation(this.img, [spriteWidth, spriteHeight], 9, 17, 7, 2, true, this.scale, 12),
                 "detonate": new Animation(this.img, [spriteWidth, spriteHeight], 9, 17, 6, 1, true, this.scale, 14),
-                "explode": new Animation(this.img, [60, 60], 4, 17, 6, 7, false, this.scale + 1, 10),
+                "explode": new Animation(this.img, [60, 60], 4, 17, 7, 7, false, this.scale + 1, 10),
             };
             if (this.states.facingRight) { this.facing = 1; } else { this.facing = -1; }
             this.animation = this.animations.launch;
@@ -63,10 +63,10 @@ define([
 
         update() {
             if (this.states.launching) {
-                this.changePos(this.facing*this.movementSpeed, 0);
+                this.changePos(this.facing*this.xVelocity, 0);
             }
             if (this.states.activating) {
-                this.changePos(this.facing * this.movementSpeed, 0);
+                this.changePos(this.facing * this.xVelocity, 0);
                 if (this.animation.loops > this.countdown) {
                     this.animation.elapsedTime = 0;
                     this.animation.loops = 0;
@@ -75,13 +75,16 @@ define([
                 }
             }
             if (this.states.detonating) {
-                //if (Math.random() < .5) {
-                //    this.y += Math.random() * 2;
-                //    this.x += Math.random() * 2;
-                //} else {
-                //    this.y -= Math.random() * 2;
-                //    this.x -= Math.random() * 2;
-                //}
+                //This "Facing Hero" check makes sure that, if Hero crosses axis before explosion,
+                //Hero will be pushed back in the correct direction on stun
+                if (this.x - this.game.hero.x < 0) {
+                    this.states.facingRight = true;
+                    this.facing = 1;
+                }
+                else {
+                    this.states.facingRight = false;
+                    this.facing = -1;
+                }
                 if (this.animation.loops > this.startup) {
                     //Spawn explosion hurtbox
                     this.animation.elapsedTime = 0;
@@ -94,10 +97,16 @@ define([
                 if (!this.states.exploded) {
                     this.spriteHeight = 60;
                     this.spriteWidth = 60;
-                    var explosionX = 135;
-                    var explosionY = 135;
-                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -1.5 * explosionX - 17.5, this.spriteHeight - 20,
-                        this.spriteWidth, this.spriteHeight, explosionX, explosionY, this.scale + 1, 4, this.states.facingRight, true, "health", 20));
+                    var explosionX = 150;
+                    var explosionY = 150;
+                    if (this.states.facingRight) {
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -1.5 * explosionX + 5, this.spriteHeight - 20,
+                            this.spriteWidth, this.spriteHeight, explosionX, explosionY, this.scale + 2, 4, this.states.facingRight, true, "health", 33));
+                    }
+                    else {
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -1.5 * explosionX - 17.5, this.spriteHeight - 20,
+                            this.spriteWidth, this.spriteHeight, explosionX, explosionY, this.scale + 2, 4, this.states.facingRight, true, "health", 33));
+                    }
                     this.states.exploded = true;
                 }
                 if (this.animation.isDone()) {
@@ -108,6 +117,10 @@ define([
             this.yVelocity += this.gravity * this.gravity;
             this.lastBoundY = this.boundY;
             this.changePos(0, this.yVelocity);
+
+            if (this.health <= 0) {
+                this.removeFromWorld = true;
+            }
         }
 
         draw(ctx) {
@@ -142,12 +155,12 @@ define([
                     this.boundY = other.boundY - this.boundHeight;
                     this.y = this.boundY + this.boundHeight - 10;
                     this.yVelocity = 0;
-                    if (this.movementSpeed > 0) {
+                    if (this.xVelocity > 0) {
                         if (this.states.facingRight) {
-                            this.movementSpeed -= this.facing * this.movementSpeed * this.friction;
+                            this.xVelocity -= this.facing * this.xVelocity * this.friction;
                         }
                         else {
-                            this.movementSpeed += this.facing * this.movementSpeed * this.friction;
+                            this.xVelocity += this.facing * this.xVelocity * this.friction;
                         }
                     }
                     if (this.states.launching) {
@@ -176,14 +189,19 @@ define([
                 //    this.facing = 1;
                 //}
             }
-            if (other instanceof Projectile && !this.states.hurt) {
-
+            if (other instanceof Projectile) {
+                this.states.launching = false,
+                this.states.activating = false;
+                this.states.detonating = false;
+                this.states.exploding = true;
+                this.gravity = 0;
+                this.yVelocity = 0;
             }
-            if (other instanceof Hurtbox && !this.states.hurt) {
+            if (other instanceof Hurtbox) {
                 other.hasOwnProperty("isEnemy");
                 other.hasOwnProperty("damage");
                 if (!other.isEnemy) {
- 
+                    //bounce
                 }
             }
         }

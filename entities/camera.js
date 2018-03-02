@@ -54,10 +54,10 @@ define([
                 this.yView = -this.followed.y + this.canvasHeight/2;
             }
             
-             console.log("xView: " + this.xView);
-             console.log("yView: " + this.yView);
-             console.log("hero x: " + this.followed.x);
-             console.log("hero y: " + this.followed.y);
+             //console.log("xView: " + this.xView);
+             //console.log("yView: " + this.yView);
+             //console.log("hero x: " + this.followed.x);
+             //console.log("hero y: " + this.followed.y);
 
         }
 

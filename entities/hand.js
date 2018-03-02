@@ -35,12 +35,13 @@ define([
             this.facing = -1;
 
             //Stats
-            this.sightRadius[0] = 500;
+            this.sightRadius[0] = 1200;
             this.sightRadius[1] = 700;
-            this.health = 100; //three normal hits.
+            this.health = 50; //three normal hits.
             this.damage = 1;
             this.throwtime = 4;
-            this.cooldown = 400;
+            this.cooldown = 120;
+            this.cooldownvariance = 20
             this.cooldownTimer = 0;
 
             this.states = {
@@ -74,7 +75,9 @@ define([
                 this.updateHitbox(40, 30, 20, 5, 0, 10);
                 this.damage = 0;
                 //insert attack behavior. Loops for now.
-                if (Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0] && this.cooldownTimer <= 0) {
+                if (Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0]
+                    && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]
+                    && this.cooldownTimer <= 0) {
                     this.animation.elapsedTime = 0;
                     this.animation.loops = 0;
                     this.states.idling = false;
@@ -93,7 +96,9 @@ define([
             if (this.states.throwing) {
                 if (!this.states.hasThrown) {
                     //spawn bomb
-                    this.game.addEntity(new Bomb(this.game, this.x + this.facing*10, this.y - 20, this.img, this.ctx, this.scale, this.spriteWidth, this.spriteHeight, this.states.facingRight))
+                    this.game.addEntity(new Bomb(this.game, this.x + this.facing * 10, this.y - 20, this.img, this.ctx,
+                        this.scale, this.spriteWidth, this.spriteHeight, this.states.facingRight,
+                        Math.abs(this.x - this.game.hero.x) / 75));
                     //hasThrwon is true
                     this.states.hasThrown = true;
                 }

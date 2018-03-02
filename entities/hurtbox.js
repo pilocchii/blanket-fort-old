@@ -3,11 +3,13 @@ define([
     'animation',
     "terrain",
     "enemy",
+    "hero",
 ], function (
     Actor,
     Animation,
     Terrain,
     Enemy,
+    Hero,
     ) {
 
     /* For copy paste jobs:
@@ -55,7 +57,10 @@ define([
             collided(other, direction) {
                 // collide with terrain
                 if (other instanceof Terrain) {
-                    console.log("clink");
+                    //console.log("clink");
+                }
+                else if (other instanceof Actor && !(other instanceof Enemy)) { //TODO: Why can't I just use instanceof Hero? (claims Hero is not an object. Why?)
+                    this.removeFromWorld = true;
                 }
             }
 
