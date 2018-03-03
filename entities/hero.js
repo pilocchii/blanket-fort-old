@@ -24,14 +24,6 @@ define([
         constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=60, spriteHeight=60) {
             super(game, x, y, img, ctx);
             this.origY = this.y; //For jumping
-            //this.y = y - spriteHeight*scale;
-            this.movementSpeed = (8);
-
-            this.jumpStrength = (20);
-            this.jumpsLeft = 2;
-            this.maxJumps = 2;
-            this.jumpTimer = 0;
-            this.jumpCooldown = 20;
 
             this.scale = scale;
             this.spriteWidth = spriteWidth;
@@ -45,6 +37,14 @@ define([
             this.boundY = this.y - this.boundHeight;
             this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
+            this.movementSpeed = (8);
+            this.dashSpeed = 17
+            this.jumpStrength = (20);
+            this.jumpsLeft = 2;
+            this.maxJumps = 2;
+            this.jumpTimer = 0;
+            this.jumpCooldown = 20;
+
             this.maxHealth = 6;
             this.maxEnergy = 6;
             this.energy = 5;
@@ -52,6 +52,9 @@ define([
             this.slashEnergyCost = 4;
             this.shootEnergyCost = 2;
             this.dashEnergyCost = 1;
+
+            this.stunDir = 0;
+            
             //Timers
             this.damageCooldownTimer = 0;
             this.damageCooldown = 20;
@@ -72,10 +75,14 @@ define([
                 "framelocked": false,
                 "energized": false,
                 "dashing": false,
+                "stunned": false,
+                "dead": false,
                 "hasDashed": false,
             };
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale), //50x50
+                "stun": new Animation(this.img, [spriteWidth, spriteHeight], 0, 13, 4, 4, false, this.scale, 9),
+                "dead": new Animation(this.img, [spriteWidth, spriteHeight], 0, 18, 5, 5, true, this.scale, 13),
                 "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 22, 3, 11, true, this.scale), //50x50
                 //Takeoff?
                 "ascend": new Animation(this.img, [spriteWidth, spriteHeight], 2, 8, 3, 4, true, this.scale, 2), //50x50
@@ -86,7 +93,7 @@ define([
                 "gunrun": new Animation(this.img, [60, 60], 1, 22, 3, 11, true, this.scale, 11), //50x50
                 "slash": new Animation(this.img, [90, 60], 4, 11, 2, 11, false, this.scale), //80x50
                 "cleave": new Animation(this.img, [100, 70], 9, 13, 2, 13, false, this.scale), //80x60
-                "dash": new Animation(this.img, [90, 60], 4, 11, 2, 11, false, 2),
+                "dash": new Animation(this.img, [60, 60], 5, 7, 3, 7, false, this.scale),
             };
         }
 
@@ -114,6 +121,7 @@ define([
             if (this.game.controlKeys[this.game.controls.cleave].active && this.states.grounded && !this.states.framelocked) { //cleave
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
+                this.setStates(false, false, false, true, this.states.facingRight, false, false, false, true, this.states.energized, false, false);
                 this.states.cleaving = true;
                 this.states.framelocked = true;
             }
@@ -125,8 +133,7 @@ define([
             if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { //dash
                 this.states.dashing = true;
                 this.states.hasDashed = true;
-                this.damageCooldownTimer = 18;
-                console.log("heeey-oh!")
+                this.damageCooldownTimer = 19;
                 this.states.running = false;
                 this.states.framelocked = true;
             }
@@ -240,24 +247,46 @@ define([
             }
             //Dashing
             if (this.states.dashing) {
-                this.yVelocity = 0;
                 if (this.states.hasDashed) {
                     //this.energyCooldownTimer = this.energyCooldown;
+                    this.gravity = 0;
                     this.yVelocity = 0;
                     this.energy -= this.dashEnergyCost;
                     this.states.hasDashed = false;
                 }
 
-                if (this.states.facingRight) {this.x += 17; this.boundX += 17;}
-                else { this.x -= 17; this.boundX -= 17; }
+                if (this.states.facingRight) {this.x += this.dashSpeed; this.boundX += this.dashSpeed;}
+                else { this.x -= this.dashSpeed; this.boundX -= this.dashSpeed; }
 
                 if (this.animation.isDone()) {
                     this.animation.elapsedTime = 0;
                     this.animation.loops = 0;
+                    this.gravity = 0.9;
                     this.states.dashing = false;
                     this.states.framelocked = false;
                 }
             }
+            //Stunned
+            if (this.states.stunned) { 
+                //move away from the direction of the attack
+                this.x += this.stunDir * 1;
+                this.gravity = 0;
+                this.yVelocity = 0;
+                if (this.animation.isDone()) {
+                    this.animation.elapsedTime = 0;
+                    this.states.stunned = false;
+                    this.states.framelocked = false;
+                    this.damageCooldownTimer = this.damageCooldown;
+                    this.gravity = 0.9;
+                }
+            }
+            //DEAD
+            if (this.states.dead) {
+                if (this.animation.loops > 3) {
+                    this.removeFromWorld = true;
+                }
+            }
+
             //Timer Checks
             if (this.energyCooldownTimer > 0) {
                 this.energyCooldownTimer--;
@@ -268,9 +297,10 @@ define([
             }
             if (this.damageCooldownTimer > 0) {
                 this.damageCooldownTimer--;
-                console.log(this.damageCooldownTimer);
+                //console.log(this.damageCooldownTimer);
             }
 
+            //Grounded state logic
             if (this.yVelocity === 0 && this.velocityCooldownTimer > 0) {
                 this.velocityCooldownTimer--;
             }
@@ -290,7 +320,9 @@ define([
 
             //Health checks and position checks
             if (this.health <= 0) {
-                this.removeFromWorld = true;
+                this.clearStates();
+                this.states.dead = true;
+                this.states.framelocked = true;
             }
         }
 
@@ -307,12 +339,11 @@ define([
                 this.updateHitbox(50, 50, 20, 35);
                 this.animation = this.animations.gunrun;
             }
-            else if (this.states.shooting && this.yVelocity == 0 && this.animation) {//shooting
-
+            else if (this.states.shooting && this.states.grounded && this.animation) {//shooting
                 this.updateHitbox(70, 50, 20, 35);
                 this.animation = this.animations.shoot;
             }
-            else if (this.states.shooting && this.yVelocity != 0 && this.animation) {//air shooting
+            else if (this.states.shooting && !this.states.grounded && this.animation) {//air shooting
                 this.updateHitbox(50, 50, 20, 35);
                 this.animation = this.animations.airshoot;
             }
@@ -325,8 +356,15 @@ define([
                 this.animation = this.animations.slash;
             }
             else if (this.states.dashing && this.animation) { //dashing
-                this.updateHitbox(40, 25, 30, 15, 0, -10);
+                this.updateHitbox(60, 60, 45, 15, 0, -10);
                 this.animation = this.animations.dash;
+            }
+            else if (this.states.stunned) {
+                this.updateHitbox(50, 50, 20, 35);
+                this.animation = this.animations.stun;
+            }
+            else if (this.states.dead) {
+                this.animation = this.animations.dead;
             }
             else {
                 this.updateHitbox(50, 50, 20, 35);
@@ -344,7 +382,7 @@ define([
                 // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
                 if (direction === 'bottom') {
                     this.boundY = other.boundY - this.boundHeight;
-                    this.y = this.boundY + this.boundHeight; //DS3DRAWCHANGE1:
+                    this.y = this.boundY + this.boundHeight;
                     if(this.yVelocity > 0) //DS3 2/18: stops Hero from becoming grounded when jumping onto a platform when he grazes the side
                         this.yVelocity = 0;
                     this.jumpsLeft = this.maxJumps;
@@ -373,17 +411,41 @@ define([
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
             }
 
-            if (this.damageCooldownTimer <= 0) { //If Hero can take damage, check if
+            if (this.damageCooldownTimer <= 0 && !this.states.dead && !this.states.stunned) { //If Hero can take damage, check if...
                 if (other instanceof Enemy) {
-                    this.health -= other.damage;
-                    this.damageCooldownTimer = this.damageCooldown;
+                    if (other.damage > 0) {
+                        //Determine interaction based on enemy's damage type
+                        if (other.damageType === "health") {
+                            console.log("health: " + this.health) //DBG
+                            this.health -= other.damage;
+                            console.log("health: " + this.health) //DBG
+                            //reset states and put into stun anim and stunlock
+                            this.clearStates();
+                            this.states.stunned = true;
+                            this.states.framelocked = true;
+                            //determine which way hero should move during stun
+                            if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
+                        }                        
+                        else if (other.damageType === "energy" && this.energy > 0) {
+                            console.log("energy: " + this.energy) //DBG
+                            this.energy -= other.damage;
+                            console.log("energy: " + this.energy) //DBG
+                        }
+                    }
                 } 
                 if (other instanceof Hurtbox) {
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");
                     if (other.isEnemy) {
-                        this.health -= other.damage;
+                        console.log("health: " + this.health); //DBG
+                        this.health -= other.damage; 
                         this.damageCooldownTimer = this.damageCooldown;
+                        console.log("health: " + this.health); //DBG
+                        //reset states and put into stun anim and stunlock
+                        this.clearStates();
+                        this.states.stunned = true;
+                        this.states.framelocked = true;
+                        if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
                     }
                 }
             }
@@ -412,6 +474,9 @@ define([
             this.states.hasDashed = hasDashed;
         }
 
+        clearStates() {
+            this.setStates(false, false, false, false, this.states.facingRight, false, false, false, false, this.states.energized, false, false);
+        }
         drawOutline (ctx) {
             ctx.beginPath();
             ctx.strokeStyle = "green";
@@ -424,7 +489,7 @@ define([
 
 
         drawImg (ctx) {
-            //this.drawOutline(ctx);
+            this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }

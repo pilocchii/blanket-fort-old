@@ -17,8 +17,12 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
-                this.xSpeed = 4;
-                this.ySpeed = 2;
+                this.xSpeed = 8;
+                this.ySpeed = 4;
+                this.maxX = 8;
+                this.maxY = 4;
+                this.xAccel = .25;
+                this.yAccel = .1;
                 this.y -= 70
                 if (!facingRight) { this.x -= 100; } else { this.x += 100 };//offset to match gun
                 this.scale = scale;
@@ -38,8 +42,9 @@ define([
                 }
 
                 //Stats
+                this.damageType = "energy";
                 this.damage = 2;
-                this.health = 150;
+                this.health = 50;
 
                 this.states = {
                     "active": true,
@@ -54,25 +59,34 @@ define([
 
             update() {
                 //TODO
-                if (this.x - this.game.hero.x < 0) {
+                if (!this.states.facingRight && this.x - this.game.hero.x < 0) {
                     this.states.facingRight = true;
                     this.facing = 1;
                 }
-                else /*if(this.x - this.game.hero.x > this.xSpeed - 4)*/ {
+                else if (this.states.facingRight && this.x - this.game.hero.x >= 0) {
                     this.states.facingRight = false;
                     this.facing = -1;
                 }
                 if (this.states.active) {//TODO Tracking behavior
-                        this.x +=       this.facing * this.xSpeed + this.facing * Math.floor(Math.abs(this.x - this.game.hero.x) / 400) * 1.5;
-                        this.boundX +=  this.facing * this.xSpeed + this.facing * Math.floor(Math.abs(this.x - this.game.hero.x) / 400) * 1.5;
-                        if (this.y - this.game.hero.y >= 0) {// below hero;
-                            this.y -=       this.ySpeed + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
-                            this.boundY -=  this.ySpeed + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
+                    if ((this.xSpeed < this.maxX && this.facing === 1) || (this.xSpeed > -this.maxX && this.facing === -1)) {
+                        this.xSpeed += this.facing * this.xAccel;
+                    }
+                    this.x += this.xSpeed;
+                    this.boundX += this.xSpeed;
+                    if (this.y - this.game.hero.y >= 0) {// below hero;
+                        if (this.ySpeed > -this.maxY) {
+                            this.ySpeed -= this.yAccel;
                         }
-                        else {// above hero
-                            this.y +=       this.ySpeed + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
-                            this.boundY +=  this.ySpeed + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
+                        this.y += this.ySpeed;
+                        this.boundY += this.ySpeed;
+                    }
+                    else {// above hero
+                        if (this.ySpeed < this.maxY) {
+                            this.ySpeed += this.yAccel;
                         }
+                        this.y += this.ySpeed;// + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
+                        this.boundY += this.ySpeed;// + Math.floor(Math.abs(this.y - this.game.hero.y) / 300) * 1.5;
+                    }
                     if (this.animation.loops > 15) {
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;

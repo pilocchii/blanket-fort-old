@@ -6,7 +6,7 @@ define([
     GameEngine,
 ){
 
-	class LevelOne {
+	class LevelTwo {
 
 		/* Define terrain */
 		constructor(gameEngine, assetManager, ctx) {
@@ -36,7 +36,7 @@ define([
                 '|': [4, 6],
 				'l': [2, 3],
                 '~': [6, 0],
-				']': [6, 3],
+				']': [6, 3],	
             }
             this.tileDimensions = {
                 //boundWidth, boundHeight, offX, offY
@@ -56,29 +56,26 @@ define([
                 '~': [32, 16, 0, 24],
                 ']': [32, 32, 0, 0],
             }
+
 // 20 lines from top to bottom
 this.map = 
-`{_____________________________}   []                                                           
-l-----------------------------j   []
-!                              {} []
-!                              lj []
-!   {________}                    []
-!   l--------j                    []
-!             {}    {}      {____}[]
-!             lj    lj      l----j[]
-<~~~~~~~~~>                      |[]
-          {}                     |[]               
-          []                     |[]
-          []{____}    {____}     |[]
-          []l----j    l----j     |[]
-          []                     |[]
-          lj                     |[]
-                              {__}[]
-                              l--j[]
-  {}{______}{}{___}{}{_________}{}[]
-  lj[------]lj[###]lj[#########]lj[]
-{}{}[]!~~|[]{}l---j{}l---------j{}[]
-lj[][]!  |[]lj~~~~~lj           lj[]
+`                                                                                                                        #
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+
+
+
+                   <~~~~~>                                                            
+                                                                                   __
+                                                                              __          __
+                                       []{}{______}{}{___}{}{_________}{}[]
+                       {}              []ljl------jljl---jljl---------jlj[]
+{___}{}{}{______}{}{___}{}{_________}{}[]
+l---jljljl------jljl---jljl---------jlj[]
 `.split('\n');
                 
 
@@ -93,24 +90,23 @@ lj[][]!  |[]lj~~~~~lj           lj[]
 			console.log("constructing terrain...")
 			console.log(this.map[0].length + " x " + this.map.length)
 			for (var col = 0; col < this.map[0].length; col++) {
-                for (var row = 0; row < this.map.length; row++) {
+				for (var row = 0; row < this.map.length; row++) {
                     var tile = this.tileMap[this.map[row][col]]
                     if (tile != null) {
                         var tileDimension = this.tileDimensions[this.map[row][col]];
-                        this.gameEngine.addEntity(new Terrain(this.gameEngine, col * this.tileSize, row * this.tileSize, [32, 32], this.tilesheet, this.ctx, 3, tile, tileDimension));
-                    }
-                }
+						this.gameEngine.addEntity(new Terrain(this.gameEngine, col * this.tileSize, row * this.tileSize, [32, 32], this.tilesheet, this.ctx, 3, tile, tileDimension));
+
+					}
+				}
 			}
-
 			// this.gameEngine.addEntity(new Terrain(this.gameEngine, 100, 600, [32, 32], , this.ctx, 3, [[2,0], [3, 0], [4,0]]));
-
-
 		}
 
 
 		/* Define enemies */
+        //DINO: 1885, 1254
 
 	}
 
-	return LevelOne;
+	return LevelTwo;
 });

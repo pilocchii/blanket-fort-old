@@ -38,7 +38,7 @@ define([
                 //Stats
                 this.health = 150;
                 this.damage = 1;
-                this.facing = 1;
+                this.facing = -1;
 
                 // Behavior parameters
                 this.runProb = 5;
@@ -70,9 +70,9 @@ define([
                     "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 15, 4, true, this.scale, 11),
                     "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 3, 12, true, this.scale),
                     "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale),
-                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale, 5),
-                    "slash_start": new Animation(this.img, [80, 60], 3, 9, 3, 9, false, this.scale),
-                    "slash_end": new Animation(this.img, [100, 60], 4, 11, 3, 7, false, this.scale),
+                    "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 4, 5, false, this.scale, 5),
+                    "slash_start": new Animation(this.img, [100, 60], 3, 16, 3, 9, false, this.scale),
+                    "slash_end": new Animation(this.img, [100, 60], 3, 16, 3, 7, false, this.scale, 9),
                 };
                 this.animation = this.animations.idle;
             }
@@ -89,12 +89,12 @@ define([
                         && Math.abs(this.x - this.game.hero.x) < this.sightRadius[0]
                         && Math.abs(this.y - this.game.hero.y) < this.sightRadius[1]) {
                         //Face Enemy
-                        if (this.game.hero.x > this.x && this.states.facingRight && !this.states.blocking) {
+                        if (this.game.hero.x > this.x && !this.states.facingRight && !this.states.blocking) {
                             this.updateHitbox(50, 50, 38, 40);
                             this.states.turning = true;
                             this.states.idling = false;
                         }
-                        else if (this.game.hero.x < this.x && !this.states.facingRight && !this.states.blocking) {
+                        else if (this.game.hero.x < this.x && this.states.facingRight && !this.states.blocking) {
                             this.updateHitbox(50, 50, 38, 40);
                             this.states.turning = true;
                             this.states.idling = false;
@@ -203,7 +203,7 @@ define([
                     }
                     if (this.states.slashing_start && !this.states.framelocked) { //slashing start  this.updateHitbox(80, 60, 50, 40);
                         if (this.animation.currentFrame() === 8) {
-                            if (!this.states.facingRight)
+                            if (this.states.facingRight)
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 40, 100,
                                     this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
                             else
@@ -219,7 +219,7 @@ define([
                     }
                     if (this.states.slashing_end) { //slashing end
                         if (this.animation.currentFrame() >= 0 && this.animation.currentFrame() <= 1) {
-                            if (!this.states.facingRight)
+                            if (this.states.facingRight)
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 25, 100,
                                     this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
                             else
@@ -238,11 +238,11 @@ define([
                         //this.UpdateHitbox(50, 50, 45, 45);
                         // a little knockback
                         if (this.states.facingRight) {
-                            this.x += 1;
-                            this.boundX += 1;
-                        } else {
                             this.x -= 1;
                             this.boundX -= 1;
+                        } else {
+                            this.x += 1;
+                            this.boundX += 1;
                         }
 
 
@@ -380,6 +380,8 @@ define([
                                 // blood or something goes here
                                 // this.game.addEntity(...)
                                 this.health -= other.damage;
+                                //Automatically dies to Hero's hurtbox (sword) attacks
+                                //this.removeFromWorld = true;
                                 console.log("OUCH!")
                             }
                         }

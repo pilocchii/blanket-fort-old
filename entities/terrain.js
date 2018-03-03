@@ -6,7 +6,7 @@ define([
 
 
     class Terrain extends Entity {
-         constructor (game, x, y, dimensions, img=null, ctx=null, scale=null, tiles=null) {
+         constructor (game, x, y, dimensions, img=null, ctx=null, scale=null, tiles=null, bounds = [0, 0, 0, 0]) {
             super(game, x, y, img, ctx);
             this.states = null;
             this.animations = null;
@@ -15,16 +15,16 @@ define([
             this.scale = scale;
             this.src_width = dimensions[0];
             this.src_height = dimensions[1];
-            this.boundX = this.x;
-            this.boundY = this.y+6;
-            this.boundWidth = 96;
-            this.boundHeight = 96;
+            this.boundX = this.x + bounds[2];
+            this.boundY = this.y + bounds[3];
+            this.boundWidth = this.scale * bounds[0];
+            this.boundHeight = this.scale * bounds[1];
         }
 
         drawOutline (ctx) {
             ctx.beginPath();
             ctx.strokeStyle = "green";
-            ctx.rect(this.x, this.y, 
+            ctx.rect(this.boundX, this.boundY, 
                 this.boundWidth, this.boundHeight);
             ctx.stroke();
             ctx.closePath();
@@ -35,7 +35,7 @@ define([
             for (var i = 0; i < 1; i++) {
                 let col = this.tiles[0]
                 let row = this.tiles[1]
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 ctx.drawImage(this.img, 
                     (col * this.src_width),
                     (row * this.src_height),

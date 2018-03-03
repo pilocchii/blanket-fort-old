@@ -43,13 +43,13 @@ define([
                 "jump": "Space",
                 "right": "KeyD",
                 "left": "KeyA",
-                "shoot": "Numpad1",
+                "shoot": "Numpad4",
                 "slash": "Numpad5",
                 "cleave": "Numpad6",
                 "energize": "KeyW",
-                "dash": "Numpad2",
+                "dash": "Numpad1",
+                "getPos": "KeyE",
             }
-            this.spawnedSS = false;
             this.score = 0;
             this.hero = hero;
         }
@@ -154,8 +154,16 @@ define([
         draw (drawCallback) {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
             this.ctx.save();
-            for (let i = 0; i < this.entities.length; i++) {
+            this.entities[0].draw(this.ctx);
+            for (let i = 1; i < this.entities.length; i++) {
+                //Draw only what is within the canvas view (numbers are negative because the camera is weird like that.
+                //postive numbers would screw the translate process)
+                if(-this.entities[i].x - this.entities[i].boundWidth < this.entities[0].xView 
+                && -this.entities[i].x > this.entities[0].xView - this.ctx.canvas.width 
+                && -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
+                && -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height) {
                 this.entities[i].draw(this.ctx);
+                }
             }
             if (drawCallback) {
                 drawCallback(this);
@@ -194,10 +202,12 @@ define([
                     if (entity != other && entity.isColliding(other) != 'none') {
                         let direction = entity.isColliding(other);
                         entity.collided(other, direction);
-
                     }
                 }
                 
+            }
+            if (this.controlKeys[this.controls.getPos].active) {
+                console.log("x: " + this.hero.x + ", y: " + this.hero.y);
             }
         }
 

@@ -39,21 +39,25 @@ define([
         }
 
         draw(ctx) {
-             ctx.setTransform(1, 0, 0, 1, 0, 0); //reset transform matrix
-             ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // clear viewport after matrix is reset
-             ctx.translate(this.xView, this.yView);
+            //  ctx.setTransform(1, 0, 0, 1, 0, 0); //reset transform matrix
+            //  ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // clear viewport after matrix is reset
+              ctx.translate(this.xView, this.yView);
+            
         }
 
 
         update() {
             // Note: this logic feels HORRIBLY wrong, but it works for now, so yay?
             if (this.followed != null) {
-                this.xView = this.boundsCheck(-this.followed.x + this.canvasWidth, -this.worldWidth, 0);
-                this.yView = this.boundsCheck(-this.followed.y + this.canvasHeight, -this.worldHeight, 0);
+                //TODO: need to figure out world bounds for min and max clamping
+                this.xView = -this.followed.x + this.canvasWidth/2;
+                this.yView = -this.followed.y + this.canvasHeight/2;
             }
             
              //console.log("xView: " + this.xView);
              //console.log("yView: " + this.yView);
+             //console.log("hero x: " + this.followed.x);
+             //console.log("hero y: " + this.followed.y);
 
         }
 

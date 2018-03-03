@@ -39,6 +39,12 @@ define([
 
         }
  
+        changePos(x, y) {
+            this.x += x;
+            this.boundX += x;
+            this.y += y;
+            this.boundY += y;
+        }
 
         /* Draws the outline of this entity */
         drawOutline (ctx) {

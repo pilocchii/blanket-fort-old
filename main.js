@@ -19,7 +19,8 @@ require.config({
         "hud": "hud",
         "entity": "entities/entity",
     	"terrain" : "entities/terrain",
-    	"level-one": "maps/level-one",
+        "level-one": "maps/level-one",
+        "level-two": "maps/level-two",
         "hero": "entities/hero",
         "projectile": "entities/projectile",
         "projectile-sword": "entities/projectile-sword",
@@ -35,6 +36,8 @@ require.config({
         "enemy": "entities/enemy",
         "hurtbox": "entities/hurtbox",
         "item": "entities/items/item",
+        "bomb": "entities/bomb",
+        "hand": "entities/hand",
     },
 });
 
