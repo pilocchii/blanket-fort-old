@@ -21,6 +21,7 @@ define([
     "hurtbox",
     "item",
     "hand",
+    "lava",
 
 ], function(
     AssetManager,
@@ -45,6 +46,7 @@ define([
     Hurtbox,
     Item,
     Hand,
+    Lava,
 ) {
 
     let init = function() {
@@ -128,10 +130,12 @@ define([
         //***LEVEL TWO***
         //gameEngine.addEntity(new Hand(gameEngine, 1885, 1350, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Dino(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
-        gameEngine.addEntity(new Crow(gameEngine, 2200, 1750, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Crow(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 2200, 1750, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Lava(gameEngine, 700, 1440 + (96 * 3 - 6 * 3), ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 64)); //96*3 - 6*3 aligns with floor
+        gameEngine.addEntity(new Lava(gameEngine, 1450, 1440 + (96 * 3 - 6 * 3), ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 320)); //96*3 - 6*3 aligns with floor
         
         gameEngine.addEntity(hud);
         gameEngine.init(ctx);

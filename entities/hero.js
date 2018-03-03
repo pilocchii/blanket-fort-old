@@ -7,6 +7,7 @@ define([
     "soldier-shield",
     "enemy",
     "hurtbox",
+    "lava",
 ], function (
     Actor,
     Animation,
@@ -16,6 +17,7 @@ define([
     Soldier_Shield,
     Enemy,
     Hurtbox,
+    Lava,
 ){
 
 
@@ -326,6 +328,8 @@ define([
                 this.clearStates();
                 this.states.dead = true;
                 this.states.framelocked = true;
+                this.gravity = 0;
+                this.yVelocity = 0;
             }
         }
 
@@ -413,7 +417,14 @@ define([
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
             }
-
+            if (other instanceof Lava && !this.states.dead) {
+                this.clearStates();
+                this.health = 0;
+                this.states.stunned = true;
+                this.states.framelocked = true;
+                this.boundY = other.boundY - this.boundHeight;
+                this.y = this.boundY + this.boundHeight - 5;
+            }
             if (this.damageCooldownTimer <= 0 && !this.states.dead && !this.states.stunned) { //If Hero can take damage, check if...
                 if (other instanceof Enemy) {
                     if (other.damage > 0) {

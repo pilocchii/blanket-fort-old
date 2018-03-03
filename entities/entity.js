@@ -39,7 +39,7 @@ define([
 
         }
  
-        changePos(x, y) {
+        changePos(x, y) {//used in various actor classes, and can be used in the moving terrain class. (hence this being in Entity)
             this.x += x;
             this.boundX += x;
             this.y += y;
@@ -64,7 +64,7 @@ define([
         /* Draws this entity. Called every cycle of the game engine. */
         draw (ctx) {
             if (this.game.showOutlines && this.boundX) {
-                //drawOutline(ctx)
+                drawOutline(ctx);
             }
             if (this.img) {
                 this.animation.drawFrame(this.clockTick, ctx, this.x, this.y, true);
