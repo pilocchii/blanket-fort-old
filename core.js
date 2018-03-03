@@ -129,6 +129,7 @@ define([
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         
         gameEngine.addEntity(hud);
+        hud.draw(ctx);
         gameEngine.init(ctx);
         gameEngine.start();
     });

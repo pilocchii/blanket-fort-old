@@ -42,6 +42,7 @@ define([
             this.game_engine = game_engine;
             this.camera = camera;
             this.scale = scale;
+            this.dest_coords = dest_coordinates;
         }
 
         update() {
