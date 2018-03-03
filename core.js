@@ -82,7 +82,7 @@ define([
 
         let hero = new Hero(gameEngine, 100, 1400, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
-        gameEngine.addEntity(hud);
+        
         
         let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
         //let levelTwo = new LevelTwo(gameEngine, ASSET_MANAGER, ctx);
@@ -132,7 +132,7 @@ define([
         //gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         
-        
+        gameEngine.addEntity(hud);
         gameEngine.init(ctx);
         gameEngine.start();
     });
