@@ -17,6 +17,7 @@ define([
 
         constructor (hero) {
             this.entities = [];
+            this.backgroundLayers = [];
             this.ctx = null;
             this.click = null;
             this.mouse = null;
@@ -148,6 +149,10 @@ define([
             this.entities.push(entity);
         }
 
+        addBackgroundLayer (layer) {
+            this.backgroundLayers.push(layer);
+        }
+
 
         /*
         Draws all entities in the list
@@ -217,11 +222,36 @@ define([
             }
         }
 
+        drawBackground(drawCallback) {
+            this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            this.ctx.save();
+            for (let i = 0; i < this.backgroundLayers.length; i++) {
+                //Draw the camera and hud first
+                if (i === 0) {
+                    this.backgroundLayers[i].draw(this.ctx);
+                }
+                //Draw only what is within the canvas view (numbers are negative because the camera is weird like that.
+                //postive numbers would screw the translate process)
+                else if((-this.backgroundLayers[i].x - this.backgroundLayers[i].boundWidth < this.backgroundLayers[0].xView 
+                && -this.backgroundLayers[i].x > this.backgroundLayers[0].xView - this.ctx.canvas.width 
+                && -this.backgroundLayers[i].y - this.backgroundLayers[i].boundHeight< this.backgroundLayers[0].yView 
+                && -this.backgroundLayers[i].y > this.backgroundLayers[0].yView - this.ctx.canvas.height)
+                || this.backgroundLayers[i] instanceof Hud) {
+                this.backgroundLayers[i].draw(this.ctx);
+                }
+            }
+            if (drawCallback) {
+                drawCallback(this);
+            }
+            this.ctx.restore();
+        }
+
         /*
         Defines the game loop
         */
         loop () {
             this.update();
+            this.drawBackground();
             this.draw();
             this.click = null;
             this.wheel = null;
