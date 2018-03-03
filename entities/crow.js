@@ -18,10 +18,6 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 50, spriteHeight = 40) {
                 super(game, x, y, img, ctx);
-                this.movementSpeed = 12;
-                //for demo
-                this.origy = this.y;
-                this.origx = this.x;
 
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
@@ -34,13 +30,25 @@ define([
                 this.boundY = this.y - this.boundHeight;
 
                 //Stats
-                this.sightRadius[0] = 500;
+                this.xSpeed = 4;
+                this.ySpeed = 8;
+                this.maxX = 5;
+                this.maxY = 9;
+                this.xAccel = .35;
+                this.yAccel = .6;
+
+                this.attackAngle1 = 2;
+                this.attackAngle2 = 10;
+                this.xAttack = 17
+                this.xRecover = 7;
+                this.yRecover = 4;
+                this.recoverDistance = 400;
+
+                this.sightRadius[0] = 800;
                 this.sightRadius[1] = 700;
                 this.health = 100;
                 this.damage = 0;
                 this.facing = 1;
-                this.attackAngle1 = 2;
-                this.attackAngle2 = 10;
                 this.rand = 0;
 
 
@@ -75,7 +83,8 @@ define([
                     }
                 }
                 if (this.states.idling) {
-                    if (Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0] && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]) {
+                    if (Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0]
+                            && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]) {
                         //disable states
                         this.states.idling = false;
                         //enable states
@@ -83,23 +92,48 @@ define([
                     }
                 }
                 if (this.states.flying) { //this.updateHitbox(50, 40, 20, 15);
-                    //chase in x direction
-                    if (Math.abs(this.x - this.game.hero.x) >= 500 && this.states.active) { 
-                        this.x += this.facing * 3;
-                        this.boundX += this.facing * 3;
+                    //Apply speed updates and chase Hero/stay in attack range
+                    if ((this.xSpeed < this.maxX && this.facing === 1) || (this.xSpeed > -this.maxX && this.facing === -1)) {
+                        this.xSpeed += this.facing * this.xAccel;
                     }
-                    //chase in y direction
-                    if (Math.abs(this.y - this.game.hero.y) <= 200) { //stay away by 200
-                        this.y -= 5;
-                        this.boundY -= 5;
+                    if (this.y - this.game.hero.y >= -125) {
+                        if (this.ySpeed > -this.maxY) {
+                            this.ySpeed -= this.yAccel;
+                        }
+                        this.y += this.ySpeed;
+                        this.boundY += this.ySpeed;
                     }
-                    else if (Math.abs(this.y - this.game.hero.y) >= 300) { //stay within 300
-                        this.y += 5;
-                        this.boundY += 5;
+                    else if (this.y - this.game.hero.y <= -200){
+                        if (this.ySpeed < this.maxY) {
+                            this.ySpeed += this.yAccel;
+                        }
+                        this.y += this.ySpeed;
+                        this.boundY += this.ySpeed;
                     }
+                    //Stay within Crow's attack radius
+                    if (Math.abs(this.x - this.game.hero.x) >= 500 && this.states.active) {
+                        this.x += this.xSpeed;
+                        this.boundX += this.xSpeed;
+                    }
+                    else if (Math.abs(this.x - this.game.hero.x) <= 250 && this.states.active) {
+                        this.x -= this.xSpeed;
+                        this.boundX -= this.xSpeed;
+                    }
+                    // below hero;
+                    //if (this.y - this.game.hero.y <= 100) {
+                    //    this.y += this.ySpeed;
+                    //    this.boundY += this.ySpeed;
+                    //}
+                    //// above hero
+                    //else if (this.y - this.game.hero.y >= 200) {
+                    //    this.y += this.ySpeed;
+                    //    this.boundY += this.ySpeed;
+                    //}
+
                     //if (all of this stuff) ATTACK!!!
-                    if (Math.abs(this.x - this.game.hero.x) <= 700 && this.y - this.game.hero.y < -200 && (this.y - this.game.hero.y) > -300
-                        && this.animation.loops > 2 && Math.random() * 100 <= 30) { 
+                    if (Math.abs(this.x - this.game.hero.x) <= 700
+                            && this.y - this.game.hero.y < -100 && (this.y - this.game.hero.y) > -200
+                            && this.animation.loops > 2 && Math.random() * 100 <= 30) { 
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.attacking = true;
@@ -131,8 +165,8 @@ define([
                         this.y += this.attackAngle2;
                         this.boundY += this.attackAngle2;
                     }
-                    this.x += this.facing * 17;
-                    this.boundX += this.facing * 17;
+                    this.x += this.facing * this.xAttack;
+                    this.boundX += this.facing * this.xAttack;
                     //console.log("y: " + this.y);
 
 
@@ -154,11 +188,11 @@ define([
                 }
                 if (this.states.recovering) { //after attack is finished
                     //fly away
-                    this.x += this.facing * 7;
-                    this.boundX += this.facing * 7;
-                    this.y -= 5;
-                    this.boundY -= 5;
-                    if (Math.abs(this.x - this.game.hero.x) >= 500) {
+                    this.x += this.facing * this.xRecover;
+                    this.boundX += this.facing * this.xRecover;
+                    this.y -= this.yRecover;
+                    this.boundY -= this.yRecover;
+                    if (Math.abs(this.x - this.game.hero.x) >= this.recoverDistance) {
                         this.states.recovering = false;
                         this.states.flying = true;
                     }
