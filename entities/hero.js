@@ -126,6 +126,8 @@ define([
                 this.states.framelocked = true;
             }
             if (this.game.controlKeys[this.game.controls.slash].active && this.states.grounded && (!this.states.framelocked || this.states.dashing)) { //slash
+                if (this.game.controlKeys[this.game.controls.right].active) { this.states.facingRight = true; }
+                else if (this.game.controlKeys[this.game.controls.left].active) { this.states.facingRight = false; }
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
                 this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
@@ -221,6 +223,7 @@ define([
             }
             //Slashing
             if (this.states.slashing) {
+                this.gravity = 0.9; //Fixes super-duper jump bug. (When interrupting dash, dash doesn't enter isDone() so grav isn't reset)
                 if (this.animation.currentFrame() === 2 && this.states.energized 
                     && !this.states.shotlocked && this.energy >= this.maxEnergy/2) {
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
@@ -425,6 +428,14 @@ define([
                             this.states.framelocked = true;
                             //determine which way hero should move during stun
                             if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
+                            if (this.x - other.x < 0) {
+                                this.boundX = other.boundX - this.boundWidth;
+                                this.x = this.boundX;
+                            }
+                            else {
+                                this.boundX = other.boundX + other.boundWidth;
+                                this.x = this.boundX;
+                            }
                         }                        
                         else if (other.damageType === "energy" && this.energy > 0) {
                             console.log("energy: " + this.energy) //DBG

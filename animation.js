@@ -76,7 +76,7 @@ define([
                              this.frameWidth, this.frameHeight,
                              -(this.frameWidth * 2) + (this.frameWidth / 2)
                                 + this.frameWidth, // Offset dx
-                             y - this.scale*this.frameHeight + this.scale*10, //DS3DRAWCHANGES3
+                             y - this.scale*this.frameHeight + this.scale*10,
 
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
@@ -90,7 +90,7 @@ define([
                              (xindex * this.frameWidth), (yindex * this.frameHeight) + drow,  // source from sheet
                              this.frameWidth, this.frameHeight,
                              x - this.frameWidth,
-                             y - this.scale * this.frameHeight + this.scale * 10, //DS3DRAWCHANGES3
+                             y - this.scale * this.frameHeight + this.scale * 10, 
                              this.frameWidth * this.scale,
                              this.frameHeight * this.scale);
                 }
