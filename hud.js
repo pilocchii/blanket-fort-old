@@ -47,7 +47,7 @@ define([
 
         update() {
             this.score = this.game_engine.score;
-            this.dest_coords = [Math.abs(this.camera.xView) + 200, Math.abs(this.camera.yView) + 100]
+            this.dest_coords = [-this.camera.xView + 200, -this.camera.yView + 100]
         }
 
 
@@ -172,7 +172,7 @@ define([
 
         update() {
             this.health = this.hero.health;
-            this.dest_coords = [Math.abs(this.camera.xView) + 100, Math.abs(this.camera.yView) + 100]
+            this.dest_coords = [-this.camera.xView + 100, -this.camera.yView + 100]
         }
         isColliding() {}
         collided() {}
@@ -239,7 +239,7 @@ define([
 
         update() {
             this.energy = this.hero.energy;
-            this.dest_coords = [Math.abs(this.camera.xView) + 150, Math.abs(this.camera.yView) + 100]
+            this.dest_coords = [-this.camera.xView + 150, -this.camera.yView + 100]
         }
         isColliding() {}
         collided() {}

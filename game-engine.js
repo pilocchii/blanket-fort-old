@@ -155,8 +155,9 @@ define([
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
             this.ctx.save();
             for (let i = 0; i < this.entities.length; i++) {
-                if (i === 0) {
-                    this.entities[0].draw(this.ctx);
+                //Draw the camera and hud first
+                if (i === 0 || i === 1) {
+                    this.entities[i].draw(this.ctx);
                 }
                 //Draw only what is within the canvas view (numbers are negative because the camera is weird like that.
                 //postive numbers would screw the translate process)
