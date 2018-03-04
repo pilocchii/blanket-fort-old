@@ -2,12 +2,14 @@ define([
     "asset-manager",
     'soldier-shield',
     "hero",
-    "hud"
+    "hud",
+    "background"
 ], function (
     AssetManager,
     Soldier_Shield,
     Hero,
-    Hud
+    Hud,
+    Background
 ){
 
      /***************
@@ -161,6 +163,12 @@ define([
         draw (drawCallback) {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
             this.ctx.save();
+            for (let i = 0; i < this.backgroundLayers.length; i++) {
+                //Draw the camera and hud first
+
+                this.backgroundLayers[i].draw(this.ctx);
+
+            }
             for (let i = 0; i < this.entities.length; i++) {
                 //Draw the camera and hud first
                 if (i === 0) {
@@ -173,9 +181,11 @@ define([
                 && -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
                 && -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height)
                 || this.entities[i] instanceof Hud) {
-                this.entities[i].draw(this.ctx);
+                    this.entities[i].draw(this.ctx);
                 }
             }
+            
+
             if (drawCallback) {
                 drawCallback(this);
             }
@@ -227,18 +237,8 @@ define([
             this.ctx.save();
             for (let i = 0; i < this.backgroundLayers.length; i++) {
                 //Draw the camera and hud first
-                if (i === 0) {
-                    this.backgroundLayers[i].draw(this.ctx);
-                }
-                //Draw only what is within the canvas view (numbers are negative because the camera is weird like that.
-                //postive numbers would screw the translate process)
-                else if((-this.backgroundLayers[i].x - this.backgroundLayers[i].boundWidth < this.backgroundLayers[0].xView 
-                && -this.backgroundLayers[i].x > this.backgroundLayers[0].xView - this.ctx.canvas.width 
-                && -this.backgroundLayers[i].y - this.backgroundLayers[i].boundHeight< this.backgroundLayers[0].yView 
-                && -this.backgroundLayers[i].y > this.backgroundLayers[0].yView - this.ctx.canvas.height)
-                || this.backgroundLayers[i] instanceof Hud) {
                 this.backgroundLayers[i].draw(this.ctx);
-                }
+
             }
             if (drawCallback) {
                 drawCallback(this);
@@ -251,7 +251,7 @@ define([
         */
         loop () {
             this.update();
-            this.drawBackground();
+            // this.drawBackground();
             this.draw();
             this.click = null;
             this.wheel = null;

@@ -68,6 +68,7 @@ define([
         "img/bg/2_farbuildings.png",
         "img/bg/3_buildings.png",
         "img/bg/4_foreground.png",
+        "img/bg/bot_fill.png"
 
     ];
 
@@ -91,7 +92,7 @@ define([
         
         gameEngine.addEntity(camera);
 
-        let background = new Background(gameEngine, ASSET_MANAGER, ctx);
+        let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
         let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
         //let levelTwo = new LevelTwo(gameEngine, ASSET_MANAGER, ctx);
 
