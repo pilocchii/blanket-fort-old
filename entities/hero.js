@@ -7,7 +7,7 @@ define([
     "soldier-shield",
     "enemy",
     "hurtbox",
-    "lava",
+    "hazards",
 ], function (
     Actor,
     Animation,
@@ -17,7 +17,7 @@ define([
     Soldier_Shield,
     Enemy,
     Hurtbox,
-    Lava,
+    Hazards,
 ){
 
 
@@ -383,7 +383,7 @@ define([
 
         collided(other, direction) {
             // collide with terrain
-            if (other instanceof Terrain) {
+            if (other instanceof Terrain || other instanceof Hazards["spikes"]) {
 
                 // Hero above terrain
                 // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
@@ -417,7 +417,7 @@ define([
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
             }
-            if (other instanceof Lava && !this.states.dead) {
+            if (other instanceof Hazards["lava"] && !this.states.dead) {
                 this.clearStates();
                 this.health = 0;
                 this.states.stunned = true;
@@ -447,14 +447,25 @@ define([
                                 this.boundX = other.boundX + other.boundWidth;
                                 this.x = this.boundX;
                             }
-                        }                        
+                        }
                         else if (other.damageType === "energy" && this.energy > 0) {
                             console.log("energy: " + this.energy) //DBG
                             this.energy -= other.damage;
                             console.log("energy: " + this.energy) //DBG
                         }
                     }
-                } 
+                }
+                if (other instanceof Hazards["fireball"]) {
+                    console.log("health: " + this.health); //DBG
+                    this.health -= other.damage;
+                    this.damageCooldownTimer = this.damageCooldown;
+                    console.log("health: " + this.health); //DBG
+                    //reset states and put into stun anim and stunlock
+                    this.clearStates();
+                    this.states.stunned = true;
+                    this.states.framelocked = true;
+                    if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
+                }
                 if (other instanceof Hurtbox) {
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");

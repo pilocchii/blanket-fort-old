@@ -20,7 +20,8 @@ define([
         class Hurtbox extends Actor {
 
             //Note that img is required for super(), even though Hurtbox is never animated.
-            constructor(game, ctx = null, x, y, offX, offY, parentWidth, parentHeight, hurtWidth, hurtHeight, scale = 3, damage, facingRight = true, isEnemy = false, damageType = "health", frames = 1, img = null) {
+            constructor(game, ctx = null, x, y, offX, offY, parentWidth, parentHeight, hurtWidth, hurtHeight, scale = 3,
+                            damage, facingRight = true, isEnemy = false, damageType = "health", frames = 2, persistent = false, img = null) {
                 super(game, x, y, img, ctx);
                 this.movementSpeed = 0;
                 this.scale = scale;
@@ -35,6 +36,7 @@ define([
                 //Stats
                 this.damage = damage;
                 this.frames = frames;
+                this.persistent = persistent;
 
 
                 this.states = {
@@ -44,10 +46,16 @@ define([
 
             update() {
                 //hitbox persists for two ticks. (two prevents random hitbox "gaps")
-                if (this.frames === 0) {
-                    this.removeFromWorld = true;
+                if (this.frames < 0) {
+                    //persist
+                    //TODO: Figure out why hitbox doesn't persist
                 }
-                this.frames--;
+                else if(this.frames >= 0) {
+                    if (this.frames === 0) {
+                        this.removeFromWorld = true;
+                    }
+                    this.frames--;
+                }
             };
 
             draw(ctx) {
@@ -59,7 +67,7 @@ define([
                 if (other instanceof Terrain) {
                     //console.log("clink");
                 }
-                else if (other instanceof Actor && !(other instanceof Enemy)) { //TODO: Why can't I just use instanceof Hero? (claims Hero is not an object. Why?)
+                else if (other instanceof Actor && !(other instanceof Enemy) && !this.persistent) { //TODO: Why can't I just use instanceof Hero? (claims Hero is not an object. Why?)
                     this.removeFromWorld = true;
                 }
             }
