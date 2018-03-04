@@ -1,0 +1,10 @@
+#gameWorld {
+    border: 1px solid brown; 
+    width:100%; 
+    height:100%; 
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

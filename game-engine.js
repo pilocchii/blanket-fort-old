@@ -250,8 +250,10 @@ define([
         Defines the game loop
         */
         loop () {
+            this.ctx.width = window.innerWidth;
+            this.ctx.height = window.innerHeight;
+
             this.update();
-            // this.drawBackground();
             this.draw();
             this.click = null;
             this.wheel = null;

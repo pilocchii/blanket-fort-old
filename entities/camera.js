@@ -51,7 +51,7 @@ define([
             if (this.followed != null) {
                 //TODO: need to figure out world bounds for min and max clamping
                 this.xView = -this.followed.x + this.canvasWidth/2;
-                this.yView = -this.followed.y + this.canvasHeight/2;
+                this.yView = -this.followed.y + this.canvasHeight/1.25;
             }
             
              //console.log("xView: " + this.xView);
