@@ -38,7 +38,6 @@ require.config({
         "item": "entities/items/item",
         "bomb": "entities/bomb",
         "hand": "entities/hand",
-        "lava": "entities/lava",
         "background": "background",
         "hazards": "entities/hazards",
         "fireball": "entities/fireball",

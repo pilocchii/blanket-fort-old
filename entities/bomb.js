@@ -200,9 +200,12 @@ define([
             if (other instanceof Hurtbox) {
                 other.hasOwnProperty("isEnemy");
                 other.hasOwnProperty("damage");
-                if (!other.isEnemy) {
-                    //bounce
-                }
+                this.states.launching = false,
+                this.states.activating = false;
+                this.states.detonating = false;
+                this.states.exploding = true;
+                this.gravity = 0;
+                this.yVelocity = 0;
             }
         }
 

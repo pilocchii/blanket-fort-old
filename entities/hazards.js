@@ -27,27 +27,28 @@ define([
                 this.boundY = this.y - this.spriteHeight * this.scale + 37 * this.scale;
 
                 this.fireCooldownTimer = 0;
-                this.fireCooldown = 100;
+                this.fireCooldown = 1000;
 
                 this.states = {
                     "active": true,
                     "facingRight": true,
                 };
                 this.animations = {
-                    "active": new Animation(this.img, [this.spriteWidth, 128], 7, 1, 5, 8, true, this.scale),
+                    "active": new Animation(this.img, [this.spriteWidth, 128], 7, 1, 7, 8, true, this.scale),
                 };
                 this.animation = this.animations.active;
             }
 
             /*Updates the entity each game loop. i.e. what does this entity do? */
             update() {
-                if (Math.abs(this.x - this.game.hero.x) <= 500 && this.fireCooldownTimer <= 0) {
-                    this.game.addEntity(new Fireball(this.game, this.x - 32, this.y - this.spriteHeight*2, this.img, this.ctx, 4, 15));
-                    this.fireCooldownTimer = this.fireCooldown;
-                }
-                if (this.fireCooldownTimer > 0) {
-                    this.fireCooldownTimer--;
-                }
+                ////Have Lava spawn fireballs **I don't like this, but I'm leaving the code for posterity's sake.**
+                //if (Math.abs(this.x - this.game.hero.x) <= 500 && this.fireCooldownTimer <= 0) {
+                //    this.game.addEntity(new Fireball(this.game, this.x - 32, this.y - this.spriteHeight*2, this.img, this.ctx, 4, 15));
+                //    this.fireCooldownTimer = this.fireCooldown;
+                //}
+                //if (this.fireCooldownTimer > 0) {
+                //    this.fireCooldownTimer--;
+                //}
             }
 
             drawOutline(ctx) {
@@ -72,8 +73,9 @@ define([
         }
 
         class Fireball extends Entity {
-            constructor(game, x, y, img = null, ctx = null, scale = null, ySpeed = 12) {
+            constructor(game, x, y, img = null, ctx = null, scale = null, cooldown = 150, ySpeed = 12) {
                 super(game, x, y, img, ctx);
+
                 this.scale = scale;
                 this.spriteWidth = 60;
                 this.spriteHeight = 60;
@@ -83,11 +85,18 @@ define([
                 this.boundX = this.centerX - this.boundWidth/2;
                 this.boundY = this.y - this.spriteHeight*this.scale/2;
 
+                this.origX = this.x;
+                this.origY = this.y;
+                this.origBoundX = this.boundX;
+                this.origBoundY = this.boundY;
+
                 this.ySpeed = ySpeed;
                 this.damage = 2;
+                this.cooldownTimer = 0;
+                this.cooldown = cooldown;
 
                 this.states = {
-                    "active": false,//TODO: Determine if we want this state. (almost definitely unneeded)
+                    "active": true,
                     "start": true,
                     "middle_up": false,
                     "peak_up": false,
@@ -105,66 +114,80 @@ define([
                     "middle_down": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 9, 13, 3, 1, true, this.scale, 10),
                     "finish": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 9, 13, 3, 1, true, this.scale, 11),
                 };
-                this.animation = this.animations.active;
+                this.animation = this.animations.start;
                 console.log(this.gravity);
             }
 
             /*Updates the entity each game loop. i.e. what does this entity do? */
             update() {
-                if (this.states.start) {
-                    this.changePos(0, -1*this.ySpeed);
-                    if (this.animation.loops > 4) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.start = false;
-                        this.states.middle_up = true;
+                if (this.states.active) {
+                    if (this.states.start) {
+                        this.changePos(0, -1 * this.ySpeed);
+                        if (this.animation.loops > 5) {
+                            this.animation.elapsedTime = 0;
+                            this.animation.loops = 0;
+                            this.states.start = false;
+                            this.states.middle_up = true;
+                        }
+                    }
+                    if (this.states.middle_up) {
+                        this.changePos(0, -.5 * this.ySpeed);
+                        if (this.animation.loops > 3) {
+                            this.animation.elapsedTime = 0;
+                            this.animation.loops = 0;
+                            this.states.middle_up = false;
+                            this.states.peak_up = true;
+                        }
+                    }
+                    if (this.states.peak_up) {
+                        this.changePos(0, -.1 * this.ySpeed);
+                        if (this.animation.loops > 2) {
+                            this.animation.elapsedTime = 0;
+                            this.animation.loops = 0;
+                            this.states.peak_up = false;
+                            this.states.peak_down = true;
+                        }
+                    }
+                    if (this.states.peak_down) {
+                        this.changePos(0, .1 * this.ySpeed);
+                        if (this.animation.loops > 2) {
+                            this.animation.elapsedTime = 0;
+                            this.animation.loops = 0;
+                            this.states.peak_down = false;
+                            this.states.middle_down = true;
+                        }
+                    }
+                    if (this.states.middle_down) {
+                        this.changePos(0, .5 * this.ySpeed);
+                        if (this.animation.loops > 3) {
+                            this.animation.elapsedTime = 0;
+                            this.animation.loops = 0;
+                            this.states.middle_down = false;
+                            this.states.finish = true;
+                        }
+                    }
+                    if (this.states.finish) {
+                        this.changePos(0, this.ySpeed);
+                        if (this.animation.loops > 5) {
+                            this.animation.elapsedTime = 0;
+                            this.animation.loops = 0;
+                            this.states.finish = false;
+                            this.states.start = true;
+                            this.states.active = true;
+                            this.cooldownTimer = this.cooldown;
+                            this.x = this.origX;
+                            this.y = this.origY;
+                            this.boundX = this.origBoundX;
+                            this.boundY = this.origBoundY;
+                        }
                     }
                 }
-                if (this.states.middle_up) {
-                    this.changePos(0, -.5*this.ySpeed);
-                    if (this.animation.loops > 3) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.middle_up = false;
-                        this.states.peak_up = true;
-                    }
+                if (this.cooldownTimer > 0) {
+                    this.cooldownTimer--;
+                    this.states.active = false;
                 }
-                if (this.states.peak_up) {
-                    this.changePos(0, -.1*this.ySpeed);
-                    if (this.animation.loops > 2) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.peak_up = false;
-                        this.states.peak_down = true;
-                    }
-                }
-                if (this.states.peak_down) {
-                    this.changePos(0, .1*this.ySpeed);
-                    if (this.animation.loops > 2) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.peak_down = false;
-                        this.states.middle_down = true;
-                    }
-                }
-                if (this.states.middle_down) {
-                    this.changePos(0, .5*this.ySpeed);
-                    if (this.animation.loops > 3) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.middle_down = false;
-                        this.states.finish = true;
-                    }
-                }
-                if (this.states.finish) {
-                    this.changePos(0, this.ySpeed);
-                    if (this.animation.loops > 4) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.finish = false;
-                        this.states.start = true;
-                        this.removeFromWorld = true;
-                    }
+                else {
+                    this.states.active = true;
                 }
             }
 
@@ -179,9 +202,6 @@ define([
             }
 
             draw(ctx) {
-                if (this.states.active) {
-                    //
-                }
                 if (this.states.start) {
                     this.animation = this.animations.start;
                 }
@@ -200,7 +220,9 @@ define([
                 if (this.states.finish) {
                     this.animation = this.animations.finish;
                 }
-                this.drawImg(ctx);
+                if (this.states.active) {
+                    this.drawImg(ctx);
+                }                
             }
 
             drawImg(ctx) {
@@ -212,7 +234,7 @@ define([
         class Spikes extends Entity {
             constructor(game, x, y, img = null, ctx = null, scale = null, active = true, timer, timeOffset = 0, length = 0) {
                 super(game, x, y, img, ctx);
-                this.y += 44;
+                //this.y += 44; Give a +44 offset when instantiating 
                 this.scale = scale;
                 this.spriteWidth = 60;
                 this.spriteHeight = 60;
@@ -224,6 +246,7 @@ define([
 
                 this.spikeCooldownTimer = timeOffset;
                 this.spikeCooldown = timer;
+                this.damage = 1; //this.game.hero.maxHealth
 
                 this.states = {
                     "active": false,
@@ -242,7 +265,7 @@ define([
                     var nextOffset = timeOffset + 20;
                     length--;
                     this.game.addEntity(new Spikes(this.game, this.x + this.spriteWidth,
-                        1440, this.img, ctx, 2, true, this.spikeCooldown, nextOffset, length));
+                        this.y, this.img, ctx, 2, true, this.spikeCooldown, nextOffset, length));
                 }
             }
 
@@ -250,7 +273,7 @@ define([
             update() {
                 if (this.states.active) {
                     this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX + 3, this.boundY, -this.spriteWidth - .5 * this.boundWidth, 0,
-                        this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 3, this.boundHeight - 36, this.scale, this.game.hero.maxHealth, this.states.facingRight,
+                        this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 3, this.boundHeight - 36, this.scale, this.damage, this.states.facingRight,
                         "health", 2, true));
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;
@@ -274,7 +297,7 @@ define([
                 else if (this.states.inactive_up) {
                     if (Math.abs(this.x - this.game.hero.x) < 300 && Math.abs(this.y - this.game.hero.y) < 300) {
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX + 3, this.boundY, -this.spriteWidth - .5*this.boundWidth, 0,
-                            this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 3, this.boundHeight - 36, this.scale, this.game.hero.maxHealth, this.states.facingRight,
+                            this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 3, this.boundHeight - 36, this.scale, this.damage, this.states.facingRight,
                             "health", 2, true));
                     }
                 }
