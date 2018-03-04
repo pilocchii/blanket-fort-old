@@ -117,29 +117,30 @@ define([
         gameEngine.addEntity(hero);  
 
         //***LEVEL ONE***
-        //gameEngine.addEntity(new Item.HealthPack(gameEngine, 2935, 1200, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
-        //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 2965, 1200, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
-        //gameEngine.addEntity(new Item.HealthPack(gameEngine, 300, 400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
-        //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 330, 400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.HealthPack(gameEngine, 2935, 1200, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 2965, 1200, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.HealthPack(gameEngine, 300, 400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
+        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 330, 400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
 
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
 
-        //gameEngine.addEntity(new Dino(gameEngine, 2130, 1061, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
-        //gameEngine.addEntity(new Dino(gameEngine, 1980, 582, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Dino(gameEngine, 2130, 1061, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
+        gameEngine.addEntity(new Dino(gameEngine, 1980, 582, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        //gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
+        //TODO: What is this? Can we remove it?
+        gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
 
         //***LEVEL TWO***
         //gameEngine.addEntity(new Hand(gameEngine, 1885, 1350, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Dino(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
-        gameEngine.addEntity(new Crow(gameEngine, 2200, 1750, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Crow(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 2200, 1750, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         
         gameEngine.addEntity(hud);
