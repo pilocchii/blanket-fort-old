@@ -144,7 +144,14 @@ define([
         //gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Hazards["lava"](gameEngine, 700, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 64));
-        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 700, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, false));
+        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 700,
+            1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20*6, 0, 18));
+        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 700 + 2 * (55),
+        //    1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 50, 20));
+        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 700 + 3*55,
+        //    1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 50, 40));
+        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 700 + 4 * (55),
+        //    1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 50, 60));
         
         
         gameEngine.addEntity(hud);
