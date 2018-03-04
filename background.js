@@ -73,10 +73,10 @@ define([
                 [213, 142], this.camera, 0.15, 0.35, this.camera.canvasHeight/2))
             this.game_engine.addBackgroundLayer(new Layer(this.asset_manager.getAsset("img/bg/3_buildings.png"), 
                 [272, 150], this.camera, 0.2, 0.4, this.camera.canvasHeight/2))
-            this.game_engine.addBackgroundLayer(new Layer(this.asset_manager.getAsset("img/bg/4_foreground.png"), 
-                [272, 104], this.camera, 0.25, .5, this.camera.canvasHeight/2))
+            // this.game_engine.addBackgroundLayer(new Layer(this.asset_manager.getAsset("img/bg/4_foreground.png"), 
+                // [272, 104], this.camera, 0.25, .5, this.camera.canvasHeight/2))
             this.game_engine.addBackgroundLayer(new Layer(this.asset_manager.getAsset("img/bg/bot_fill.png"), 
-                [250, 250], this.camera, 1, 1, this.camera.canvasHeight/2 + 250))
+                [250, 250], this.camera, 1, 1, this.camera.canvasHeight/2))
         }
 
     }
