@@ -1,9 +1,11 @@
 define([
     'entity',
     "animation",
+    "fireball",
 ],function(
     Entity,
     Animation,
+    Fireball,
 ){
 
 

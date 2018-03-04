@@ -1,15 +1,13 @@
 define([
     "asset-manager",
-    'soldier-shield',
     "hero",
     "hud",
     "background"
 ], function (
     AssetManager,
-    Soldier_Shield,
     Hero,
     Hud,
-    Background
+    Background,
 ){
 
      /***************
