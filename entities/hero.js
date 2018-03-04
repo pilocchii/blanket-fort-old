@@ -383,7 +383,7 @@ define([
 
         collided(other, direction) {
             // collide with terrain
-            if (other instanceof Terrain) {
+            if (other instanceof Terrain || other instanceof Hazards["spikes"]) {
 
                 // Hero above terrain
                 // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
