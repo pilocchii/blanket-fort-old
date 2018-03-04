@@ -6,6 +6,7 @@ define([
     "hud",
     "entity",
     "terrain",
+    "background",
     "hero",
     "leo",
     "flames",
@@ -30,6 +31,7 @@ define([
     Hud,
     Entity,
     Terrain,
+    Background,
     Hero,
     Leo,
     Flames,
@@ -61,7 +63,13 @@ define([
         "img/Enemies.png",
         "img/hud.png",
         "img/healthpack.png",
-        "img/energypack.png"
+        "img/energypack.png",
+        "img/bg/1_bg.png",
+        "img/bg/2_farbuildings.png",
+        "img/bg/3_buildings.png",
+        "img/bg/4_foreground.png",
+        "img/bg/bot_fill.png"
+
     ];
 
     let ASSET_MANAGER = new AssetManager(toload);
@@ -74,19 +82,20 @@ define([
         console.log("canvas height: " + canvas.height);
 
         let gameEngine = new GameEngine();
-        //TODO: Placeholder magic numbers until we decide on how to handle world boundary and camera
-
-        /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
         let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width, canvas.height, 2000, 2000)
-        gameEngine.addEntity(camera);
-
         let hero = new Hero(gameEngine, 100, 1400, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
         
-        //let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
-        let levelTwo = new LevelTwo(gameEngine, ASSET_MANAGER, ctx);
+        //TODO: Placeholder magic numbers until we decide on how to handle world boundary and camera
 
-       
+        /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
+        
+        gameEngine.addEntity(camera);
+
+
+        let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
+        let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
+        //let levelTwo = new LevelTwo(gameEngine, ASSET_MANAGER, ctx);       
         
         //hero as global variable
         gameEngine.hero = hero;

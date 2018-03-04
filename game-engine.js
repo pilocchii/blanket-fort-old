@@ -2,12 +2,14 @@ define([
     "asset-manager",
     'soldier-shield',
     "hero",
-    "hud"
+    "hud",
+    "background"
 ], function (
     AssetManager,
     Soldier_Shield,
     Hero,
-    Hud
+    Hud,
+    Background
 ){
 
      /***************
@@ -17,6 +19,7 @@ define([
 
         constructor (hero) {
             this.entities = [];
+            this.backgroundLayers = [];
             this.ctx = null;
             this.click = null;
             this.mouse = null;
@@ -148,6 +151,10 @@ define([
             this.entities.push(entity);
         }
 
+        addBackgroundLayer (layer) {
+            this.backgroundLayers.push(layer);
+        }
+
 
         /*
         Draws all entities in the list
@@ -156,6 +163,12 @@ define([
         draw (drawCallback) {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
             this.ctx.save();
+            for (let i = 0; i < this.backgroundLayers.length; i++) {
+                //Draw the camera and hud first
+
+                this.backgroundLayers[i].draw(this.ctx);
+
+            }
             for (let i = 0; i < this.entities.length; i++) {
                 //Draw the camera and hud first
                 if (i === 0) {
@@ -168,9 +181,11 @@ define([
                 && -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
                 && -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height)
                 || this.entities[i] instanceof Hud) {
-                this.entities[i].draw(this.ctx);
+                    this.entities[i].draw(this.ctx);
                 }
             }
+            
+
             if (drawCallback) {
                 drawCallback(this);
             }
@@ -217,11 +232,26 @@ define([
             }
         }
 
+        drawBackground(drawCallback) {
+            this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            this.ctx.save();
+            for (let i = 0; i < this.backgroundLayers.length; i++) {
+                //Draw the camera and hud first
+                this.backgroundLayers[i].draw(this.ctx);
+
+            }
+            if (drawCallback) {
+                drawCallback(this);
+            }
+            this.ctx.restore();
+        }
+
         /*
         Defines the game loop
         */
         loop () {
             this.update();
+            // this.drawBackground();
             this.draw();
             this.click = null;
             this.wheel = null;
