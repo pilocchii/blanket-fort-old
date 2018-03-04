@@ -16,7 +16,7 @@ define([
     Hurtbox,
     ) {
 
-
+        //TODO (long term): ALL ACTORS - "Check if in range" helper function
         class Soldier_Shield extends Enemy {
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 50, spriteHeight = 50) {
@@ -36,7 +36,7 @@ define([
                 this.updateHitbox(50, 50, 38, 40);
 
                 //Stats
-                this.health = 150;
+                this.health = 50;
                 this.damage = 1;
                 this.facing = -1;
 
@@ -55,6 +55,7 @@ define([
                     "running": false,
                     "shooting_startup": false,
                     "shooting_active": false,
+                    "shooting_recover": false,
                     "hasShot": false,
                     "slashing_start": false,
                     "slashing_end": false,
@@ -66,12 +67,13 @@ define([
                 };
                 this.animations = {
                     "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 5, 6, true, this.scale),
-                    "turn": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 4, 5, false, this.scale, 6),
-                    "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 15, 4, true, this.scale, 11),
+                    "turn": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 3, 5, false, this.scale, 6),
+                    "block": new Animation(this.img, [spriteWidth, spriteHeight], 0, 15, 9, 4, false, this.scale, 11),
                     "run": new Animation(this.img, [spriteWidth, spriteHeight], 1, 12, 3, 12, true, this.scale),
-                    "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 3, 5, false, this.scale),
+                    "shoot_startup": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 2, 5, false, this.scale),
                     "shoot_active": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 4, 5, false, this.scale, 5),
-                    "slash_start": new Animation(this.img, [100, 60], 3, 16, 3, 9, false, this.scale),
+                    "shoot_recover": new Animation(this.img, [spriteWidth, spriteHeight], 2, 18, 4, 1, true, this.scale, 9),
+                    "slash_start": new Animation(this.img, [100, 60], 3, 16, 2, 9, false, this.scale),
                     "slash_end": new Animation(this.img, [100, 60], 3, 16, 3, 7, false, this.scale, 9),
                 };
                 this.animation = this.animations.idle;
@@ -147,7 +149,7 @@ define([
                     /**** END BEHAVIOR CODE ****/
 
                     //Run Away Routine
-                    if (this.states.runningAway && !this.states.shooting_startup && !this.states.shooting_active) {
+                    if (this.states.runningAway && !this.states.shooting_startup && !this.states.shooting_active && !this.states.shooting_recover) {
                         if (this.runAwayTimer == this.runAwayTime - 1) {
                             this.states.turning = true;
                         }
@@ -193,22 +195,30 @@ define([
                             this.animation.loops = 0;
                             this.states.shooting_active = false;
                             this.states.hasShot = false;
+                            //this.states.shooting_recover = true;
                             if (!this.states.runningAway)
                                 this.states.idling = true;
-                            //for demo
-                            //this.states.slashing_start = true;
-                            this.updateHitbox(50, 50, 38, 40);
-
+                        }
+                    }
+                    //TODO: Decide whether to use this
+                    //TODO: Figure out why this causes "run away" to happen in the wrong direction
+                    if (this.states.shooting_recover) { 
+                        if (this.animation.loops > 2) {
+                            this.animation.elapsedTime = 0;
+                            this.animation.loops = 0;
+                            this.states.shooting_recover = false;
+                            if (!this.states.runningAway)
+                                this.states.idling = true;
                         }
                     }
                     if (this.states.slashing_start && !this.states.framelocked) { //slashing start  this.updateHitbox(80, 60, 50, 40);
                         if (this.animation.currentFrame() === 8) {
                             if (this.states.facingRight)
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 40, 100,
-                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                             else
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 85, 100,
-                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                         }
                         if (this.animation.isDone()) {
                             this.animation.elapsedTime = 0;
@@ -221,15 +231,14 @@ define([
                         if (this.animation.currentFrame() >= 0 && this.animation.currentFrame() <= 1) {
                             if (this.states.facingRight)
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 25, 100,
-                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                             else
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 80, 100,
-                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, !this.states.facingRight, true));
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                         }
                         if (this.animation.isDone()) {
                             this.animation.elapsedTime = 0;
                             this.states.slashing_end = false;
-                            //for demo
                             this.states.idling = true;
                             this.updateHitbox(50, 50, 38, 40);
                         }
@@ -246,7 +255,7 @@ define([
                         }
 
 
-                        if (this.animation.loops > 0) {
+                        if (this.animation.isDone()) {
                             this.animation.elapsedTime = 0;
                             this.animation.loops = 0;
                             this.states.blocking = false;
@@ -290,6 +299,9 @@ define([
                 if (this.states.shooting_active) {
                     this.animation = this.animations.shoot_active;
                 }
+                if (this.states.shooting_recover) {
+                    this.animation = this.animations.shoot_recover;
+                }
                 if (this.states.slashing_start) {
                     this.animation = this.animations.slash_start;
                 }
@@ -316,7 +328,6 @@ define([
 
             collided(other, direction) {
                 if (other instanceof Terrain) {
-
                     if (direction === 'bottom') {
                         this.boundY = other.boundY - this.boundHeight;
                         this.y = this.boundY + this.boundHeight - 20; //fix magic number (drawn slightly below hitbox without the 20 offset)
@@ -324,12 +335,10 @@ define([
                         this.jumpsLeft = this.maxJumps;
                         this.states.jumping = false;
                     }
-
                     else if (direction === 'top') {
                         this.boundY = other.boundY + other.boundHeight;
                         this.y = this.boundY + this.boundHeight;
                         this.lastBoundY = this.boundY;
-
                     }
 
                     else if (direction === 'left') {
@@ -345,11 +354,11 @@ define([
                 if (other instanceof Projectile) {
                     // blocking from left & right
                     if (this.states.idling || this.states.blocking) {
-                        if (direction == 'left' && other.x < this.x) {
+                        if (this.x - this.game.hero.x < 0 && this.states.facingRight/*direction == 'left' && other.x < this.x*/) {
                             this.states.blocking = true;
                             this.states.idling = false;
                         }
-                        else if (direction == 'right' && other.x > this.x) {
+                        else if (this.x - this.game.hero.x > 0 && !this.states.facingRight/*direction == 'right' && other.x > this.x*/) {
                             this.states.blocking = true;
                             this.states.idling = false;
                         }
@@ -369,21 +378,22 @@ define([
                     // blocking from left & right
                     if (!other.isEnemy) {
                         if (this.states.idling || this.states.blocking) {
-                            if (direction == 'left' && other.x < this.x) {
+                            if (this.x - this.game.hero.x < 0 && this.states.facingRight/*direction == 'left' && other.x < this.x*/) {
                                 this.states.blocking = true;
                                 this.states.idling = false;
                             }
-                            else if (direction == 'right' && other.x > this.x) {
+                            else if (this.x - this.game.hero.x > 0 && !this.states.facingRight/*direction == 'right' && other.x > this.x*/) {
                                 this.states.blocking = true;
                                 this.states.idling = false;
-                            } else {
-                                // blood or something goes here
-                                // this.game.addEntity(...)
+                            }
+                            else {
                                 this.health -= other.damage;
-                                //Automatically dies to Hero's hurtbox (sword) attacks
-                                //this.removeFromWorld = true;
                                 console.log("OUCH!")
                             }
+                        }
+                        else {
+                            this.health -= other.damage;
+                            console.log("OUCH!")
                         }
                     }
                 }
@@ -400,7 +410,7 @@ define([
             }
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
         }
