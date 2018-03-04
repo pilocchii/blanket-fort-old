@@ -31,7 +31,6 @@ define([
         isColliding() {}
         collided() {}
 
-
     }
 
 
@@ -49,8 +48,6 @@ define([
             this.score = this.game_engine.score;
             this.dest_coords = [-this.camera.xView + 200, -this.camera.yView + 100]
         }
-
-
 
 
         draw(ctx) {

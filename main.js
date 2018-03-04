@@ -39,6 +39,7 @@ require.config({
         "bomb": "entities/bomb",
         "hand": "entities/hand",
         "lava": "entities/lava",
+        "background": "background"
     },
 });
 
