@@ -212,6 +212,7 @@ define([
                         //this.energyCooldownTimer = this.energyCooldown;
                     }
                     else {
+                        this.game.playSound("hero_shoot")
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
                     }
                     this.states.shotlocked = true;
@@ -225,6 +226,7 @@ define([
             }
             //Slashing
             if (this.states.slashing) {
+                this.game.playSound("sword_swing")
                 this.gravity = 0.9; //Fixes super-duper jump bug. (When interrupting dash, dash doesn't enter isDone() so grav isn't reset)
                 if (this.animation.currentFrame() === 2 && this.states.energized 
                     && !this.states.shotlocked && this.energy >= this.maxEnergy/2) {
@@ -274,6 +276,7 @@ define([
             //Stunned
             if (this.states.stunned) { 
                 //move away from the direction of the attack
+
                 this.x += this.stunDir * 1;
                 this.gravity = 0;
                 this.yVelocity = 0;
@@ -424,9 +427,12 @@ define([
                 this.states.framelocked = true;
                 this.boundY = other.boundY - this.boundHeight;
                 this.y = this.boundY + this.boundHeight - 5;
+                this.game.playSound("hero_hurt")
             }
             if (this.damageCooldownTimer <= 0 && !this.states.dead && !this.states.stunned) { //If Hero can take damage, check if...
                 if (other instanceof Enemy) {
+
+                    this.game.playSound("hero_hurt")
                     if (other.damage > 0) {
                         //Determine interaction based on enemy's damage type
                         if (other.damageType === "health") {
@@ -456,6 +462,8 @@ define([
                     }
                 }
                 if (other instanceof Hazards["fireball"]) {
+
+                    this.game.playSound("hero_hurt")
                     console.log("health: " + this.health); //DBG
                     this.health -= other.damage;
                     this.damageCooldownTimer = this.damageCooldown;
@@ -470,6 +478,8 @@ define([
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");
                     if (other.isEnemy) {
+
+                        this.game.playSound("hero_hurt")
                         console.log("health: " + this.health); //DBG
                         this.health -= other.damage; 
                         this.damageCooldownTimer = this.damageCooldown;

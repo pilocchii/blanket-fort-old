@@ -126,6 +126,7 @@ define([
                     if (!this.states.framelocked) {
                         this.game.addEntity(new Rocket(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.states.framelocked = true;
+                        this.game.playSound("energy_launcher")
                     }
                     if (this.animation.isDone()) {
                         this.animation.elapsedTime = 0;

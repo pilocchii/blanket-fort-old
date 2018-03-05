@@ -122,6 +122,10 @@ define([
             update() {
                 if (this.states.active) {
                     if (this.states.start) {
+                        if (this.animation.loops == 1) {
+                            this.game.playSound("lava_ball", 0.5)
+                        }
+
                         this.changePos(0, -1 * this.ySpeed);
                         if (this.animation.loops > 5) {
                             this.animation.elapsedTime = 0;

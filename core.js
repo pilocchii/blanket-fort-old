@@ -23,6 +23,7 @@ define([
     "item",
     "hand",
     "hazards",
+    "sound"
 
 ], function(
     AssetManager,
@@ -49,6 +50,7 @@ define([
     Item,
     Hand,
     Hazards,
+    Sound
 ) {
 
     let init = function() {
@@ -82,12 +84,12 @@ define([
         console.log("canvas width: " + canvas.width);
         console.log("canvas height: " + canvas.height);
 
-        let gameEngine = new GameEngine();
+        let gameEngine = new GameEngine(new Sound());
         let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width, canvas.height, 2000, 2000)
         let hero = new Hero(gameEngine, 7000, 1248, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
         let audio = new Audio("./audio/track_1.wav");
-        audio.volume = 0.04;
+        audio.volume = 1;
         audio.play();
         //TODO: Placeholder magic numbers until we decide on how to handle world boundary and camera
 
@@ -126,7 +128,10 @@ define([
         //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 330, 400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
 
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 1300, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 1250, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+
         //gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));

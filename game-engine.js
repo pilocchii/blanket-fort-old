@@ -15,7 +15,8 @@ define([
     ****************/
     class GameEngine {
 
-        constructor (hero) {
+        constructor (sound, hero) {
+            this.sound = sound;
             this.entities = [];
             this.backgroundLayers = [];
             this.ctx = null;
@@ -79,6 +80,10 @@ define([
                 that.loop();
                 requestAnimFrame(gameLoop, that.ctx.canvas);
             })();
+        }
+
+        playSound(sound_name, volume=1) {
+            this.sound.play(sound_name, volume)
         }
 
         //Timer class
