@@ -23,6 +23,7 @@ define([
     "item",
     "hand",
     "hazards",
+    "sound"
 
 ], function(
     AssetManager,
@@ -49,6 +50,7 @@ define([
     Item,
     Hand,
     Hazards,
+    Sound
 ) {
 
     let init = function() {
@@ -82,11 +84,14 @@ define([
         console.log("canvas width: " + canvas.width);
         console.log("canvas height: " + canvas.height);
 
-        let gameEngine = new GameEngine();
+        let gameEngine = new GameEngine(new Sound());
         let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width, canvas.height, 2000, 2000)
         let hero = new Hero(gameEngine, 7000, 1120, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
-        
+        // ### music ###
+        // let audio = new Audio("./audio/track_1.wav");
+        // audio.volume = 1;
+        // audio.play();
         //TODO: Placeholder magic numbers until we decide on how to handle world boundary and camera
 
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
@@ -124,7 +129,10 @@ define([
         //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 330, 400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
 
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 1300, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 1250, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+
         //gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
@@ -180,6 +188,7 @@ define([
         gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7980,
             1056 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 20, 3));
         gameEngine.addEntity(new Hazards["spikes"](gameEngine, 8665,
+
             1150 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 3.5, 40, 0));
         gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7692,
             700 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4.5, 0, 3));
@@ -190,7 +199,6 @@ define([
         gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 792 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 90, 370, 20))
         gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875 - 95, 984 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 90, 370, 50))
         gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 1176 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 45, 370, 60))
-
         gameEngine.addEntity(hud);
         gameEngine.init(ctx);
         gameEngine.start();

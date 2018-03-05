@@ -41,6 +41,7 @@ require.config({
         "background": "background",
         "hazards": "entities/hazards",
         "fireball": "entities/fireball",
+        "sound": "sound"
     },
 });
 

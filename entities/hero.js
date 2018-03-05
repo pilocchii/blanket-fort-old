@@ -126,6 +126,7 @@ define([
             if (this.game.controlKeys[this.game.controls.cleave].active && this.states.grounded && !this.states.framelocked) { //cleave
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
+                this.game.playSound("sword_swing")
                 this.setStates(false, false, false, true, this.states.facingRight, false, false, false, true, this.states.energized, false, false);
                 this.states.cleaving = true;
                 this.states.framelocked = true;
@@ -135,6 +136,7 @@ define([
                 else if (this.game.controlKeys[this.game.controls.left].active) { this.states.facingRight = false; }
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
+                this.game.playSound("sword_swing")
                 this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
             }
             if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { //dash
@@ -215,6 +217,7 @@ define([
                         //this.energyCooldownTimer = this.energyCooldown;
                     }
                     else {
+                        this.game.playSound("hero_shoot")
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
                     }
                     this.states.shotlocked = true;
@@ -277,6 +280,7 @@ define([
             //Stunned
             if (this.states.stunned) { 
                 //move away from the direction of the attack
+
                 this.x += this.stunDir * 1;
                 this.gravity = 0;
                 this.yVelocity = 0;
@@ -429,9 +433,12 @@ define([
                 this.states.framelocked = true;
                 this.boundY = other.boundY - this.boundHeight;
                 this.y = this.boundY + this.boundHeight - 5;
+                this.game.playSound("hero_hurt")
             }
             if (this.damageCooldownTimer <= 0 && !this.states.dead && !this.states.stunned) { //If Hero can take damage, check if...
                 if (other instanceof Enemy) {
+
+                    this.game.playSound("hero_hurt")
                     if (other.damage > 0) {
                         //Determine interaction based on enemy's damage type
                         if (other.damageType === "health") {
@@ -461,6 +468,8 @@ define([
                     }
                 }
                 if (other instanceof Hazards["fireball"]) {
+
+                    this.game.playSound("hero_hurt")
                     console.log("health: " + this.health); //DBG
                     this.health -= other.damage;
                     this.damageCooldownTimer = this.damageCooldown;
@@ -482,6 +491,8 @@ define([
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");
                     if (other.isEnemy) {
+
+                        this.game.playSound("hero_hurt")
                         console.log("health: " + this.health); //DBG
                         this.health -= other.damage; 
                         this.damageCooldownTimer = this.damageCooldown;

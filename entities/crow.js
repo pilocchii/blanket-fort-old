@@ -141,6 +141,7 @@ define([
                         this.animation.loops = 0;
                         this.states.attacking = true;
                         this.states.flying = false;
+                        this.game.sound.play("crow_caw");
                     }
                 }
                 if (this.states.attacking) {
