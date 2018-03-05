@@ -186,6 +186,7 @@ define([
                     }
                     if (this.states.shooting_active) { //shooting active
                         if (!this.states.hasShot) {
+                            this.game.playSound("enemy_shoot")
                             this.game.addEntity(new Shotblast(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                             this.game.addEntity(new Bullet(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                             this.states.hasShot = true;
@@ -357,13 +358,16 @@ define([
                         if (this.x - this.game.hero.x < 0 && this.states.facingRight/*direction == 'left' && other.x < this.x*/) {
                             this.states.blocking = true;
                             this.states.idling = false;
+                            this.game.playSound("shield_block")
                         }
                         else if (this.x - this.game.hero.x > 0 && !this.states.facingRight/*direction == 'right' && other.x > this.x*/) {
                             this.states.blocking = true;
                             this.states.idling = false;
+                            this.game.playSound("shield_block")
                         }
                         else {
                             this.health -= other.damage;
+                            this.game.playSound("enemy_hurt_1")
                         } 
                     } else {
                         // blood or something goes here

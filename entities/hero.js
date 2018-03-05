@@ -7,7 +7,7 @@ define([
     "soldier-shield",
     "enemy",
     "hurtbox",
-    "lava",
+    "hazards",
 ], function (
     Actor,
     Animation,
@@ -17,7 +17,7 @@ define([
     Soldier_Shield,
     Enemy,
     Hurtbox,
-    Lava,
+    Hazards,
 ){
 
 
@@ -123,6 +123,7 @@ define([
             if (this.game.controlKeys[this.game.controls.cleave].active && this.states.grounded && !this.states.framelocked) { //cleave
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
+                this.game.playSound("sword_swing")
                 this.setStates(false, false, false, true, this.states.facingRight, false, false, false, true, this.states.energized, false, false);
                 this.states.cleaving = true;
                 this.states.framelocked = true;
@@ -132,6 +133,7 @@ define([
                 else if (this.game.controlKeys[this.game.controls.left].active) { this.states.facingRight = false; }
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
+                this.game.playSound("sword_swing")
                 this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
             }
             if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { //dash
@@ -212,6 +214,7 @@ define([
                         //this.energyCooldownTimer = this.energyCooldown;
                     }
                     else {
+                        this.game.playSound("hero_shoot")
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
                     }
                     this.states.shotlocked = true;
@@ -274,6 +277,7 @@ define([
             //Stunned
             if (this.states.stunned) { 
                 //move away from the direction of the attack
+
                 this.x += this.stunDir * 1;
                 this.gravity = 0;
                 this.yVelocity = 0;
@@ -383,7 +387,7 @@ define([
 
         collided(other, direction) {
             // collide with terrain
-            if (other instanceof Terrain) {
+            if (other instanceof Terrain || other instanceof Hazards["spikes"]) {
 
                 // Hero above terrain
                 // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
@@ -417,16 +421,19 @@ define([
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
             }
-            if (other instanceof Lava && !this.states.dead) {
+            if (other instanceof Hazards["lava"] && !this.states.dead) {
                 this.clearStates();
                 this.health = 0;
                 this.states.stunned = true;
                 this.states.framelocked = true;
                 this.boundY = other.boundY - this.boundHeight;
                 this.y = this.boundY + this.boundHeight - 5;
+                this.game.playSound("hero_hurt")
             }
             if (this.damageCooldownTimer <= 0 && !this.states.dead && !this.states.stunned) { //If Hero can take damage, check if...
                 if (other instanceof Enemy) {
+
+                    this.game.playSound("hero_hurt")
                     if (other.damage > 0) {
                         //Determine interaction based on enemy's damage type
                         if (other.damageType === "health") {
@@ -447,18 +454,33 @@ define([
                                 this.boundX = other.boundX + other.boundWidth;
                                 this.x = this.boundX;
                             }
-                        }                        
+                        }
                         else if (other.damageType === "energy" && this.energy > 0) {
                             console.log("energy: " + this.energy) //DBG
                             this.energy -= other.damage;
                             console.log("energy: " + this.energy) //DBG
                         }
                     }
-                } 
+                }
+                if (other instanceof Hazards["fireball"]) {
+
+                    this.game.playSound("hero_hurt")
+                    console.log("health: " + this.health); //DBG
+                    this.health -= other.damage;
+                    this.damageCooldownTimer = this.damageCooldown;
+                    console.log("health: " + this.health); //DBG
+                    //reset states and put into stun anim and stunlock
+                    this.clearStates();
+                    this.states.stunned = true;
+                    this.states.framelocked = true;
+                    if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
+                }
                 if (other instanceof Hurtbox) {
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");
                     if (other.isEnemy) {
+
+                        this.game.playSound("hero_hurt")
                         console.log("health: " + this.health); //DBG
                         this.health -= other.damage; 
                         this.damageCooldownTimer = this.damageCooldown;

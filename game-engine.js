@@ -1,15 +1,13 @@
 define([
     "asset-manager",
-    'soldier-shield',
     "hero",
     "hud",
     "background"
 ], function (
     AssetManager,
-    Soldier_Shield,
     Hero,
     Hud,
-    Background
+    Background,
 ){
 
      /***************
@@ -17,7 +15,8 @@ define([
     ****************/
     class GameEngine {
 
-        constructor (hero) {
+        constructor (sound, hero) {
+            this.sound = sound;
             this.entities = [];
             this.backgroundLayers = [];
             this.ctx = null;
@@ -81,6 +80,10 @@ define([
                 that.loop();
                 requestAnimFrame(gameLoop, that.ctx.canvas);
             })();
+        }
+
+        playSound(sound_name, volume=1) {
+            this.sound.play(sound_name, volume)
         }
 
         //Timer class
@@ -174,15 +177,17 @@ define([
                 if (i === 0) {
                     this.entities[i].draw(this.ctx);
                 }
-                //Draw only what is within the canvas view (numbers are negative because the camera is weird like that.
-                //postive numbers would screw the translate process)
-                else if((-this.entities[i].x - this.entities[i].boundWidth < this.entities[0].xView 
-                && -this.entities[i].x > this.entities[0].xView - this.ctx.canvas.width 
-                && -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
-                && -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height)
-                || this.entities[i] instanceof Hud) {
+                ////Draw only what is within the canvas view (numbers are negative because the camera is weird like that.
+                ////postive numbers would screw the translate process)
+                //else if((-this.entities[i].x - this.entities[i].boundWidth < this.entities[0].xView 
+                //&& -this.entities[i].x > this.entities[0].xView - this.ctx.canvas.width 
+                //&& -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
+                //&& -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height)
+                //|| this.entities[i] instanceof Hud) {
+                //    this.entities[i].draw(this.ctx);
+                //}
+                else
                     this.entities[i].draw(this.ctx);
-                }
             }
             
 
@@ -250,8 +255,10 @@ define([
         Defines the game loop
         */
         loop () {
+            this.ctx.width = window.innerWidth;
+            this.ctx.height = window.innerHeight;
+
             this.update();
-            // this.drawBackground();
             this.draw();
             this.click = null;
             this.wheel = null;
