@@ -61,7 +61,7 @@ define([
             
             //Timers
             this.damageCooldownTimer = 0;
-            this.damageCooldown = 6;
+            this.damageCooldown = 10000;
             this.energyCooldownTimer = 0;
             this.energyCooldown = 240; 
             this.velocityCooldown = 2;
