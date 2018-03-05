@@ -182,7 +182,6 @@ define([
         gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875 - 95, 984 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 90, 370, 50))
         gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 1176 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 45, 370, 60))
 
-
         gameEngine.addEntity(hud);
         gameEngine.init(ctx);
         gameEngine.start();
