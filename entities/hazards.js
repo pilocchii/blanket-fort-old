@@ -1,11 +1,21 @@
 define([
     'entity',
     "animation",
+    "hero",
     "hurtbox",
+    "terrain",
+    "actor",
+    "enemy",
+    "projectile",
 ], function (
     Entity,
     Animation,
+    Hero,
     Hurtbox,
+    Terrain,
+    Actor,
+    Enemy,
+    Projectile,
     ) {
 
         /***********
@@ -332,9 +342,154 @@ define([
             }
         }
 
+        class ProjectileHazard extends Entity {
+            constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, directions) {
+                super(game, x, y, img, ctx);
+                //this.y += 44; Give a +44 offset when instantiating 
+                this.scale = scale;
+                this.spriteWidth = 60;
+                this.spriteHeight = 60;
+                this.centerX = x + ((this.spriteWidth * this.scale) / 2) - this.spriteWidth;
+                this.boundWidth = this.scale * 8 + 3;
+                this.boundHeight = this.scale * 8 + 3;
+                this.boundX = this.centerX - this.scale * 5;
+                this.boundY = this.y - this.spriteHeight * this.scale/2 + 5 * this.scale;
+
+                this.xSpeed = xSpeed;
+                this.ySpeed = ySpeed;
+                this.xDir = directions[0];
+                this.yDir = directions[1];
+                this.damage = 1;
+
+                this.states = {
+                    "active": true,
+                };
+                this.animations = {
+                    "active": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 9, 13, 3, 1, true, this.scale, 12),
+                };
+                this.animation = this.animations.active;
+            }
+
+            /*Updates the entity each game loop. i.e. what does this entity do? */
+            update() {
+                this.changePos(this.xSpeed * this.xDir, this.ySpeed * this.yDir);
+            }
+
+            collided(other, direction) {
+                // collide with terrain
+                if (other instanceof Terrain) {
+                    this.removeFromWorld = true;
+                }
+                else if (other instanceof Actor && !(other instanceof Enemy)) {//Hero collision
+                    this.removeFromWorld = true;
+                }
+                else if (other instanceof Projectile) {
+                    this.removeFromWorld = true;
+                }
+                //else if (other instanceof Hurtbox) {
+                //    other.hasOwnProperty("isEnemy");
+                //    other.hasOwnProperty("damage");
+                //    if (!other.isEnemy) {
+                //        this.removeFromWorld = true;
+                //    }
+                //}
+            }
+
+            drawOutline(ctx) {
+                ctx.beginPath();
+                ctx.strokeStyle = "green";
+                ctx.rect(this.boundX,
+                    this.boundY,
+                    this.boundWidth, this.boundHeight);
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            draw(ctx) {
+                if (this.states.active) {
+                    this.animation = this.animations.active;
+                }
+                if (this.states.inactive_down) {
+                    this.animation = this.animations.inactive_down;
+                }
+                if (this.states.inactive_up) {
+                    this.animation = this.animations.inactive_up;
+                }
+                this.drawImg(ctx);
+            }
+
+            drawImg(ctx) {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                this.drawOutline(ctx);
+            }
+        }
+
+        class Launcher extends Entity {
+            constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, directions, cooldown) {
+                super(game, x, y, img, ctx);
+                //this.y += 44; Give a +44 offset when instantiating 
+                this.scale = scale;
+                this.spriteWidth = 60;
+                this.spriteHeight = 60;
+                this.centerX = x + ((this.spriteWidth * this.scale) / 2) - this.spriteWidth;
+                this.boundWidth = this.scale * 8;
+                this.boundHeight = this.scale * 8;
+                this.boundX = this.x - this.spriteWidth + this.scale * 8;
+                this.boundY = this.y - this.spriteHeight * this.scale + 8 * this.scale;
+
+                this.xSpeed = xSpeed;
+                this.ySpeed = ySpeed;
+                this.xDir = directions[0];
+                this.yDir = directions[1];
+                this.shotCooldownTimer = 0;
+                this.shotCooldown = cooldown;
+
+                this.states = {
+                    "active": true,
+                };
+                this.animations = {
+                    "active": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 9, 13, 3, 1, true, this.scale, 20),
+                };
+                this.animation = this.animations.active;
+            }
+
+            /*Updates the entity each game loop. i.e. what does this entity do? */
+            update() {
+                if (Math.abs(this.x - this.game.hero.x) <= 3000 && this.shotCooldownTimer === 0) {
+                    this.game.addEntity(new ProjectileHazard(this.game, this.x - this.spriteWidth, this.y - this.spriteHeight, this.img, this.ctx, this.scale,
+                        this.xSpeed, this.ySpeed, [this.xDir, this.yDir]));
+                    this.shotCooldownTimer = this.shotCooldown;
+                }
+                if (this.shotCooldownTimer > 0) {
+                    this.shotCooldownTimer--;
+                }
+            }
+
+            drawOutline(ctx) {
+                ctx.beginPath();
+                ctx.strokeStyle = "green";
+                ctx.rect(this.boundX,
+                    this.boundY,
+                    this.boundWidth, this.boundHeight);
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            draw(ctx) {
+                this.drawImg(ctx);
+            }
+
+            drawImg(ctx) {
+                //this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                this.drawOutline(ctx);
+            }
+        }
+
         return {
             "lava": Lava,
             "fireball": Fireball,
             "spikes": Spikes,
+            "projectile": ProjectileHazard,
+            "launcher": Launcher,
         };
     });

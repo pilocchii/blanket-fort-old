@@ -55,7 +55,7 @@ define([
                 "launch": new Animation(this.img, [spriteWidth, spriteHeight], 9, 17, 5, 1, true, this.scale, 11),
                 "activate": new Animation(this.img, [spriteWidth, spriteHeight], 9, 17, 7, 2, true, this.scale, 12),
                 "detonate": new Animation(this.img, [spriteWidth, spriteHeight], 9, 17, 6, 1, true, this.scale, 14),
-                "explode": new Animation(this.img, [60, 60], 4, 17, 7, 7, false, this.scale + 1, 10),
+                "explode": new Animation(this.img, [60, 60], 4, 17, 5, 7, false, this.scale + 3, 10),
             };
             if (this.states.facingRight) { this.facing = 1; } else { this.facing = -1; }
             this.animation = this.animations.launch;

@@ -8,6 +8,7 @@ define([
     "enemy",
     "hurtbox",
     "hazards",
+    "rocket",
 ], function (
     Actor,
     Animation,
@@ -18,6 +19,7 @@ define([
     Enemy,
     Hurtbox,
     Hazards,
+    Rocket,
 ){
 
 
@@ -461,6 +463,13 @@ define([
                     this.damageCooldownTimer = this.damageCooldown;
                     console.log("health: " + this.health); //DBG
                     //reset states and put into stun anim and stunlock
+                    this.clearStates();
+                    this.states.stunned = true;
+                    this.states.framelocked = true;
+                    if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
+                } if (other instanceof Hazards["projectile"]) {
+                    this.health -= other.damage;
+                    other.removeFromWorld = true;
                     this.clearStates();
                     this.states.stunned = true;
                     this.states.framelocked = true;
