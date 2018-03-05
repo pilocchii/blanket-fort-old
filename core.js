@@ -146,13 +146,13 @@ define([
         /***ITEMS***/
         gameEngine.addEntity(new Item.HealthPack(gameEngine, 7050, 1248, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8, 3, 1));
         gameEngine.addEntity(new Item.EnergyPack(gameEngine, 7080, 1248, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8, 3, 1));
-
+        gameEngine.addEntity(new Item.HealthPack(gameEngine, 8647, 1148, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8, 3, 1));
+        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 8647, 1148, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8, 3, 1));
 
         /***ENEMIES***/
         gameEngine.addEntity(new Crow(gameEngine, 8800, -200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
         gameEngine.addEntity(new Crow(gameEngine, 9600, -200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
         gameEngine.addEntity(new Crow(gameEngine, 9200, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
-
 
         /***HAZARDS***/
         gameEngine.addEntity(new Hazards["lava"](gameEngine, 7500, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
