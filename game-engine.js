@@ -214,8 +214,11 @@ define([
             for (let i = this.entities.length - 1; i >= 0; --i) {
                 if (this.entities[i].removeFromWorld) {
                     if (this.entities[i].hasOwnProperty("pointValue")) {
-                        this.score += this.entities[i].pointValue;
+                        this.score += this.entities[i].pointValue * this.hero.multiplier;
+                        if(this.entities[i].pointValue > 0)
+                            this.hero.multiplier += .1;
                         console.log("score is now " + this.score);
+                        console.log("muliplier is " + this.hero.multiplier);
                     }
                     this.entities.splice(i, 1);
                 }

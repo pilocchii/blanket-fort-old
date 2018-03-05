@@ -41,6 +41,7 @@ define([
                 this.shotCooldown = 500;
                 this.shotCooldownTimer = shotTimeOffset;
                 //Stats
+                this.pointValue = 15
                 this.health = 200;
                 this.damage = 1;
                 this.yVelocity = 0;

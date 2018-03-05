@@ -16,7 +16,7 @@ define([
 
         class Crow extends Enemy {
 
-            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 50, spriteHeight = 40) {
+            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 50, spriteHeight = 40, sightRadius = [700, 500]) {
                 super(game, x, y, img, ctx);
 
                 this.scale = scale;
@@ -30,12 +30,13 @@ define([
                 this.boundY = this.y - this.boundHeight;
 
                 //Stats
+                this.pointValue = 10;
                 this.xSpeed = 4;
                 this.ySpeed = 8;
                 this.maxX = 5;
                 this.maxY = 9;
                 this.xAccel = .35;
-                this.yAccel = .6;
+                this.yAccel = .4;
 
                 this.attackAngle1 = 2;
                 this.attackAngle2 = 10;
@@ -43,9 +44,11 @@ define([
                 this.xRecover = 7;
                 this.yRecover = 4;
                 this.recoverDistance = 400;
+                this.xRecoverDistance;
+                this.yRecoverDistance;
 
-                this.sightRadius[0] = 800;
-                this.sightRadius[1] = 700;
+                this.sightRadius[0] = sightRadius[0];
+                this.sightRadius[1] = sightRadius[1];
                 this.health = 100;
                 this.damage = 0;
                 this.facing = 1;
@@ -130,10 +133,10 @@ define([
                     //    this.boundY += this.ySpeed;
                     //}
 
-                    //if (all of this stuff) ATTACK!!!
+                    //ATTACK!!!
                     if (Math.abs(this.x - this.game.hero.x) <= 700
                             && this.y - this.game.hero.y < -100 && (this.y - this.game.hero.y) > -200
-                            && this.animation.loops > 2 && Math.random() * 100 <= 30) { 
+                            && this.animation.loops > 1 && Math.random() * 100 <= 10) { 
                         this.animation.elapsedTime = 0;
                         this.animation.loops = 0;
                         this.states.attacking = true;
@@ -268,7 +271,7 @@ define([
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");
                     if (!other.isEnemy) {
-                        this.health -= 50;
+                        this.health -= other.damage;
                         this.states.flying = false;
                         this.states.attacking = false;
                         this.states.attacking_final = false;

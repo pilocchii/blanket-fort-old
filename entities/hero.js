@@ -8,6 +8,7 @@ define([
     "enemy",
     "hurtbox",
     "hazards",
+    "rocket",
 ], function (
     Actor,
     Animation,
@@ -18,6 +19,7 @@ define([
     Enemy,
     Hurtbox,
     Hazards,
+    Rocket,
 ){
 
 
@@ -49,19 +51,20 @@ define([
 
             this.maxHealth = 6;
             this.maxEnergy = 6;
-            this.energy = 5;
-            this.health = 5;
+            this.energy = 6;
+            this.health = 6;
             this.slashEnergyCost = 4;
             this.shootEnergyCost = 2;
             this.dashEnergyCost = 1;
 
             this.stunDir = 0;
+            this.multiplier = 1;
             
             //Timers
             this.damageCooldownTimer = 0;
-            this.damageCooldown = 20;
+            this.damageCooldown = 16000;
             this.energyCooldownTimer = 0;
-            this.energyCooldown = 240; 
+            this.energyCooldown = 240/(this.multiplier*2); 
             this.velocityCooldown = 2;
             this.velocityCooldownTimer = 0;
 
@@ -287,6 +290,8 @@ define([
                     this.states.framelocked = false;
                     this.damageCooldownTimer = this.damageCooldown;
                     this.gravity = 0.9;
+                    this.multiplier = 1;
+                    this.game.score -= 10;
                 }
             }
             //DEAD
@@ -474,6 +479,13 @@ define([
                     this.states.stunned = true;
                     this.states.framelocked = true;
                     if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
+                } if (other instanceof Hazards["projectile"]) {
+                    this.health -= other.damage;
+                    other.removeFromWorld = true;
+                    this.clearStates();
+                    this.states.stunned = true;
+                    this.states.framelocked = true;
+                    if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
                 }
                 if (other instanceof Hurtbox) {
                     other.hasOwnProperty("isEnemy");
@@ -533,7 +545,7 @@ define([
 
 
         drawImg (ctx) {
-            this.drawOutline(ctx);
+            //this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }

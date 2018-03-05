@@ -1,11 +1,21 @@
 define([
     'entity',
     "animation",
+    "hero",
     "hurtbox",
+    "terrain",
+    "actor",
+    "enemy",
+    "projectile",
 ], function (
     Entity,
     Animation,
+    Hero,
     Hurtbox,
+    Terrain,
+    Actor,
+    Enemy,
+    Projectile,
     ) {
 
         /***********
@@ -28,6 +38,7 @@ define([
 
                 this.fireCooldownTimer = 0;
                 this.fireCooldown = 1000;
+                this.damage = 1//this.game.hero.x.maxHealth
 
                 this.states = {
                     "active": true,
@@ -68,12 +79,12 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
         class Fireball extends Entity {
-            constructor(game, x, y, img = null, ctx = null, scale = null, cooldown = 150, ySpeed = 12) {
+            constructor(game, x, y, img = null, ctx = null, scale = null, cooldown = 150, ySpeed = 12, spawnOffset) {
                 super(game, x, y, img, ctx);
 
                 this.scale = scale;
@@ -92,7 +103,7 @@ define([
 
                 this.ySpeed = ySpeed;
                 this.damage = 2;
-                this.cooldownTimer = 0;
+                this.cooldownTimer = spawnOffset;
                 this.cooldown = cooldown;
 
                 this.states = {
@@ -231,7 +242,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
@@ -332,7 +343,167 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
+            }
+        }
+
+        class ProjectileHazard extends Entity {
+            constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, directions, lifespan) {
+                super(game, x, y, img, ctx);
+                //this.y += 44; Give a +44 offset when instantiating 
+                this.scale = scale;
+                this.origX = this.x;
+                this.origY = this.y;
+                this.spriteWidth = 60;
+                this.spriteHeight = 60;
+                this.centerX = x + ((this.spriteWidth * this.scale) / 2) - this.spriteWidth;
+                this.boundWidth = this.scale * 8 + 3;
+                this.boundHeight = this.scale * 8 + 3;
+                this.boundX = this.centerX - this.scale * 5;
+                this.boundY = this.y - this.spriteHeight * this.scale/2 + 5 * this.scale;
+
+                this.xSpeed = xSpeed;
+                this.ySpeed = ySpeed;
+                this.xDir = directions[0];
+                this.yDir = directions[1];
+                this.lifespan = lifespan;
+                this.damage = 1;
+                this.tick = 1;
+
+                this.states = {
+                    "active": true,
+                };
+                this.animations = {
+                    "active": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 9, 13, 3, 1, true, this.scale, 12),
+                };
+                this.animation = this.animations.active;
+            }
+
+            /*Updates the entity each game loop. i.e. what does this entity do? */
+            update() {
+                this.changePos(this.xSpeed * this.xDir, this.ySpeed * this.yDir);
+                if (this.lifespan > 0) {
+                    this.lifespan--;
+                }
+                else {
+                    this.removeFromWorld = true;
+                }
+            }
+
+            collided(other, direction) {
+                // collide with terrain
+                if (other instanceof Terrain) {
+                    this.removeFromWorld = true;
+                }
+                else if (other instanceof Actor && !(other instanceof Enemy)) {//Hero collision
+                    if (other instanceof Projectile) {
+                        if (this.tick === 0) {
+                            this.removeFromWorld = true;
+                        }
+                        this.tick--;
+                        other.health -= 1;
+                    } else {
+                        this.removeFromWorld = true;
+                    }
+                }
+                else if (other instanceof Hurtbox) {
+                    other.hasOwnProperty("isEnemy");
+                    other.hasOwnProperty("damage");
+                    if (!other.isEnemy) {
+                        this.removeFromWorld = true;
+                    }
+                }
+            }
+
+            drawOutline(ctx) {
+                ctx.beginPath();
+                ctx.strokeStyle = "green";
+                ctx.rect(this.boundX,
+                    this.boundY,
+                    this.boundWidth, this.boundHeight);
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            draw(ctx) {
+                if (this.states.active) {
+                    this.animation = this.animations.active;
+                }
+                if (this.states.inactive_down) {
+                    this.animation = this.animations.inactive_down;
+                }
+                if (this.states.inactive_up) {
+                    this.animation = this.animations.inactive_up;
+                }
+                this.drawImg(ctx);
+            }
+
+            drawImg(ctx) {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                //this.drawOutline(ctx);
+            }
+        }
+
+        class Launcher extends Entity {
+            constructor(game, x, y, img = null, ctx = null, scale = null,
+                            xSpeed, ySpeed, directions, cooldown, projectileLifespan, launchTimeOffset = 0) {
+                super(game, x, y, img, ctx);
+                //this.y += 44; Give a +44 offset when instantiating 
+                this.scale = scale;
+                this.spriteWidth = 60;
+                this.spriteHeight = 60;
+                this.centerX = x + ((this.spriteWidth * this.scale) / 2) - this.spriteWidth;
+                this.boundWidth = this.scale * 8;
+                this.boundHeight = this.scale * 8;
+                this.boundX = this.x - this.spriteWidth + this.scale * 8;
+                this.boundY = this.y - this.spriteHeight * this.scale + 8 * this.scale;
+
+                this.xSpeed = xSpeed;
+                this.ySpeed = ySpeed;
+                this.xDir = directions[0];
+                this.yDir = directions[1];
+                this.shotCooldownTimer = launchTimeOffset;
+                this.shotCooldown = cooldown;
+                this.projectileLifespan = projectileLifespan;
+
+                this.states = {
+                    "active": true,
+                };
+                this.animations = {
+                    "active": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 9, 13, 3, 1, true, this.scale, 20),
+                };
+                this.animation = this.animations.active;
+            }
+
+            /*Updates the entity each game loop. i.e. what does this entity do? */
+            update() {
+                if (/*Math.abs(this.x - this.game.hero.x) <= 5000 &&*/ this.shotCooldownTimer === 0) {
+                    this.game.addEntity(new ProjectileHazard(this.game, this.x - this.spriteWidth, this.y - this.spriteHeight, this.img, this.ctx, this.scale,
+                        this.xSpeed, this.ySpeed, [this.xDir, this.yDir], this.projectileLifespan));
+                    this.shotCooldownTimer = this.shotCooldown;
+                }
+                if (this.shotCooldownTimer > 0) {
+                    this.shotCooldownTimer--;
+                }
+            }
+
+            drawOutline(ctx) {
+                ctx.beginPath();
+                ctx.strokeStyle = "green";
+                ctx.rect(this.boundX,
+                    this.boundY,
+                    this.boundWidth, this.boundHeight);
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            draw(ctx) {
+                this.drawImg(ctx);
+            }
+
+            drawImg(ctx) {
+                //this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                //this.drawOutline(ctx);
             }
         }
 
@@ -340,5 +511,7 @@ define([
             "lava": Lava,
             "fireball": Fireball,
             "spikes": Spikes,
+            "projectile": ProjectileHazard,
+            "launcher": Launcher,
         };
     });

@@ -35,7 +35,8 @@ define([
             this.facing = -1;
 
             //Stats
-            this.sightRadius[0] = 1200;
+            this.pointValue = 10;
+            this.sightRadius[0] = 4000;
             this.sightRadius[1] = 700;
             this.health = 50; //three normal hits.
             this.damage = 1;
@@ -98,7 +99,7 @@ define([
                     //spawn bomb
                     this.game.addEntity(new Bomb(this.game, this.x + this.facing * 10, this.y - 20, this.img, this.ctx,
                         this.scale, this.spriteWidth, this.spriteHeight, this.states.facingRight,
-                        Math.abs(this.x - this.game.hero.x) / 75));
+                        Math.abs(this.x - this.game.hero.x) / 125)); //75 explodes on stationary Hero
                     //hasThrwon is true
                     this.states.hasThrown = true;
                 }
@@ -192,13 +193,13 @@ define([
                 //}
             }
             if (other instanceof Projectile && !this.states.hurt) {
-
+                //nothing for now
             }
             if (other instanceof Hurtbox && !this.states.hurt) {
                 other.hasOwnProperty("isEnemy");
                 other.hasOwnProperty("damage");
                 if (!other.isEnemy) {
-
+                    this.removeFromWorld = true;
                 }
             }
         }
@@ -214,7 +215,7 @@ define([
         }
 
         drawImg(ctx) {
-            this.drawOutline(ctx);
+            //this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }

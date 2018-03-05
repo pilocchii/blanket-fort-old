@@ -45,7 +45,7 @@ define([
         }
 
         update() {
-            this.score = this.game_engine.score;
+            this.score = Math.floor(this.game_engine.score);
             this.dest_coords = [-this.camera.xView + 200, -this.camera.yView + 100]
         }
 

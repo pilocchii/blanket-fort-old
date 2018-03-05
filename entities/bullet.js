@@ -5,6 +5,7 @@ define([
     "hero",
     "projectile",
     "hurtbox",
+    "actor",
 ], function (
     Enemy,
     Terrain,
@@ -12,6 +13,7 @@ define([
     Hero,
     Projectile,
     Hurtbox,
+    Actor,
     ) {
 
 
@@ -84,7 +86,7 @@ define([
                 if (other instanceof Terrain) {
                     this.removeFromWorld = true;
                 }
-                else if (other instanceof Hero) {
+                else if (other instanceof Actor && !(other instanceof Enemy)) { //Why can't I use instanceof Hero (same issues as in Hurtbox)
                     this.removeFromWorld = true;
                 }
                 else if (other instanceof Projectile) {

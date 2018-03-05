@@ -4,12 +4,14 @@ define([
     "animation",
     "hero",
     "projectile",
+    "actor",
 ], function (
     Enemy,
     Terrain,
     Animation,
     Hero,
     Projectile,
+    Actor,
     ) {
 
 
@@ -108,7 +110,7 @@ define([
                     if (this.animation.loops > 3)
                         this.removeFromWorld = true;
                 }
-                else if (other instanceof Hero) {
+                else if (other instanceof Actor && !(other instanceof Enemy)) {
                     this.removeFromWorld = true;
                 }
                 else if (other instanceof Projectile) {
