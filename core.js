@@ -88,9 +88,10 @@ define([
         let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width, canvas.height, 2000, 2000)
         let hero = new Hero(gameEngine, 7000, 1248, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
-        let audio = new Audio("./audio/track_1.wav");
-        audio.volume = 1;
-        audio.play();
+        // ### music ###
+        // let audio = new Audio("./audio/track_1.wav");
+        // audio.volume = 1;
+        // audio.play();
         //TODO: Placeholder magic numbers until we decide on how to handle world boundary and camera
 
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
