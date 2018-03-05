@@ -36,6 +36,7 @@ define([
                 this.updateHitbox(50, 50, 38, 40);
 
                 //Stats
+                this.pointValue = 30;
                 this.health = 50;
                 this.damage = 1;
                 this.facing = -1;

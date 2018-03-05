@@ -35,6 +35,7 @@ define([
             this.facing = -1;
 
             //Stats
+            this.pointValue = 10;
             this.sightRadius[0] = 4000;
             this.sightRadius[1] = 700;
             this.health = 50; //three normal hits.

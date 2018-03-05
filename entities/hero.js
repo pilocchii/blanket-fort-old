@@ -58,12 +58,13 @@ define([
             this.dashEnergyCost = 1;
 
             this.stunDir = 0;
+            this.multiplier = 1;
             
             //Timers
             this.damageCooldownTimer = 0;
-            this.damageCooldown = 10000;
+            this.damageCooldown = 16000;
             this.energyCooldownTimer = 0;
-            this.energyCooldown = 240; 
+            this.energyCooldown = 240/(this.multiplier*2); 
             this.velocityCooldown = 2;
             this.velocityCooldownTimer = 0;
 
@@ -285,6 +286,8 @@ define([
                     this.states.framelocked = false;
                     this.damageCooldownTimer = this.damageCooldown;
                     this.gravity = 0.9;
+                    this.multiplier = 1;
+                    this.game.score -= 10;
                 }
             }
             //DEAD

@@ -30,6 +30,7 @@ define([
                 this.boundY = this.y - this.boundHeight;
 
                 //Stats
+                this.pointValue = 10;
                 this.xSpeed = 4;
                 this.ySpeed = 8;
                 this.maxX = 5;
