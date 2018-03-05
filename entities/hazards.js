@@ -38,6 +38,7 @@ define([
 
                 this.fireCooldownTimer = 0;
                 this.fireCooldown = 1000;
+                this.damage = 1//this.game.hero.x.maxHealth
 
                 this.states = {
                     "active": true,
@@ -78,12 +79,12 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
         class Fireball extends Entity {
-            constructor(game, x, y, img = null, ctx = null, scale = null, cooldown = 150, ySpeed = 12) {
+            constructor(game, x, y, img = null, ctx = null, scale = null, cooldown = 150, ySpeed = 12, spawnOffset) {
                 super(game, x, y, img, ctx);
 
                 this.scale = scale;
@@ -102,7 +103,7 @@ define([
 
                 this.ySpeed = ySpeed;
                 this.damage = 2;
-                this.cooldownTimer = 0;
+                this.cooldownTimer = spawnOffset;
                 this.cooldown = cooldown;
 
                 this.states = {
@@ -237,7 +238,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
@@ -338,15 +339,17 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
         class ProjectileHazard extends Entity {
-            constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, directions) {
+            constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, directions, lifespan) {
                 super(game, x, y, img, ctx);
                 //this.y += 44; Give a +44 offset when instantiating 
                 this.scale = scale;
+                this.origX = this.x;
+                this.origY = this.y;
                 this.spriteWidth = 60;
                 this.spriteHeight = 60;
                 this.centerX = x + ((this.spriteWidth * this.scale) / 2) - this.spriteWidth;
@@ -359,6 +362,7 @@ define([
                 this.ySpeed = ySpeed;
                 this.xDir = directions[0];
                 this.yDir = directions[1];
+                this.lifespan = lifespan;
                 this.damage = 1;
 
                 this.states = {
@@ -373,6 +377,12 @@ define([
             /*Updates the entity each game loop. i.e. what does this entity do? */
             update() {
                 this.changePos(this.xSpeed * this.xDir, this.ySpeed * this.yDir);
+                if (this.lifespan > 0) {
+                    this.lifespan--;
+                }
+                else {
+                    this.removeFromWorld = true;
+                }
             }
 
             collided(other, direction) {
@@ -420,12 +430,13 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
         class Launcher extends Entity {
-            constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, directions, cooldown) {
+            constructor(game, x, y, img = null, ctx = null, scale = null,
+                            xSpeed, ySpeed, directions, cooldown, projectileLifespan, launchTimeOffset = 0) {
                 super(game, x, y, img, ctx);
                 //this.y += 44; Give a +44 offset when instantiating 
                 this.scale = scale;
@@ -441,8 +452,9 @@ define([
                 this.ySpeed = ySpeed;
                 this.xDir = directions[0];
                 this.yDir = directions[1];
-                this.shotCooldownTimer = 0;
+                this.shotCooldownTimer = launchTimeOffset;
                 this.shotCooldown = cooldown;
+                this.projectileLifespan = projectileLifespan;
 
                 this.states = {
                     "active": true,
@@ -455,9 +467,9 @@ define([
 
             /*Updates the entity each game loop. i.e. what does this entity do? */
             update() {
-                if (Math.abs(this.x - this.game.hero.x) <= 3000 && this.shotCooldownTimer === 0) {
+                if (/*Math.abs(this.x - this.game.hero.x) <= 5000 &&*/ this.shotCooldownTimer === 0) {
                     this.game.addEntity(new ProjectileHazard(this.game, this.x - this.spriteWidth, this.y - this.spriteHeight, this.img, this.ctx, this.scale,
-                        this.xSpeed, this.ySpeed, [this.xDir, this.yDir]));
+                        this.xSpeed, this.ySpeed, [this.xDir, this.yDir], this.projectileLifespan));
                     this.shotCooldownTimer = this.shotCooldown;
                 }
                 if (this.shotCooldownTimer > 0) {
@@ -481,7 +493,7 @@ define([
 
             drawImg(ctx) {
                 //this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 

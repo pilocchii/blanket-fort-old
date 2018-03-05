@@ -61,7 +61,7 @@ define([
             
             //Timers
             this.damageCooldownTimer = 0;
-            this.damageCooldown = 20;
+            this.damageCooldown = 10000;
             this.energyCooldownTimer = 0;
             this.energyCooldown = 240; 
             this.velocityCooldown = 2;
@@ -531,7 +531,7 @@ define([
 
 
         drawImg (ctx) {
-            this.drawOutline(ctx);
+            //this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }

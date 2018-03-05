@@ -70,7 +70,7 @@ define([
         constructor(game, x, y, img, ctx, width, height, scale=3, health_value=1) {
             super(game, x, y, img, ctx, width, height, scale);
             this.health_value = health_value;          
-            this.animation = new Animation(this.img, [10, 8], 0, 4, 4, 4, true, 3, 0);
+            this.animation = new Animation(this.img, [10, 8], 0, 4, 4, 4, true, this.scale, 0);
             this.xOffset = 10
             this.yOffset = -30
         }
@@ -90,7 +90,7 @@ define([
         constructor(game, x, y, img, ctx, width, height, scale=3, energy_value=1) {
             super(game, x, y, img, ctx, width, height, scale);
             this.energy_value = energy_value;          
-            this.animation = new Animation(this.img, [8, 8], 0, 4, 4, 4, true, 3, 0);
+            this.animation = new Animation(this.img, [8, 8], 0, 4, 4, 4, true, this.scale, 0);
             this.xOffset = 10
             this.yOffset = -30
         }

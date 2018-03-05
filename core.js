@@ -84,7 +84,7 @@ define([
 
         let gameEngine = new GameEngine();
         let camera = new Camera(gameEngine, 0, 0, null, ctx=ctx, canvas.width, canvas.height, 2000, 2000)
-        let hero = new Hero(gameEngine, 7000, 1248, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let hero = new Hero(gameEngine, 3500, 1248, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
         
         //TODO: Placeholder magic numbers until we decide on how to handle world boundary and camera
@@ -143,21 +143,44 @@ define([
         //gameEngine.addEntity(new Crow(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
-        /***This spawns the hazard projectiles. The array is for x and y direction (-1, 0, or 1)***/
-        //gameEngine.addEntity(new Hazards["launcher"](gameEngine, 1000, 1150, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 5, 5, [-1, 0], 100))
+        /***ITEMS***/
+        gameEngine.addEntity(new Item.HealthPack(gameEngine, 7050, 1248, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8, 3, 1));
+        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 7080, 1248, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8, 3, 1));
+
+
+        /***ENEMIES***/
+        gameEngine.addEntity(new Crow(gameEngine, 8800, -200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
+        gameEngine.addEntity(new Crow(gameEngine, 9600, -200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
+        gameEngine.addEntity(new Crow(gameEngine, 9200, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
+
+
+        /***HAZARDS***/
         gameEngine.addEntity(new Hazards["lava"](gameEngine, 7500, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
         gameEngine.addEntity(new Hazards["lava"](gameEngine, 8400, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
         gameEngine.addEntity(new Hazards["lava"](gameEngine, 9300, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
         gameEngine.addEntity(new Hazards["fireball"](gameEngine, 7300, 1450 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 4,
                                 /*cooldown*/ 50, /*speed*/ 20));
+        gameEngine.addEntity(new Hazards["fireball"](gameEngine, 7820, 1450 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 4,
+                                /*cooldown*/ 50, /*speed*/ 20, /*offset*/ 25));
         //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 700,
         //                        1440 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20*6, 0, 18));
         gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7512,
             1152 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 0, 3));
         gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7980,
-            1056 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 0, 3));
+            1056 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 20, 3));
         gameEngine.addEntity(new Hazards["spikes"](gameEngine, 8665,
-            1150 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 0, 2));
+            1150 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 3.5, 40, 0));
+        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7692,
+            700 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4.5, 0, 3));
+        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 8064,
+            250 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 5, 40, 20));
+
+        gameEngine.addEntity(new Hazards["launcher"](gameEngine, 7965, -300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 7, 7, [0, 1], 120, 160))
+        gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 792 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 7, 7, [-1, 0], 80, 320, 20))
+        gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 984 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 7, 7, [-1, 0], 80, 320, 40))
+        gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 1176 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 7, 7, [-1, 0], 40, 320, 60))
+
+
         gameEngine.addEntity(hud);
         gameEngine.init(ctx);
         gameEngine.start();
