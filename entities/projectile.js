@@ -88,6 +88,9 @@ define([
                         this.removeFromWorld = true;
                     }
                 }
+                if (this.health <= 0) {
+                    this.removeFromWorld = true;
+                }
             };
 
             draw(ctx) {

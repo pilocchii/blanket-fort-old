@@ -51,8 +51,8 @@ define([
 
             this.maxHealth = 6;
             this.maxEnergy = 6;
-            this.energy = 5;
-            this.health = 5;
+            this.energy = 6;
+            this.health = 6;
             this.slashEnergyCost = 4;
             this.shootEnergyCost = 2;
             this.dashEnergyCost = 1;
@@ -61,7 +61,7 @@ define([
             
             //Timers
             this.damageCooldownTimer = 0;
-            this.damageCooldown = 10000;
+            this.damageCooldown = 6;
             this.energyCooldownTimer = 0;
             this.energyCooldown = 240; 
             this.velocityCooldown = 2;

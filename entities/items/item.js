@@ -2,12 +2,14 @@ define([
     "entity",
     "hero",
     "animation",
-    "terrain"
+    "terrain",
+    "hazards",
 ],function(
     Entity,
     Hero,
     Animation,
-    Terrain
+    Terrain,
+    Hazards,
 ){
 
     class Item extends Entity {
@@ -46,9 +48,9 @@ define([
         collided (other, direction) {
             if (other instanceof Hero) {
                 this.on_pickup(other);
-            } else if (other instanceof Terrain) {
+            } else if (other instanceof Terrain || other instanceof Hazards["spikes"]) {
                 this.boundY = other.boundY - this.boundHeight;
-                this.y = this.boundY + this.boundHeight; //DS3DRAWCHANGE1:
+                this.y = this.boundY + this.boundHeight;
                 this.yVelocity = 0;
             }
         }
@@ -76,7 +78,8 @@ define([
         }
 
         on_pickup(hero) {
-            hero.health += this.health_value;
+            if(hero.health < hero.maxHealth)
+                hero.health += this.health_value;
             this.removeFromWorld = true;
         }
     }
@@ -91,12 +94,13 @@ define([
             super(game, x, y, img, ctx, width, height, scale);
             this.energy_value = energy_value;          
             this.animation = new Animation(this.img, [8, 8], 0, 4, 4, 4, true, this.scale, 0);
-            this.xOffset = 10
-            this.yOffset = -30
+            this.xOffset = 10;
+            this.yOffset = -30;
         }
 
         on_pickup(hero) {
-            hero.energy += this.energy_value;
+            if(hero.energy < hero.maxEnergy)
+                hero.energy += this.energy_value;
             this.removeFromWorld = true;
         }
     }

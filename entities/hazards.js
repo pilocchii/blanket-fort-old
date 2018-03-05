@@ -364,6 +364,7 @@ define([
                 this.yDir = directions[1];
                 this.lifespan = lifespan;
                 this.damage = 1;
+                this.tick = 1;
 
                 this.states = {
                     "active": true,
@@ -391,18 +392,23 @@ define([
                     this.removeFromWorld = true;
                 }
                 else if (other instanceof Actor && !(other instanceof Enemy)) {//Hero collision
-                    this.removeFromWorld = true;
+                    if (other instanceof Projectile) {
+                        if (this.tick === 0) {
+                            this.removeFromWorld = true;
+                        }
+                        this.tick--;
+                        other.health -= 1;
+                    } else {
+                        this.removeFromWorld = true;
+                    }
                 }
-                else if (other instanceof Projectile) {
-                    this.removeFromWorld = true;
+                else if (other instanceof Hurtbox) {
+                    other.hasOwnProperty("isEnemy");
+                    other.hasOwnProperty("damage");
+                    if (!other.isEnemy) {
+                        this.removeFromWorld = true;
+                    }
                 }
-                //else if (other instanceof Hurtbox) {
-                //    other.hasOwnProperty("isEnemy");
-                //    other.hasOwnProperty("damage");
-                //    if (!other.isEnemy) {
-                //        this.removeFromWorld = true;
-                //    }
-                //}
             }
 
             drawOutline(ctx) {
