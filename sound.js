@@ -47,10 +47,9 @@ define([
 
 
         /* plays a sound */
-        play(sound, volume) {
-
+        play(sound, volume=0.5) {
             let index = this.sounds[sound]["current"]
-            if (index >= this.sounds[sound]["max"]) {
+            if (index >= this.sounds[sound]["max"]-1) {
                 this.sounds[sound]["current"] = 0
             }
             if (!this.sounds[sound]["sounds"][index].ended) {

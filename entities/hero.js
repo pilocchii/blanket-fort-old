@@ -123,6 +123,7 @@ define([
             if (this.game.controlKeys[this.game.controls.cleave].active && this.states.grounded && !this.states.framelocked) { //cleave
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
+                this.game.playSound("sword_swing")
                 this.setStates(false, false, false, true, this.states.facingRight, false, false, false, true, this.states.energized, false, false);
                 this.states.cleaving = true;
                 this.states.framelocked = true;
@@ -132,6 +133,7 @@ define([
                 else if (this.game.controlKeys[this.game.controls.left].active) { this.states.facingRight = false; }
                 this.animation.elapsedTime = 0;
                 this.animation.loops = 0;
+                this.game.playSound("sword_swing")
                 this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
             }
             if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { //dash
@@ -226,7 +228,6 @@ define([
             }
             //Slashing
             if (this.states.slashing) {
-                this.game.playSound("sword_swing")
                 this.gravity = 0.9; //Fixes super-duper jump bug. (When interrupting dash, dash doesn't enter isDone() so grav isn't reset)
                 if (this.animation.currentFrame() === 2 && this.states.energized 
                     && !this.states.shotlocked && this.energy >= this.maxEnergy/2) {
