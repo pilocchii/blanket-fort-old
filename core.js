@@ -145,11 +145,11 @@ define([
         gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
         gameEngine.addEntity(new Soldier_Shield(gameEngine, 10598, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
         gameEngine.addEntity(new Dino(gameEngine, 11980, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3));
-        gameEngine.addEntity(new Crow(gameEngine, 17550, 0, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, [1000, 700]));
-        gameEngine.addEntity(new Crow(gameEngine, 17550, -80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, [1000, 700]));
-        gameEngine.addEntity(new Crow(gameEngine, 17550, 80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, [1000, 700]));
-        gameEngine.addEntity(new Crow(gameEngine, 17550, 160, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, [1000, 700]));
-        gameEngine.addEntity(new Crow(gameEngine, 17550, -160, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, [1000, 700]));
+        gameEngine.addEntity(new Crow(gameEngine, 13550, 0, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
+        gameEngine.addEntity(new Crow(gameEngine, 13550, -80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3,  [1000, 700]));
+        gameEngine.addEntity(new Crow(gameEngine, 13550, 80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
+        gameEngine.addEntity(new Crow(gameEngine, 13550, 160, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
+        gameEngine.addEntity(new Crow(gameEngine, 13550, -160, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
 
 
         /***ITEMS***/
