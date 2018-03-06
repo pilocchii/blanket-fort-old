@@ -228,7 +228,7 @@ define([
                 let entity = this.entities[i];
                 for (let j = 0; j < this.entities.length; j++) {
                     let other = this.entities[j];
-                    if (entity != other && entity.isColliding(other) != 'none') {
+                    if (entity != other && entity.isColliding(other) != 'none') { /// D.prototype = new C(), links C to prototype linkage of D OR put property "something_type" or whatever and check for that
                         let direction = entity.isColliding(other);
                         entity.collided(other, direction);
                     }
