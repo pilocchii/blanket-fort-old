@@ -42,7 +42,7 @@ define([
                 if (this.states.active) {
                     if (this.animation.isDone()) {
 
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.states.active = false;
                         this.removeFromWorld = true;
                     }

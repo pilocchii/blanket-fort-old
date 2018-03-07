@@ -1,16 +1,19 @@
 define([
     'actor',
     'animation',
+    "enemy",
 ],function(
     Actor,
     Animation,
+    Enemy,
 ){
 
 
-    class Leo extends Actor {
+    class Leo extends Enemy {
 
         constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 80, spriteHeight = 60) {
             super(game, x, y, img, ctx);
+            this.parentClass = "Enemy";
             this.origX = x; // TODO: demo
             this.origY = y; // TODO: demo
             this.movementSpeed = 12;
@@ -55,7 +58,7 @@ define([
                         this.x += this.movementSpeed;
                     }
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.states.lunging = false;
                         this.states.attacking = true;
                         this.y -= 40;
@@ -65,7 +68,7 @@ define([
                     this.spriteHeight = 70;
                     this.spriteWidth = 80;
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.states.lunging = false;
                         this.states.attacking = false;
                         this.states.firelunging = true;
@@ -81,7 +84,7 @@ define([
                         this.x += this.movementSpeed;
                     }
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.x = this.origX;
                         this.y = this.origY;
                         this.states.firelunging = false;
@@ -98,7 +101,7 @@ define([
             //        this.x += this.movementSpeed;
             //    }
             //    if (this.animation.isDone()) {
-            //        this.animation.elapsedTime = 0;
+            //        this.animation.reset();
             //        this.states.lunging = false;
             //        this.states.attacking = true;
             //        this.y -= 40;
@@ -109,7 +112,7 @@ define([
             //    this.spriteWidth = 80;
             //    //This will potentially be used to flag different levels of "vulnerability" (ex: counterable)
             //    if (this.animation.isDone()) {
-            //        this.animation.elapsedTime = 0;
+            //        this.animation.reset();
             //        this.states.lunging = false;
             //        this.states.attacking = false;
             //    }
@@ -122,7 +125,7 @@ define([
             //        this.x += this.movementSpeed;
             //    }
             //    if (this.animation.elapsedTime >= this.animation.totalTime - 1) {
-            //        this.animation.elapsedTime = 0;
+            //        this.animation.reset();
             //        this.x = this.origX;
             //    }
             //}

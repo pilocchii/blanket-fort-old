@@ -21,6 +21,7 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Enemy";
                 this.movementSpeed = 7;
                 if (facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
                 this.scale = scale;
@@ -66,8 +67,7 @@ define([
                         this.boundX -= this.movementSpeed;
                     }
                     if (this.animation.loops > 7) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
                         this.states.steady = false;
                         this.removeFromWorld = true;
                     }

@@ -19,6 +19,7 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 90, spriteHeight = 60, patrolDistance = 0, shotTimeOffset = 0) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Enemy";
                 this.movementSpeed = 2;
                 this.hero = this.game.hero;
                 this.y = y;
@@ -108,8 +109,8 @@ define([
                     if (this.shotCooldownTimer <= 0 && this.yVelocity === 0
                         && (Math.abs(this.maxX - this.x) <= 5 || Math.abs(this.startX - this.x) <= 5)
                             && Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0] && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         this.states.shooting = true;
                         this.states.walking = false;
                     }
@@ -130,8 +131,7 @@ define([
                         this.game.playSound("energy_launcher")
                     }
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
                         this.states.shooting = false;    
                         this.shotCooldownTimer = this.shotCooldown;
                         if (this.states.patrolling)

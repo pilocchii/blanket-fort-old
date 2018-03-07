@@ -23,9 +23,10 @@ define([
         x, y - entity's coordinates
         removeFromWorld - a flag that denotes when to remove this entity from the game
         ************/
-        class Lava extends Entity {
+        class Lava extends Enemy {
             constructor(game, x, y, img = null, ctx = null, scale = null, spriteWidth = 64) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Enemy";
                 this.y += (96 * 3 - 6 * 3);
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
@@ -83,10 +84,10 @@ define([
             }
         }
 
-        class Fireball extends Entity {
+        class Fireball extends Enemy {
             constructor(game, x, y, img = null, ctx = null, scale = null, cooldown = 150, ySpeed = 12, spawnOffset) {
                 super(game, x, y, img, ctx);
-
+                this.parentClass = "Enemy";
                 this.scale = scale;
                 this.spriteWidth = 60;
                 this.spriteHeight = 60;
@@ -140,55 +141,55 @@ define([
                             }
                         }
 
-                        this.changePos(0, -1 * this.ySpeed);
+                        this.updatePos(0, -1 * this.ySpeed);
                         if (this.animation.loops > 5) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.states.start = false;
                             this.states.middle_up = true;
                         }
                     }
                     if (this.states.middle_up) {
-                        this.changePos(0, -.5 * this.ySpeed);
+                        this.updatePos(0, -.5 * this.ySpeed);
                         if (this.animation.loops > 3) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.states.middle_up = false;
                             this.states.peak_up = true;
                         }
                     }
                     if (this.states.peak_up) {
-                        this.changePos(0, -.1 * this.ySpeed);
+                        this.updatePos(0, -.1 * this.ySpeed);
                         if (this.animation.loops > 2) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.states.peak_up = false;
                             this.states.peak_down = true;
                         }
                     }
                     if (this.states.peak_down) {
-                        this.changePos(0, .1 * this.ySpeed);
+                        this.updatePos(0, .1 * this.ySpeed);
                         if (this.animation.loops > 2) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.states.peak_down = false;
                             this.states.middle_down = true;
                         }
                     }
                     if (this.states.middle_down) {
-                        this.changePos(0, .5 * this.ySpeed);
+                        this.updatePos(0, .5 * this.ySpeed);
                         if (this.animation.loops > 3) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.states.middle_down = false;
                             this.states.finish = true;
                         }
                     }
                     if (this.states.finish) {
-                        this.changePos(0, this.ySpeed);
+                        this.updatePos(0, this.ySpeed);
                         if (this.animation.loops > 5) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.states.finish = false;
                             this.states.start = true;
                             this.states.active = true;
@@ -249,9 +250,10 @@ define([
             }
         }
 
-        class Spikes extends Entity {
+        class Spikes extends Enemy {
             constructor(game, x, y, img = null, ctx = null, scale = null, active = true, timer, timeOffset = 0, length = 0) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Enemy";
                 //this.y += 44; Give a +44 offset when instantiating 
                 this.scale = scale;
                 this.spriteWidth = 60;
@@ -294,8 +296,8 @@ define([
                         this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 3, this.boundHeight - 36, this.scale, this.damage, this.states.facingRight,
                         "health", 2, true));
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         this.states.active = false;
                         this.states.inactive_down = true;
                         this.spikeCooldownTimer = this.spikeCooldown;
@@ -306,8 +308,8 @@ define([
                         this.spikeCooldownTimer--;
                     }
                     else {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         this.states.active = true;
                         this.states.inactive_down = false;
                     }
@@ -350,9 +352,10 @@ define([
             }
         }
 
-        class ProjectileHazard extends Entity {
+        class ProjectileHazard extends Enemy {
             constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, directions, lifespan) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Enemy";
                 //this.y += 44; Give a +44 offset when instantiating 
                 this.scale = scale;
                 this.origX = this.x;
@@ -384,7 +387,7 @@ define([
 
             /*Updates the entity each game loop. i.e. what does this entity do? */
             update() {
-                this.changePos(this.xSpeed * this.xDir, this.ySpeed * this.yDir);
+                this.updatePos(this.xSpeed * this.xDir, this.ySpeed * this.yDir);
                 if (this.lifespan > 0) {
                     this.lifespan--;
                 }
@@ -452,6 +455,7 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = null,
                             xSpeed, ySpeed, directions, cooldown, projectileLifespan, launchTimeOffset = 0) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Entity";
                 //this.y += 44; Give a +44 offset when instantiating 
                 this.scale = scale;
                 this.spriteWidth = 60;

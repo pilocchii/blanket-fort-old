@@ -18,7 +18,7 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 50, spriteHeight = 40, sightRadius = [700, 500]) {
                 super(game, x, y, img, ctx);
-
+                this.parentClass = "Enemy";
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
@@ -69,7 +69,8 @@ define([
                     "fly":          new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 5, true, this.scale),
                     "attack":       new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 3, false, this.scale, 5),
                     "attack_final": new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 2, true, this.scale, 8),
-                    "hurt":         new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 1, true, this.scale, 10),    
+                    "hurt": new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 1, true, this.scale, 10),
+                    //TODO: Add "smokebomb" effect for activation
                 };
                 this.animation = this.animations.fly;
             }
@@ -137,8 +138,7 @@ define([
                     if (Math.abs(this.x - this.game.hero.x) <= 700
                             && this.y - this.game.hero.y < -100 && (this.y - this.game.hero.y) > -200
                             && this.animation.loops > 1 && Math.random() * 100 <= 10) { 
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
                         this.states.attacking = true;
                         this.states.flying = false;
                         this.game.sound.play("crow_caw");
@@ -151,7 +151,7 @@ define([
                     this.boundX -= this.facing*7;                    
                     
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.states.attacking = false;
                         //randomly determine angle of attack (makes prediction harder)
                         //min attack angle of 2
@@ -185,8 +185,8 @@ define([
                     //state finished
                     if (this.animation.loops > 3) {
                         this.states.attacking_final = false;
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         this.states.recovering = true;
                     }
                 }
@@ -214,8 +214,8 @@ define([
                     if (this.animation.loops > 8) {
                         //reset animation
                         this.damage = 1;
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         //disable states
                         this.states.hurt = false;
                         //enable states

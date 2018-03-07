@@ -8,7 +8,7 @@ define([
 
         class TerrainMobile extends Terrain {
             constructor(game, x, y, dimensions, img = null, ctx = null, scale = null, tiles = null) {
-                super(game, x, y, img, ctx);
+                super(game, x, y, img, ctx, "Terrain");
                 this.states = null;
                 this.animations = null;
                 this.animation = null;

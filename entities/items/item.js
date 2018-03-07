@@ -15,6 +15,7 @@ define([
     class Item extends Entity {
         constructor(game, x, y, img, ctx, width, height, scale=3) {
             super(game, x, y, img, ctx);
+            this.parentClass = "Entity";
             this.width = width;
             this.height = height;
             this.scale = scale;

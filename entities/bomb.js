@@ -19,6 +19,7 @@ define([
 
         constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 40, spriteHeight = 30, facingRight = false, xVelocity = 7, yVelocity = -20) {
             super(game, x, y, img, ctx);
+            this.parentClass = "Enemy";
             this.xVelocity = xVelocity;
 
             this.scale = scale;
@@ -63,13 +64,12 @@ define([
 
         update() {
             if (this.states.launching) {
-                this.changePos(this.facing*this.xVelocity, 0);
+                this.updatePos(this.facing*this.xVelocity, 0);
             }
             if (this.states.activating) {
-                this.changePos(this.facing * this.xVelocity, 0);
+                this.updatePos(this.facing * this.xVelocity, 0);
                 if (this.animation.loops > this.countdown) {
-                    this.animation.elapsedTime = 0;
-                    this.animation.loops = 0;
+                    this.animation.reset();
                     this.states.activating = false;
                     this.states.detonating = true;
                 }
@@ -87,8 +87,7 @@ define([
                 }
                 if (this.animation.loops > this.startup) {
                     //Spawn explosion hurtbox
-                    this.animation.elapsedTime = 0;
-                    this.animation.loops = 0;
+                    this.animation.reset();
                     this.states.detonating = false;
                     this.states.exploding = true;
                 }
@@ -117,7 +116,7 @@ define([
 
             this.yVelocity += this.gravity * this.gravity;
             this.lastBoundY = this.boundY;
-            this.changePos(0, this.yVelocity);
+            this.updatePos(0, this.yVelocity);
 
             if (this.health <= 0) {
                 this.removeFromWorld = true;
@@ -165,8 +164,7 @@ define([
                         }
                     }
                     if (this.states.launching) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
                         this.states.launching = false;
                         this.states.activating = true;
                     }
@@ -198,15 +196,15 @@ define([
                 this.gravity = 0;
                 this.yVelocity = 0;
             }
-            if (other.name ===  Hurtbox) {
-                other.hasOwnProperty("isEnemy");
-                other.hasOwnProperty("damage");
-                this.states.launching = false,
-                this.states.activating = false;
-                this.states.detonating = false;
-                this.states.exploding = true;
-                this.gravity = 0;
-                this.yVelocity = 0;
+            if (other.name === "Hurtbox") {
+                if (!other.isEnemy) {
+                    this.states.launching = false,
+                    this.states.activating = false;
+                    this.states.detonating = false;
+                    this.states.exploding = true;
+                    this.gravity = 0;
+                    this.yVelocity = 0;
+                }
             }
         }
 

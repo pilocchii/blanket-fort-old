@@ -7,7 +7,8 @@ define([
 
     class Terrain extends Entity {
          constructor (game, x, y, dimensions, img=null, ctx=null, scale=null, tiles=null, bounds = [0, 0, 0, 0]) {
-            super(game, x, y, img, ctx);
+             super(game, x, y, img, ctx);
+             this.parentClass = "Entity";
             this.states = null;
             this.animations = null;
             this.animation = null;

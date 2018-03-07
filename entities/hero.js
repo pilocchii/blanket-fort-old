@@ -26,7 +26,8 @@ define([
     class Hero extends Actor {
 
         constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=60, spriteHeight=60) {
-            super(game, x, y, img, ctx, "Actor");
+            super(game, x, y, img, ctx);
+            this.parentClass = "Actor";
             this.origY = this.y; //For jumping
 
             this.scale = scale;
@@ -41,13 +42,12 @@ define([
             this.boundY = this.y - this.boundHeight;
             this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
 
+            /***STATS***/
             this.movementSpeed = (8);
             this.dashSpeed = 17
             this.jumpStrength = (20);
             this.jumpsLeft = 2;
             this.maxJumps = 2;
-            this.jumpTimer = 0;
-            this.jumpCooldown = 20;
 
             this.maxHealth = 12;
             this.maxEnergy = 6;
@@ -67,6 +67,8 @@ define([
             this.energyCooldown = 240/(this.multiplier*2); 
             this.velocityCooldown = 2;
             this.velocityCooldownTimer = 0;
+            this.jumpTimer = 0;
+            this.jumpCooldown = 20;
 
             //Dev Tools
             this.setPosTimer = 0;
@@ -76,20 +78,26 @@ define([
             this.iPC = 0;
 
             this.states = {
+                "energized": false,
                 "running": false,
                 "jumping": false,
+                "dashing": false,
+                "dashingStart": false,
+                "dashingInvul": false,
+                "dashingEnd": false,
+                "hasDashed": false,
                 "shooting": false,
-                "cleaving": false,
-                "facingRight": true,
-                "grounded": true,
+                "hasShot": false,//TODO Implement to replace shotlocked
                 "slashing": false,
+                "hasSlashed": false,
+                "cleaving": false,
+                "hasCleaved": false,
                 "shotlocked": false,
                 "framelocked": false,
-                "energized": false,
-                "dashing": false,
                 "stunned": false,
                 "dead": false,
-                "hasDashed": false,
+                "grounded": true,
+                "facingRight": true,
             };
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale), //50x50
@@ -106,6 +114,9 @@ define([
                 "slash": new Animation(this.img, [90, 60], 4, 11, 2, 11, false, this.scale), //80x50
                 "cleave": new Animation(this.img, [100, 70], 9, 13, 2, 13, false, this.scale), //80x60
                 "dash": new Animation(this.img, [60, 60], 5, 7, 3, 7, false, this.scale),
+                "dash_start": new Animation(this.img, [60, 60], 5, 7, 3, 2, false, this.scale),
+                "dash_invuln": new Animation(this.img, [60, 60], 5, 7, 3, 3, false, this.scale, 2),
+                "dash_end": new Animation(this.img, [60, 60], 5, 7, 3, 2, false, this.scale, 5),
             };
         }
 
@@ -115,43 +126,50 @@ define([
                 this.setPosTimer--;
             }
             /////////// all button checks go here ///////////
-            // check if button pressed
-            // Moving left and right are mutually exclusive, thus else-if
-            // this.setStates(running, jumping, shooting, cleaving, facingRight, grounded, slashing, shotlocked, framelocked, energized, dashing, hasDashed)
-            if (this.game.controlKeys[this.game.controls.right].active && !this.states.framelocked) { //run right
+            // KEY DOWN
+            //run right
+            if (this.game.controlKeys[this.game.controls.right].active && !this.states.framelocked /*&& this.states.canRun*/) { 
                 if (!this.states.facingRight) { this.states.facingRight = true };
                 this.states.running = true;
-            } else if (this.game.controlKeys[this.game.controls.left].active && !this.states.framelocked) { //run left
+            }
+            //run left
+            else if (this.game.controlKeys[this.game.controls.left].active && !this.states.framelocked /*&& this.states.canRun*/) { 
                 if (this.states.facingRight) { this.states.facingRight = false };
                 this.states.running = true;
             }
-            if (this.game.controlKeys[this.game.controls.energize].active) { //energize
+            //energize
+            if (this.game.controlKeys[this.game.controls.energize].active) {
                 this.states.energized = true;
             }
-            if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping && !this.states.framelocked) { // jump
+            //jump
+            if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping && !this.states.framelocked /*&& this.states.canJump*/) { 
                 this.states.jumping = true;
                 this.states.grounded = false;
             }
-            if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked) { //shoot
+            //shoot
+            if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked) { 
                 this.states.shooting = true;
             }
-            if (this.game.controlKeys[this.game.controls.cleave].active && this.states.grounded && !this.states.framelocked) { //cleave
-                this.animation.elapsedTime = 0;
-                this.animation.loops = 0;
+            //cleave
+            if (this.game.controlKeys[this.game.controls.cleave].active && this.states.grounded && !this.states.framelocked) { 
+                this.animation.reset();
+                this.animation.reset();
                 this.game.playSound("sword_swing")
                 this.setStates(false, false, false, true, this.states.facingRight, false, false, false, true, this.states.energized, false, false);
                 this.states.cleaving = true;
                 this.states.framelocked = true;
             }
-            if (this.game.controlKeys[this.game.controls.slash].active && this.states.grounded && (!this.states.framelocked || this.states.dashing)) { //slash
+            //slash
+            if (this.game.controlKeys[this.game.controls.slash].active && this.states.grounded && (!this.states.framelocked || this.states.dashing)) { 
                 if (this.game.controlKeys[this.game.controls.right].active) { this.states.facingRight = true; }
                 else if (this.game.controlKeys[this.game.controls.left].active) { this.states.facingRight = false; }
-                this.animation.elapsedTime = 0;
-                this.animation.loops = 0;
+                this.animation.reset();
+                this.animation.reset();
                 this.game.playSound("sword_swing")
                 this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
             }
-            if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { //dash
+            //dash
+            if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) { 
                 this.states.dashing = true;
                 this.states.hasDashed = true;
                 this.damageCooldownTimer = 19;
@@ -159,7 +177,7 @@ define([
                 this.states.framelocked = true;
             }
 
-            // check if button NOT pressed, if state is supposed to change...
+            //KEY UP
             if (!(this.game.controlKeys[this.game.controls.right].active || this.game.controlKeys[this.game.controls.left].active)
                 && this.states.running) {
                 this.states.running = false;
@@ -177,11 +195,11 @@ define([
             if (this.states.running) {
                 if (this.states.facingRight) {
                     this.x += this.movementSpeed;
-                    this.centerX += this.movementSpeed;
+                    //this.centerX += this.movementSpeed;
                     this.boundX += this.movementSpeed;
                 } else {
                     this.x -= this.movementSpeed;
-                    this.centerX -= this.movementSpeed;
+                    //this.centerX -= this.movementSpeed;
                     this.boundX -= this.movementSpeed;
                 }
             }
@@ -215,7 +233,7 @@ define([
                             this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 150, this.states.facingRight));
                 }
                 if (this.animation.isDone()) {
-                    this.animation.elapsedTime = 0;
+                    this.animation.reset();
                     this.states.cleaving = false;
                     this.states.framelocked = false;
                 }
@@ -235,7 +253,7 @@ define([
                     this.states.shotlocked = true;
                 }
                 if (this.animation.isDone()) {
-                    this.animation.elapsedTime = 0;
+                    this.animation.reset();
                     this.states.shooting = false;
                     this.states.framelocked = false;
                     this.states.shotlocked = false;
@@ -261,7 +279,7 @@ define([
 
                 }
                 if (this.animation.isDone()) {
-                    this.animation.elapsedTime = 0;
+                    this.animation.reset();
                     this.states.slashing = false;
                     this.states.hasSlashed = false;
                     this.states.shotlocked = false;
@@ -282,8 +300,8 @@ define([
                 else { this.x -= this.dashSpeed; this.boundX -= this.dashSpeed; }
 
                 if (this.animation.isDone()) {
-                    this.animation.elapsedTime = 0;
-                    this.animation.loops = 0;
+                    this.animation.reset();
+                    this.animation.reset();
                     this.gravity = 0.9;
                     this.states.dashing = false;
                     this.states.framelocked = false;
@@ -297,7 +315,7 @@ define([
                 this.gravity = 0;
                 this.yVelocity = 0;
                 if (this.animation.isDone()) {
-                    this.animation.elapsedTime = 0;
+                    this.animation.reset();
                     this.states.stunned = false;
                     this.states.framelocked = false;
                     this.damageCooldownTimer = this.damageCooldown;
@@ -448,9 +466,7 @@ define([
                 this.game.playSound("hero_hurt")
             }
             if (this.damageCooldownTimer <= 0 && !this.states.dead && !this.states.stunned) { //If Hero can take damage, check if...
-                if (other.superClass === "Enemy") {
-
-                    
+                if (other.parentClass === "Enemy") {             
                     if (other.damage > 0) {
                         this.game.playSound("hero_hurt")
                         //Determine interaction based on enemy's damage type
@@ -520,6 +536,7 @@ define([
             }
         }
 
+        /***HELPER CLASSES***/
         updateHitbox(fWidth, fHeight, bWidth, bHeight, offX = 0, offY = 0) {
             this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth + 5;
             this.boundWidth = this.scale * bWidth;
@@ -546,6 +563,7 @@ define([
         clearStates() {
             this.setStates(false, false, false, false, this.states.facingRight, false, false, false, false, this.states.energized, false, false);
         }
+
         drawOutline (ctx) {
             ctx.beginPath();
             ctx.strokeStyle = "green";
