@@ -13,9 +13,10 @@ define([
     ************/
     class Entity {
 
-        constructor (game, x, y, img=null, ctx=null) {
+        constructor (game, x, y, img=null, ctx=null, parentClass = null) {
             this.name = this.constructor.name;
             this.game = game;
+            this.parentClass = parentClass;
             this.x = x;
             this.y = y;
             this.gravity = .9;
@@ -44,6 +45,13 @@ define([
             this.boundX += x;
             this.y += y;
             this.boundY += y;
+        }
+
+        setPos(x, y) {
+            this.x = x;
+            this.boundX = x;
+            this.y = y;
+            this.boundY = y;
         }
 
         /* Draws the outline of this entity */

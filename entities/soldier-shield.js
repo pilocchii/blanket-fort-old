@@ -329,7 +329,7 @@ define([
             }
 
             collided(other, direction) {
-                if (other instanceof Terrain) {
+                if (other.name ===  "Terrain") {
                     if (direction === 'bottom') {
                         this.boundY = other.boundY - this.boundHeight;
                         this.y = this.boundY + this.boundHeight - 20; //fix magic number (drawn slightly below hitbox without the 20 offset)
@@ -353,7 +353,7 @@ define([
                         this.x = this.boundX;
                     }
                 }
-                if (other instanceof Projectile) {
+                if (other.name ===  "Projectile") {
                     // blocking from left & right
                     if (this.states.idling || this.states.blocking) {
                         if (this.x - this.game.hero.x < 0 && this.states.facingRight/*direction == 'left' && other.x < this.x*/) {
@@ -377,7 +377,7 @@ define([
                         console.log("OUCH!")
                     }
                 }
-                if (other instanceof Hurtbox) {
+                if (other.name ===  "Hurtbox") {
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");
                     // blocking from left & right

@@ -83,18 +83,15 @@ define([
 
             collided(other, direction) {
                 // collide with terrain
-                if (other instanceof Terrain) {
+                if (other.name === "Terrain" || other.name === "Spikes" || other.name === "Hero") {
                     this.removeFromWorld = true;
                 }
-                else if (other instanceof Actor && !(other instanceof Enemy)) { //Why can't I use instanceof Hero (same issues as in Hurtbox)
-                    this.removeFromWorld = true;
-                }
-                else if (other instanceof Projectile) {
+                else if (other.name === "Projectile") {
                     this.health -= other.damage;
                 }
-                else if (other instanceof Hurtbox) {
-                    other.hasOwnProperty("isEnemy");
-                    other.hasOwnProperty("damage");
+                else if (other.name === "Hurtbox") {
+                    //other.hasOwnProperty("isEnemy");
+                    //other.hasOwnProperty("damage");
                     if (!other.isEnemy) {
                         this.removeFromWorld = true;
                     }

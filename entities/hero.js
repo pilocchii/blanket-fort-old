@@ -26,7 +26,7 @@ define([
     class Hero extends Actor {
 
         constructor (game, x, y, img=null, ctx=null, scale=3, spriteWidth=60, spriteHeight=60) {
-            super(game, x, y, img, ctx);
+            super(game, x, y, img, ctx, "Actor");
             this.origY = this.y; //For jumping
 
             this.scale = scale;
@@ -49,10 +49,10 @@ define([
             this.jumpTimer = 0;
             this.jumpCooldown = 20;
 
-            this.maxHealth = 6;
+            this.maxHealth = 12;
             this.maxEnergy = 6;
             this.energy = 6;
-            this.health = 6;
+            this.health = 12;
             this.slashEnergyCost = 4;
             this.shootEnergyCost = 2;
             this.dashEnergyCost = 1;
@@ -62,11 +62,18 @@ define([
             
             //Timers
             this.damageCooldownTimer = 0;
-            this.damageCooldown = 16000;
+            this.damageCooldown = 16;
             this.energyCooldownTimer = 0;
             this.energyCooldown = 240/(this.multiplier*2); 
             this.velocityCooldown = 2;
             this.velocityCooldownTimer = 0;
+
+            //Dev Tools
+            this.setPosTimer = 0;
+            var posCycle1 = [400, 1120];
+            var posCycle2 = [7000, 1120];
+            this.posCycle = [posCycle1, posCycle2];
+            this.iPC = 0;
 
             this.states = {
                 "running": false,
@@ -102,7 +109,11 @@ define([
             };
         }
 
-        update () {
+        update () {//TODO (maybe) find a better solution to the framelocked logic. (Too many exceptions for things like slash)
+            //Dev Tool Updates
+            if (this.setPosTimer > 0) {
+                this.setPosTimer--;
+            }
             /////////// all button checks go here ///////////
             // check if button pressed
             // Moving left and right are mutually exclusive, thus else-if
@@ -119,6 +130,7 @@ define([
             }
             if (this.game.controlKeys[this.game.controls.jump].active && !this.states.jumping && !this.states.framelocked) { // jump
                 this.states.jumping = true;
+                this.states.grounded = false;
             }
             if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked) { //shoot
                 this.states.shooting = true;
@@ -392,10 +404,9 @@ define([
 
         collided(other, direction) {
             // collide with terrain
-            if (other instanceof Terrain || other instanceof Hazards["spikes"]) {
+            if (other.name === "Terrain" || other.name === "Spikes") {
 
                 // Hero above terrain
-                // TODO store lastBottom, when landing, check to see if lastBottom is above other.BoundX. if it is, I SHOULD land. else i slide off like a chump. might work? idk yet
                 if (direction === 'bottom') {
                     this.boundY = other.boundY - this.boundHeight;
                     this.y = this.boundY + this.boundHeight;
@@ -403,6 +414,7 @@ define([
                         this.yVelocity = 0;
                     this.jumpsLeft = this.maxJumps;
                     this.states.jumping = false;
+                    this.states.grounded = true;
                 }
 
                 // Hero jumps into terrain
@@ -426,7 +438,7 @@ define([
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
             }
-            if (other instanceof Hazards["lava"] && !this.states.dead) {
+            if (other.name === "Lava" && !this.states.dead) {
                 this.clearStates();
                 this.health = 0;
                 this.states.stunned = true;
@@ -436,10 +448,11 @@ define([
                 this.game.playSound("hero_hurt")
             }
             if (this.damageCooldownTimer <= 0 && !this.states.dead && !this.states.stunned) { //If Hero can take damage, check if...
-                if (other instanceof Enemy) {
+                if (other.superClass === "Enemy") {
 
-                    this.game.playSound("hero_hurt")
+                    
                     if (other.damage > 0) {
+                        this.game.playSound("hero_hurt")
                         //Determine interaction based on enemy's damage type
                         if (other.damageType === "health") {
                             console.log("health: " + this.health) //DBG
@@ -467,7 +480,7 @@ define([
                         }
                     }
                 }
-                if (other instanceof Hazards["fireball"]) {
+                if (other.name === "Fireball") {
 
                     this.game.playSound("hero_hurt")
                     console.log("health: " + this.health); //DBG
@@ -479,7 +492,7 @@ define([
                     this.states.stunned = true;
                     this.states.framelocked = true;
                     if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
-                } if (other instanceof Hazards["projectile"]) {
+                } if (other.name === "Projectile") {
                     this.health -= other.damage;
                     other.removeFromWorld = true;
                     this.clearStates();
@@ -487,7 +500,7 @@ define([
                     this.states.framelocked = true;
                     if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
                 }
-                if (other instanceof Hurtbox) {
+                if (other.name === "Hurtbox") {
                     other.hasOwnProperty("isEnemy");
                     other.hasOwnProperty("damage");
                     if (other.isEnemy) {

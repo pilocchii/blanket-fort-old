@@ -53,6 +53,7 @@ define([
                 "energize": "KeyW",
                 "dash": "Numpad1",
                 "getPos": "KeyE",
+                "setPos": "KeyR",
             }
             this.score = 0;
             this.hero = hero;
@@ -183,7 +184,7 @@ define([
                 //&& -this.entities[i].x > this.entities[0].xView - this.ctx.canvas.width 
                 //&& -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
                 //&& -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height)
-                //|| this.entities[i] instanceof Hud) {
+                //|| this.entities[i].name ===  "Hud") {
                 //    this.entities[i].draw(this.ctx);
                 //}
                 else
@@ -237,6 +238,12 @@ define([
             }
             if (this.controlKeys[this.controls.getPos].active) {
                 console.log("x: " + this.hero.x + ", y: " + this.hero.y);
+            }
+            if (this.controlKeys[this.controls.setPos].active && this.hero.setPosTimer <= 0) {
+                this.hero.setPos(this.hero.posCycle[this.hero.iPC][0],
+                    this.hero.posCycle[this.hero.iPC][1]);
+                this.hero.setPosTimer = 20;
+                this.hero.iPC = (this.hero.iPC + 1) % this.hero.posCycle.length; 
             }
         }
 

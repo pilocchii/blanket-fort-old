@@ -116,13 +116,13 @@ define([
 
             /*COLLISION*/
             collided(other, direction) { //commented is for eventual implementation of projectile "armor"/toughness.
-                if (other instanceof Terrain) {
+                if (other.name ===  "Terrain") {
                     this.removeFromWorld = true;
                 }
-                //else if (other instanceof Bullet) {
+                //else if (other.name ===  "Bullet") {
                 //    this.health -= other.damage;
                 //}
-                else if (other instanceof Enemy) {
+                else if (other.name ===  "Enemy") {
                     this.removeFromWorld = true;
                 }
                 //if (this.health <= 0) {

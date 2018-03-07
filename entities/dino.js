@@ -177,7 +177,7 @@ define([
             }
 
             collided(other, direction) {
-                if (other instanceof Terrain) {
+                if (other.name ===  "Terrain") {
                     if (direction === 'bottom') {
                         this.boundY = other.boundY - this.boundHeight;
                         this.y = this.boundY + this.boundHeight; //fix magic number (drawn slightly below hitbox without the 20 offset)
@@ -202,12 +202,12 @@ define([
                         this.facing = 1;
                     }
                 }
-                if (other instanceof Projectile) {
+                if (other.name ===  "Projectile") {
                     this.health -= other.damage;
                 }
-                if (other instanceof Hurtbox) {
-                    other.hasOwnProperty("isEnemy");
-                    other.hasOwnProperty("damage");
+                if (other.name ===  "Hurtbox") {
+                    //other.hasOwnProperty("isEnemy");
+                    //other.hasOwnProperty("damage");
                     // blocking from left & right
                     if (!other.isEnemy) {
                         this.health -= other.damage;
