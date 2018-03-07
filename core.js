@@ -87,7 +87,6 @@ define([
         let gameEngine = new GameEngine(new Sound());
         let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, 2000, 2000);
         let hero = new Hero(gameEngine, 7000, 1120, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
-
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
         // ### music ###
          let audio = new Audio("./audio/track_1.wav");
@@ -135,8 +134,7 @@ define([
         //gameEngine.addEntity(new Crow(gameEngine, 1300, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 1250, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-
-        //gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
