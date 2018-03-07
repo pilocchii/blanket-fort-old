@@ -256,10 +256,10 @@ define([
 
             collided(other, direction) {
                 // collide with terrain
-                if (other instanceof Terrain) {
+                if (other.name ===  "Terrain") {
                     //null
                 }
-                if (other instanceof Projectile && !this.states.hurt && !this.states.idling) {
+                if (other.name ===  "Projectile" && !this.states.hurt && !this.states.idling) {
                     this.health -= other.damage;
                     this.states.flying = false;
                     this.states.attacking = false;
@@ -267,9 +267,9 @@ define([
                     this.states.idling = false;
                     this.states.hurt = true;
                 }
-                if (other instanceof Hurtbox && !this.states.hurt && !this.states.idling) {
-                    other.hasOwnProperty("isEnemy");
-                    other.hasOwnProperty("damage");
+                if (other.name ===  "Hurtbox" && !this.states.hurt && !this.states.idling) {
+                    //other.hasOwnProperty("isEnemy");
+                    //other.hasOwnProperty("damage");
                     if (!other.isEnemy) {
                         this.health -= other.damage;
                         this.states.flying = false;

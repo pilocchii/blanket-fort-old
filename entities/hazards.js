@@ -134,7 +134,10 @@ define([
                 if (this.states.active) {
                     if (this.states.start) {
                         if (this.animation.loops == 1) {
-                            this.game.playSound("lava_ball", 0.5)
+                            if (Math.abs(this.x - this.game.hero.x) < 1000
+                                && Math.abs(this.y - this.game.hero.y) < 1000) {
+                                this.game.playSound("lava_ball", 0.5)
+                            }
                         }
 
                         this.changePos(0, -1 * this.ySpeed);
@@ -392,11 +395,12 @@ define([
 
             collided(other, direction) {
                 // collide with terrain
-                if (other instanceof Terrain) {
+                if (other.name === "Terrain") {
                     this.removeFromWorld = true;
                 }
-                else if (other instanceof Actor && !(other instanceof Enemy)) {//Hero collision
-                    if (other instanceof Projectile) {
+                //TODO refactor this (artifact from instanceof days)
+                else if (other.name === "Actor" && !(other.name === "Enemy")) {//Hero collision
+                    if (other.name === "Projectile") {
                         if (this.tick === 0) {
                             this.removeFromWorld = true;
                         }
@@ -406,9 +410,9 @@ define([
                         this.removeFromWorld = true;
                     }
                 }
-                else if (other instanceof Hurtbox) {
-                    other.hasOwnProperty("isEnemy");
-                    other.hasOwnProperty("damage");
+                else if (other.name === "Hurtbox") {
+                    //other.hasOwnProperty("isEnemy");
+                    //other.hasOwnProperty("damage");
                     if (!other.isEnemy) {
                         this.removeFromWorld = true;
                     }

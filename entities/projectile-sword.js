@@ -106,10 +106,10 @@ define([
             }
 
             //collided(other, direction) {
-            //    if (other instanceof Terrain) {
+            //    if (other.name ===  "Terrain") {
             //        this.removeFromWorld = true;
             //    }
-            //    else if (other instanceof Bullet) {
+            //    else if (other.name ===  "Bullet") {
             //        this.health -= other.damage;
             //    }
             //    if (this.health <= 0) {

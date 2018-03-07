@@ -106,14 +106,11 @@ define([
 
             collided(other, direction) {
                 // collide with terrain
-                if (other instanceof Terrain) {
+                if (other.name ===  "Terrain") {
                     if (this.animation.loops > 3)
                         this.removeFromWorld = true;
                 }
-                else if (other instanceof Actor && !(other instanceof Enemy)) {
-                    this.removeFromWorld = true;
-                }
-                else if (other instanceof Projectile) {
+                else if (other.name === "Hero" || other.name === "Projectile") {
                     this.removeFromWorld = true;
                 }
             }

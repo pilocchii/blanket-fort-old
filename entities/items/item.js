@@ -46,9 +46,9 @@ define([
         }
 
         collided (other, direction) {
-            if (other instanceof Hero) {
+            if (other.name ===  "Hero") {
                 this.on_pickup(other);
-            } else if (other instanceof Terrain || other instanceof Hazards["spikes"]) {
+            } else if (other.name ===  "Terrain" || other.name ===  "Spikes") {
                 this.boundY = other.boundY - this.boundHeight;
                 this.y = this.boundY + this.boundHeight;
                 this.yVelocity = 0;

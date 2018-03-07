@@ -150,7 +150,7 @@ define([
 
         collided(other, direction) {
             // collide with terrain
-            if (other instanceof Terrain) {
+            if (other.name === "Terrain") {
                 //TODO Add collision with terrain
                 if (direction === 'bottom') {
                     this.boundY = other.boundY - this.boundHeight;
@@ -190,7 +190,7 @@ define([
                 //    this.facing = 1;
                 //}
             }
-            if (other instanceof Projectile) {
+            if (other.name === "Projectile") {
                 this.states.launching = false,
                 this.states.activating = false;
                 this.states.detonating = false;
@@ -198,7 +198,7 @@ define([
                 this.gravity = 0;
                 this.yVelocity = 0;
             }
-            if (other instanceof Hurtbox) {
+            if (other.name ===  Hurtbox) {
                 other.hasOwnProperty("isEnemy");
                 other.hasOwnProperty("damage");
                 this.states.launching = false,

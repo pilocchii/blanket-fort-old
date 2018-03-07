@@ -22,7 +22,7 @@ define([
             //Note that img is required for super(), even though Hurtbox is never animated.
             constructor(game, ctx = null, x, y, offX, offY, parentWidth, parentHeight, hurtWidth, hurtHeight, scale = 3,
                             damage, facingRight = true, isEnemy = false, damageType = "health", frames = 2, persistent = false, img = null) {
-                super(game, x, y, img, ctx);
+                super(game, x, y, img, ctx, "Actor");
                 this.movementSpeed = 0;
                 this.scale = scale;
                 this.isEnemy = isEnemy;
@@ -64,10 +64,10 @@ define([
 
             collided(other, direction) {
                 // collide with terrain
-                if (other instanceof Terrain) {
+                if (other.name === "Terrain") {
                     //console.log("clink");
                 }
-                else if (other instanceof Actor && !(other instanceof Enemy) && !this.persistent) { //TODO: Why can't I just use instanceof Hero? (claims Hero is not an object. Why?)
+                else if (other.name === "Hero") {
                     this.removeFromWorld = true;
                 }
             }
@@ -84,7 +84,7 @@ define([
 
 
             drawImg(ctx) {
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
         return Hurtbox;
