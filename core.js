@@ -120,85 +120,85 @@ define([
         camera.follow(hero);
         gameEngine.addEntity(hero);
 
-        //***LEVEL ONE***
-        //gameEngine.addEntity(new Item.HealthPack(gameEngine, 2935, 1200, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
-        //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 2965, 1200, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
-        //gameEngine.addEntity(new Item.HealthPack(gameEngine, 300, 400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
-        //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 330, 400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
+        ////***LEVEL ONE***
+        ////gameEngine.addEntity(new Item.HealthPack(gameEngine, 2935, 1200, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
+        ////gameEngine.addEntity(new Item.EnergyPack(gameEngine, 2965, 1200, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
+        ////gameEngine.addEntity(new Item.HealthPack(gameEngine, 300, 400, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
+        ////gameEngine.addEntity(new Item.EnergyPack(gameEngine, 330, 400, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8));
 
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Soldier_Shield(gameEngine, 1800, 1450, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        //gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 1300, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Crow(gameEngine, 1300, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        //gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-
-
-        //gameEngine.addEntity(new Dino(gameEngine, 2130, 1061, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
-        //gameEngine.addEntity(new Dino(gameEngine, 1980, 582, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-
-        ////TODO: What is this? Can we remove it?
-        //gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
-
-        //***LEVEL TWO***
-        //gameEngine.addEntity(new Hand(gameEngine, 2283, 1344, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Dino(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
-        //gameEngine.addEntity(new Crow(gameEngine, 1250, 700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40,
-        //    /*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
-        //gameEngine.addEntity(new Crow(gameEngine, 2200, 1750, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
-        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 10598, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
-        //gameEngine.addEntity(new Dino(gameEngine, 11980, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3));
-        //gameEngine.addEntity(new Crow(gameEngine, 12550, 0, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
-        //gameEngine.addEntity(new Crow(gameEngine, 12550, -80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3,  [1000, 700]));
-        //gameEngine.addEntity(new Crow(gameEngine, 12550, 80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
-        //gameEngine.addEntity(new Crow(gameEngine, 12550, 160, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
-        //gameEngine.addEntity(new Crow(gameEngine, 12550, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
+        ////gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
 
-        /***ITEMS***/
-        gameEngine.addEntity(new Item.HealthPack(gameEngine, 7050, 1248, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8, 3, 1));
-        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 7080, 1248, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8, 3, 1));
-        gameEngine.addEntity(new Item.HealthPack(gameEngine, 8665, 950, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8, 3, 1));
-        gameEngine.addEntity(new Item.EnergyPack(gameEngine, 8635, 1000, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8, 3, 1));
+        ////gameEngine.addEntity(new Dino(gameEngine, 2130, 1061, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
+        ////gameEngine.addEntity(new Dino(gameEngine, 1980, 582, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        /***ENEMIES***/
-        gameEngine.addEntity(new Crow(gameEngine, 8800, -200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
-        gameEngine.addEntity(new Crow(gameEngine, 9600, -200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
-        gameEngine.addEntity(new Crow(gameEngine, 9200, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
-        gameEngine.addEntity(new Hand(gameEngine, 6825, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //////TODO: What is this? Can we remove it?
+        ////gameEngine.addEntity(new Terrain(gameEngine, 0, 600, [32, 32], ASSET_MANAGER.getAsset("img/pipes.png"), ctx=ctx, scale=3, tiles=[[2,0], [3, 0], [4,0]]));
+
+        ////***LEVEL TWO***
+        ////gameEngine.addEntity(new Hand(gameEngine, 2283, 1344, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Dino(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
+        ////gameEngine.addEntity(new Crow(gameEngine, 1250, 700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40,
+        ////    /*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
+        ////gameEngine.addEntity(new Crow(gameEngine, 2200, 1750, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Crow(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        ////gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
+        ////gameEngine.addEntity(new Soldier_Shield(gameEngine, 10598, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
+        ////gameEngine.addEntity(new Dino(gameEngine, 11980, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3));
+        ////gameEngine.addEntity(new Crow(gameEngine, 12550, 0, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
+        ////gameEngine.addEntity(new Crow(gameEngine, 12550, -80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3,  [1000, 700]));
+        ////gameEngine.addEntity(new Crow(gameEngine, 12550, 80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
+        ////gameEngine.addEntity(new Crow(gameEngine, 12550, 160, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
+        ////gameEngine.addEntity(new Crow(gameEngine, 12550, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
 
 
-        /***HAZARDS***/
-        gameEngine.addEntity(new Hazards["lava"](gameEngine, 7500, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
-        gameEngine.addEntity(new Hazards["lava"](gameEngine, 8400, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
-        gameEngine.addEntity(new Hazards["lava"](gameEngine, 9300, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
-        gameEngine.addEntity(new Hazards["fireball"](gameEngine, 7300, 1450 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 4,
-                                /*cooldown*/ 50, /*speed*/ 20));
-        gameEngine.addEntity(new Hazards["fireball"](gameEngine, 7820, 1450 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 4,
-                                /*cooldown*/ 50, /*speed*/ 20, /*offset*/ 25));
-        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 700,
-        //                        1440 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20*6, 0, 18));
-        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7512,
-            1152 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 0, 3));
-        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7980,
-            1056 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 20, 3));
-        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 8665,
+        ///***ITEMS***/
+        //gameEngine.addEntity(new Item.HealthPack(gameEngine, 7050, 1248, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8, 3, 1));
+        //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 7080, 1248, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8, 3, 1));
+        //gameEngine.addEntity(new Item.HealthPack(gameEngine, 8665, 950, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8, 3, 1));
+        //gameEngine.addEntity(new Item.EnergyPack(gameEngine, 8635, 1000, ASSET_MANAGER.getAsset("img/energypack.png"), ctx, 10, 8, 3, 1));
 
-            1150 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 3.5, 40, 0));
-        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7692,
-            700 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4.5, 0, 3));
-        gameEngine.addEntity(new Hazards["spikes"](gameEngine, 8064,
-            250 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 5, 40, 20));
+        ///***ENEMIES***/
+        //gameEngine.addEntity(new Crow(gameEngine, 8800, -200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
+        //gameEngine.addEntity(new Crow(gameEngine, 9600, -200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
+        //gameEngine.addEntity(new Crow(gameEngine, 9200, 400, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40, [1000, 700]));
+        //gameEngine.addEntity(new Hand(gameEngine, 6825, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        gameEngine.addEntity(new Hazards["launcher"](gameEngine, 7965, -300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 7, 7, [0, 1], 120, 160))
-        gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 792 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 90, 370, 20))
-        gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875 - 95, 984 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 90, 370, 50))
-        gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 1176 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 45, 370, 60))
+
+        ///***HAZARDS***/
+        //gameEngine.addEntity(new Hazards["lava"](gameEngine, 7500, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
+        //gameEngine.addEntity(new Hazards["lava"](gameEngine, 8400, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
+        //gameEngine.addEntity(new Hazards["lava"](gameEngine, 9300, 1400 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 300));
+        //gameEngine.addEntity(new Hazards["fireball"](gameEngine, 7300, 1450 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 4,
+        //                        /*cooldown*/ 50, /*speed*/ 20));
+        //gameEngine.addEntity(new Hazards["fireball"](gameEngine, 7820, 1450 - 140, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 4,
+        //                        /*cooldown*/ 50, /*speed*/ 20, /*offset*/ 25));
+        ////gameEngine.addEntity(new Hazards["spikes"](gameEngine, 700,
+        ////                        1440 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20*6, 0, 18));
+        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7512,
+        //    1152 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 0, 3));
+        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7980,
+        //    1056 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4, 20, 3));
+        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 8665,
+
+        //    1150 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 3.5, 40, 0));
+        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 7692,
+        //    700 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 4.5, 0, 3));
+        //gameEngine.addEntity(new Hazards["spikes"](gameEngine, 8064,
+        //    250 + 44, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 2, true, 20 * 5, 40, 20));
+
+        //gameEngine.addEntity(new Hazards["launcher"](gameEngine, 7965, -300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 7, 7, [0, 1], 120, 160))
+        //gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 792 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 90, 370, 20))
+        //gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875 - 95, 984 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 90, 370, 50))
+        //gameEngine.addEntity(new Hazards["launcher"](gameEngine, 6875, 1176 + 2 * 70, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 8, 8, [-1, 0], 45, 370, 60))
         gameEngine.addEntity(hud);
         gameEngine.init(ctx);
         gameEngine.start();
