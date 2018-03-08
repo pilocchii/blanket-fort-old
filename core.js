@@ -84,23 +84,23 @@ define([
 
         let gameEngine = new GameEngine(new Sound());
         let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, 2000, 2000);
-        let hero = new Hero(gameEngine, 7000, 1120, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let hero = new Hero(gameEngine, 400, 1120, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
         // ### music ###
-         let audio = new Audio("./audio/track_1.wav");
-         audio.volume = 1;
-         audio.play();
+        let audio = new Audio("./audio/track_1.wav");
+        audio.volume = 1;
+        audio.play();
         //TODO: Placeholder magic numbers until we decide on how to handle world boundary and camera
 
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
-        
+
         gameEngine.addEntity(camera);
 
 
         let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
         //let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
-        let levelTwo = new LevelTwo(gameEngine, ASSET_MANAGER, ctx);       
-        
+        let levelTwo = new LevelTwo(gameEngine, ASSET_MANAGER, ctx);
+
         //hero as global variable
         gameEngine.hero = hero;
 
@@ -118,7 +118,7 @@ define([
 
 
         camera.follow(hero);
-        gameEngine.addEntity(hero);  
+        gameEngine.addEntity(hero);
 
         //***LEVEL ONE***
         //gameEngine.addEntity(new Item.HealthPack(gameEngine, 2935, 1200, ASSET_MANAGER.getAsset("img/healthpack.png"), ctx, 10, 8));
@@ -130,9 +130,8 @@ define([
 
         //gameEngine.addEntity(new Crow(gameEngine, 1350, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 1300, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        //gameEngine.addEntity(new Crow(gameEngine, 1250, 1300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
-        gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
+        //gameEngine.addEntity(new Crow(gameEngine, 2950, 1700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1100, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 400, 300, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
 
@@ -145,13 +144,15 @@ define([
 
         //***LEVEL TWO***
         //gameEngine.addEntity(new Hand(gameEngine, 2283, 1344, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Dino(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
+        //gameEngine.addEntity(new Dino(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 90, 60, 400, 250));
+        //gameEngine.addEntity(new Crow(gameEngine, 1250, 700, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, 50, 40,
+        //    /*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
         //gameEngine.addEntity(new Crow(gameEngine, 2200, 1750, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 1960, 984, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
         //gameEngine.addEntity(new Crow(gameEngine, 2700, 1200, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));
-        gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
-        gameEngine.addEntity(new Soldier_Shield(gameEngine, 10598, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
-        gameEngine.addEntity(new Dino(gameEngine, 11980, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3));
+        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 1300, 1440, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
+        //gameEngine.addEntity(new Soldier_Shield(gameEngine, 10598, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx));//x: 8652, y: 1152
+        //gameEngine.addEntity(new Dino(gameEngine, 11980, 384, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3));
         //gameEngine.addEntity(new Crow(gameEngine, 12550, 0, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));
         //gameEngine.addEntity(new Crow(gameEngine, 12550, -80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3,  [1000, 700]));
         //gameEngine.addEntity(new Crow(gameEngine, 12550, 80, ASSET_MANAGER.getAsset("img/Enemies.png"), ctx, 3, [1000, 700]));

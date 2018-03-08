@@ -97,11 +97,9 @@ define([
             }
             if (this.states.throwing) {
                 if (!this.states.hasThrown) {
-                    //spawn bomb
                     this.game.addEntity(new Bomb(this.game, this.x + this.facing * 10, this.y - 20, this.img, this.ctx,
-                        this.scale, [1000, 1000], this.spriteWidth, this.spriteHeight, this.states.facingRight,
-                        Math.abs(this.x - this.game.hero.x) / 125)); //75 explodes on stationary Hero
-                    //hasThrwon is true
+                        this.scale, this.spriteWidth, this.spriteHeight, this.states.facingRight,
+                        Math.abs(this.x - this.game.hero.x) / 125)); //value of 75 explodes on stationary Hero
                     this.states.hasThrown = true;
                 }
                 if (this.animation.loops > this.throwtime) {
@@ -163,17 +161,7 @@ define([
                     this.boundY = other.boundY - this.boundHeight;
                     this.y = this.boundY + this.boundHeight - 10;
                     this.yVelocity = 0;
-                    if (this.movementSpeed > 0) {
-                        this.movementSpeed += this.facing * this.movementSpeed * this.friction;
-                    }
-                    if (this.states.launching) {
-                        this.animation.reset();
-                        this.animation.reset();
-                        this.states.launching = false;
-                        this.states.activating = true;
-                    }
                 }
-
                 else if (direction === 'top') {
                     this.boundY = other.boundY + other.boundHeight;
                     this.y = this.boundY + this.boundHeight - 10;
@@ -216,7 +204,7 @@ define([
         }
 
         drawImg(ctx) {
-            //this.drawOutline(ctx);
+            this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }

@@ -41,6 +41,7 @@ define([
                 if (energized) {
                     this.damage = 200;
                     this.health = 2;
+                    this.movementSpeed = 17
                 }
                 else {
                     this.damage = 50;
@@ -143,7 +144,7 @@ define([
 
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
     }

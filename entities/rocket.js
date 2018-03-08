@@ -20,8 +20,8 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Enemy";
-                this.xSpeed = 8;
-                this.ySpeed = 4;
+                this.xSpeed = 0;
+                this.ySpeed = 0;
                 this.maxX = 8;
                 this.maxY = 4;
                 this.xAccel = .25;
@@ -136,7 +136,7 @@ define([
 
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
         }

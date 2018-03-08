@@ -23,7 +23,7 @@ define([
         x, y - entity's coordinates
         removeFromWorld - a flag that denotes when to remove this entity from the game
         ************/
-        class Lava extends Enemy {
+        class Lava extends Entity {
             constructor(game, x, y, img = null, ctx = null, scale = null, spriteWidth = 64) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Enemy";
@@ -80,7 +80,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
             }
         }
 
@@ -246,15 +246,14 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
             }
         }
 
-        class Spikes extends Enemy {
+        class Spikes extends Entity {
             constructor(game, x, y, img = null, ctx = null, scale = null, active = true, timer, timeOffset = 0, length = 0) {
                 super(game, x, y, img, ctx);
-                this.parentClass = "Enemy";
-                //this.y += 44; Give a +44 offset when instantiating 
+                this.parentClass = "Entity";
                 this.scale = scale;
                 this.spriteWidth = 60;
                 this.spriteHeight = 60;
@@ -296,7 +295,6 @@ define([
                         this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 3, this.boundHeight - 36, this.scale, this.damage, this.states.facingRight,
                         "health", 2, true));
                     if (this.animation.isDone()) {
-                        this.animation.reset();
                         this.animation.reset();
                         this.states.active = false;
                         this.states.inactive_down = true;
@@ -348,7 +346,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
             }
         }
 
@@ -447,7 +445,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
             }
         }
 
@@ -511,7 +509,7 @@ define([
 
             drawImg(ctx) {
                 //this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
             }
         }
 

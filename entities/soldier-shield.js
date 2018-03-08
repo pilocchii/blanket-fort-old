@@ -173,7 +173,6 @@ define([
                         this.boundX += this.facing * this.movementSpeed;
                         if (this.animation.loops >= 1) {
                             this.animation.reset();
-                            this.animation.reset();
                             this.states.running = false;
                             this.states.idle = true;
                         }
@@ -203,11 +202,8 @@ define([
                                 this.states.idling = true;
                         }
                     }
-                    //TODO: Decide whether to use this
-                    //TODO: Figure out why this causes "run away" to happen in the wrong direction
                     if (this.states.shooting_recover) { 
                         if (this.animation.loops > 2) {
-                            this.animation.reset();
                             this.animation.reset();
                             this.states.shooting_recover = false;
                             if (!this.states.runningAway)
@@ -321,7 +317,7 @@ define([
             }
 
             //used to easily update hitbox based on state/animation
-            updateHitbox(fWidth, fHeight, bWidth, bHeight) {
+            updateHitbox(fWidth, fHeight, bWidth, bHeight, offX, offY) {
                 this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth;
                 this.boundWidth = this.scale * bWidth;
                 this.boundHeight = this.scale * bHeight;
@@ -379,8 +375,6 @@ define([
                     }
                 }
                 if (other.name ===  "Hurtbox") {
-                    other.hasOwnProperty("isEnemy");
-                    other.hasOwnProperty("damage");
                     // blocking from left & right
                     if (!other.isEnemy) {
                         if (this.states.idling || this.states.blocking) {
@@ -416,7 +410,7 @@ define([
             }
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
         }
