@@ -15,10 +15,11 @@ define([
     ****************/
     class GameEngine {
 
-        constructor (sound, hero) {
+        constructor (sound, gameboard, hero) {
             this.sound = sound;
             this.entities = [];
             this.backgroundLayers = [];
+            this.gameboard = gameboard;
             this.ctx = null;
             this.click = null;
             this.mouse = null;
@@ -54,6 +55,7 @@ define([
                 "dash": "Numpad1",
                 "getPos": "KeyE",
                 "setPos": "KeyR",
+                "godToggle": "KeyF",
             }
             this.score = 0;
             this.hero = hero;
@@ -245,6 +247,10 @@ define([
                     this.hero.posCycle[this.hero.iPC][1]);
                 this.hero.setPosTimer = 20;
                 this.hero.iPC = (this.hero.iPC + 1) % this.hero.posCycle.length; 
+            }
+            if (this.controlKeys[this.controls.godToggle].active && this.hero.godToggleTimer <= 0) {
+                this.hero.states.invulnerable != this.hero.states.invulnerable;
+                this.hero.godToggleTimer = 40;
             }
         }
 

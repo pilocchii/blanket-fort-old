@@ -71,6 +71,7 @@ define([
 
             //Dev Tools
             this.setPosTimer = 0;
+            this.godToggleTimer = 0;
             var posCycle1 = [400, 1120];
             var posCycle2 = [7000, 1120];
             this.posCycle = [posCycle1, posCycle2];
@@ -125,6 +126,9 @@ define([
             //Dev Tool Updates
             if (this.setPosTimer > 0) {
                 this.setPosTimer--;
+            }
+            if (this.godToggleTimer > 0) {
+                this.godToggleTimer--;
             }
             /////////// all button checks go here ///////////
             // KEY DOWN
