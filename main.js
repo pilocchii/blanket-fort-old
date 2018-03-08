@@ -26,7 +26,6 @@ require.config({
         "projectile-sword": "entities/projectile-sword",
         "leo": "entities/leo",
         "flames": "entities/flames",
-        "solider": "entities/soldier",
         "soldier-shield": "entities/soldier-shield",
         "crow": "entities/crow",
         "dino": "entities/dino",

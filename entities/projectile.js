@@ -18,6 +18,7 @@ define([
             //Added energized (BEFORE DIMENSIONS) to choose correct projectile
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, energized, spriteWidth = 60, spriteHeight = 60) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Actor";
                 this.movementSpeed = 13;
                 if (facingRight) { this.x += 100; } else { this.x -= 100 };//offset to match gun
                 this.scale = scale;
@@ -40,6 +41,7 @@ define([
                 if (energized) {
                     this.damage = 200;
                     this.health = 2;
+                    this.movementSpeed = 17
                 }
                 else {
                     this.damage = 50;
@@ -75,15 +77,15 @@ define([
                 }
                 if (this.states.active) {
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.states.active = false;
                         this.states.stablized = true;
                     }
                 }
                 else if (this.states.stablized) {
                     if (this.animation.loops > 1) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         this.states.stablized = false;
                         this.removeFromWorld = true;
                     }
@@ -122,7 +124,7 @@ define([
                 //else if (other.name ===  "Bullet") {
                 //    this.health -= other.damage;
                 //}
-                else if (other.name ===  "Enemy") {
+                else if (other.parentClass ===  "Enemy") {
                     this.removeFromWorld = true;
                 }
                 //if (this.health <= 0) {
@@ -142,7 +144,7 @@ define([
 
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
     }

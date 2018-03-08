@@ -13,10 +13,10 @@ define([
     ************/
     class Entity {
 
-        constructor (game, x, y, img=null, ctx=null, parentClass = null) {
+        constructor (game, x, y, img=null, ctx=null) {
             this.name = this.constructor.name;
             this.game = game;
-            this.parentClass = parentClass;
+            this.parentClass = null;
             this.x = x;
             this.y = y;
             this.gravity = .9;
@@ -33,25 +33,11 @@ define([
         }
 
         // TODO, implement a list of bounding shapes, iterate through depending on type (circle or rect) 
-        rectangle () {
+        rectangle() {
 
         }
-        circle () {
+        circle() {
 
-        }
- 
-        changePos(x, y) {//used in various actor classes, and can be used in the moving terrain class. (hence this being in Entity)
-            this.x += x;
-            this.boundX += x;
-            this.y += y;
-            this.boundY += y;
-        }
-
-        setPos(x, y) {
-            this.x = x;
-            this.boundX = x;
-            this.y = y;
-            this.boundY = y;
         }
 
         /* Draws the outline of this entity */

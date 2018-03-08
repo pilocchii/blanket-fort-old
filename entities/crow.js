@@ -16,20 +16,22 @@ define([
 
         class Crow extends Enemy {
 
-            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 50, spriteHeight = 40, sightRadius = [700, 500]) {
+            constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 50, spriteHeight = 40,
+                            /*Unique to Crow*/sightRadius = [700, 500], murderLeader = false, murderDroogs = [[0, 0], [0, 0]]) {
                 super(game, x, y, img, ctx);
-
+                this.parentClass = "Enemy";
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
                 this.spriteHeight = spriteHeight;
 
                 this.centerX = x + ((spriteWidth * scale) / 2) - spriteWidth;
-                this.boundWidth = this.scale*20;
-                this.boundHeight = this.scale*15;
+                this.boundWidth = this.scale * 20;
+                this.boundHeight = this.scale * 15;
                 this.boundX = this.centerX - (this.boundWidth / 2);
                 this.boundY = this.y - this.boundHeight;
 
                 //Stats
+                this.murderLeader = murderLeader;
                 this.pointValue = 10;
                 this.xSpeed = 4;
                 this.ySpeed = 8;
@@ -46,6 +48,10 @@ define([
                 this.recoverDistance = 400;
                 this.xRecoverDistance;
                 this.yRecoverDistance;
+                if (this.murderLeader) {
+                    this.droogOne = murderDroogs[0];
+                    this.droogTwo = murderDroogs[1];
+                }
 
                 this.sightRadius[0] = sightRadius[0];
                 this.sightRadius[1] = sightRadius[1];
@@ -65,11 +71,12 @@ define([
                     "idling": true,
                     "facingRight": false,
                 };
-                this.animations = {                   
-                    "fly":          new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 5, true, this.scale),
-                    "attack":       new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 3, false, this.scale, 5),
+                this.animations = {
+                    "fly": new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 5, true, this.scale),
+                    "attack": new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 3, false, this.scale, 5),
                     "attack_final": new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 6, 2, true, this.scale, 8),
-                    "hurt":         new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 1, true, this.scale, 10),    
+                    "hurt": new Animation(this.img, [spriteWidth, spriteHeight], 8, 11, 5, 1, true, this.scale, 10),
+                    //TODO: Add "smokebomb" effect for activation
                 };
                 this.animation = this.animations.fly;
             }
@@ -92,6 +99,10 @@ define([
                         this.states.idling = false;
                         //enable states
                         this.states.flying = true;
+                        if (this.murderLeader) {
+                            this.game.addEntity(new Crow(this.game, this.x + this.droogOne[0], this.y + this.droogOne[1], this.img, this.ctx, this.scale, this.spriteWidth, this.spriteHeight));
+                            this.game.addEntity(new Crow(this.game, this.x + this.droogTwo[0], this.y + this.droogTwo[1], this.img, this.ctx, this.scale, this.spriteWidth, this.spriteHeight));
+                        }
                     }
                 }
                 if (this.states.flying) { //this.updateHitbox(50, 40, 20, 15);
@@ -137,8 +148,7 @@ define([
                     if (Math.abs(this.x - this.game.hero.x) <= 700
                             && this.y - this.game.hero.y < -100 && (this.y - this.game.hero.y) > -200
                             && this.animation.loops > 1 && Math.random() * 100 <= 10) { 
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
                         this.states.attacking = true;
                         this.states.flying = false;
                         this.game.sound.play("crow_caw");
@@ -151,7 +161,7 @@ define([
                     this.boundX -= this.facing*7;                    
                     
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.states.attacking = false;
                         //randomly determine angle of attack (makes prediction harder)
                         //min attack angle of 2
@@ -185,8 +195,8 @@ define([
                     //state finished
                     if (this.animation.loops > 3) {
                         this.states.attacking_final = false;
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         this.states.recovering = true;
                     }
                 }
@@ -214,8 +224,8 @@ define([
                     if (this.animation.loops > 8) {
                         //reset animation
                         this.damage = 1;
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         //disable states
                         this.states.hurt = false;
                         //enable states
@@ -292,7 +302,7 @@ define([
             }
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 if(this.states.active)
                     this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }

@@ -17,6 +17,7 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, facingRight, spriteWidth = 90, spriteHeight = 60) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Actor";
                 this.movementSpeed = 10;
                 if (facingRight) { this.x += 95; } else { this.x -= 95 };//offset to match gun
                 this.scale = scale;
@@ -62,22 +63,22 @@ define([
 
                 if (this.states.starting) {
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.states.starting = false;
                         this.states.stablized = true;
                     }
                 }
                 else if (this.states.stablized) {
                     if (this.animation.loops > 1) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
+                        this.animation.reset();
+                        this.animation.reset();
                         this.states.stablized = false;
                         this.states.recovering = true;
                     }
                 }
                 else if (this.states.recovering) {
                     if (this.animation.isDone()) {
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.removeFromWorld = true;
                     }
                 }
@@ -129,7 +130,7 @@ define([
 
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
         }

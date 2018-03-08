@@ -42,7 +42,7 @@ define([
                 if (this.states.active) {
                     if (this.animation.isDone()) {
 
-                        this.animation.elapsedTime = 0;
+                        this.animation.reset();
                         this.states.active = false;
                         this.removeFromWorld = true;
                     }
@@ -68,7 +68,7 @@ define([
 
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
         }

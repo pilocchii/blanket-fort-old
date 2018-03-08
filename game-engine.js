@@ -236,6 +236,7 @@ define([
                 }
                 
             }
+            //DEV TOOLS
             if (this.controlKeys[this.controls.getPos].active) {
                 console.log("x: " + this.hero.x + ", y: " + this.hero.y);
             }

@@ -21,6 +21,7 @@ define([
 
             constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 50, spriteHeight = 50) {
                 super(game, x, y, img, ctx);
+                this.parentClass = "Enemy";
                 this.movementSpeed = 7;
                 this.yVelocity = 0;
 
@@ -107,8 +108,8 @@ define([
                             && Math.random() * 100 <= 5 && this.animation.loops > 1) { //added random activation as a test.
                             this.states.slashing_start = true;
                             this.states.idling = false;
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.updateHitbox(80, 60, 50, 40);
                         }
                         //Shoot when in range
@@ -128,8 +129,8 @@ define([
                                 this.states.turning = false;
                                 this.states.idling = false;
                             } else {
-                                this.animation.elapsedTime = 0;
-                                this.animation.loops = 0;
+                                this.animation.reset();
+                                this.animation.reset();
                                 this.states.shooting_startup = true;
                                 this.states.idling = false;
                                 this.updateHitbox(50, 50, 38, 40);
@@ -171,15 +172,14 @@ define([
                         this.x += this.facing * this.movementSpeed;
                         this.boundX += this.facing * this.movementSpeed;
                         if (this.animation.loops >= 1) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
                             this.states.running = false;
                             this.states.idle = true;
                         }
                     }
                     if (this.states.shooting_startup && !this.states.framelocked) { //shooting start: this.updateHitbox(50, 50, 38, 40);
                         if (this.animation.isDone()) {
-                            this.animation.elapsedTime = 0;
+                            this.animation.reset();
                             this.states.shooting_startup = false;
                             this.states.shooting_active = true;
                             this.updateHitbox(50, 50, 38, 40);
@@ -193,8 +193,8 @@ define([
                             this.states.hasShot = true;
                         }
                         if (this.animation.isDone()) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.states.shooting_active = false;
                             this.states.hasShot = false;
                             //this.states.shooting_recover = true;
@@ -202,12 +202,9 @@ define([
                                 this.states.idling = true;
                         }
                     }
-                    //TODO: Decide whether to use this
-                    //TODO: Figure out why this causes "run away" to happen in the wrong direction
                     if (this.states.shooting_recover) { 
                         if (this.animation.loops > 2) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
                             this.states.shooting_recover = false;
                             if (!this.states.runningAway)
                                 this.states.idling = true;
@@ -223,7 +220,7 @@ define([
                                     this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                         }
                         if (this.animation.isDone()) {
-                            this.animation.elapsedTime = 0;
+                            this.animation.reset();
                             this.states.slashing_start = false;
                             this.states.slashing_end = true;
                             this.updateHitbox(100, 60, 50, 40);
@@ -239,7 +236,7 @@ define([
                                     this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                         }
                         if (this.animation.isDone()) {
-                            this.animation.elapsedTime = 0;
+                            this.animation.reset();
                             this.states.slashing_end = false;
                             this.states.idling = true;
                             this.updateHitbox(50, 50, 38, 40);
@@ -258,8 +255,8 @@ define([
 
 
                         if (this.animation.isDone()) {
-                            this.animation.elapsedTime = 0;
-                            this.animation.loops = 0;
+                            this.animation.reset();
+                            this.animation.reset();
                             this.states.blocking = false;
                             //for demo                        
                             this.states.idling = true;
@@ -269,7 +266,7 @@ define([
                     if (this.states.turning) { //turning
                         this.states.framelocked = true;
                         if (this.animation.isDone()) {
-                            this.animation.elapsedTime = 0;
+                            this.animation.reset();
                             this.states.turning = false;
                             this.states.facingRight = !this.states.facingRight;
                             this.facing *= -1; //see above statement
@@ -320,7 +317,7 @@ define([
             }
 
             //used to easily update hitbox based on state/animation
-            updateHitbox(fWidth, fHeight, bWidth, bHeight) {
+            updateHitbox(fWidth, fHeight, bWidth, bHeight, offX, offY) {
                 this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth;
                 this.boundWidth = this.scale * bWidth;
                 this.boundHeight = this.scale * bHeight;
@@ -378,8 +375,6 @@ define([
                     }
                 }
                 if (other.name ===  "Hurtbox") {
-                    other.hasOwnProperty("isEnemy");
-                    other.hasOwnProperty("damage");
                     // blocking from left & right
                     if (!other.isEnemy) {
                         if (this.states.idling || this.states.blocking) {
@@ -415,7 +410,7 @@ define([
             }
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
         }

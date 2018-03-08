@@ -20,6 +20,7 @@ define([
 
         constructor(game, x, y, img = null, ctx = null, scale = 3, spriteWidth = 40, spriteHeight = 30) {
             super(game, x, y, img, ctx);
+            this.parentClass = "Enemy";
             this.movementSpeed = 7;
             this.yVelocity = 0;
 
@@ -79,8 +80,8 @@ define([
                 if (Math.abs(this.x - this.game.hero.x) <= this.sightRadius[0]
                     && Math.abs(this.y - this.game.hero.y) <= this.sightRadius[1]
                     && this.cooldownTimer <= 0) {
-                    this.animation.elapsedTime = 0;
-                    this.animation.loops = 0;
+                    this.animation.reset();
+                    this.animation.reset();
                     this.states.idling = false;
                     this.states.starting = true;
                 }
@@ -91,21 +92,19 @@ define([
                 if (this.animation.isDone()) {
                     this.states.starting = false;
                     this.states.throwing = true;
-                    this.animation.elapsedTime = 0;
+                    this.animation.reset();
                 }
             }
             if (this.states.throwing) {
                 if (!this.states.hasThrown) {
-                    //spawn bomb
                     this.game.addEntity(new Bomb(this.game, this.x + this.facing * 10, this.y - 20, this.img, this.ctx,
                         this.scale, this.spriteWidth, this.spriteHeight, this.states.facingRight,
-                        Math.abs(this.x - this.game.hero.x) / 125)); //75 explodes on stationary Hero
-                    //hasThrwon is true
+                        Math.abs(this.x - this.game.hero.x) / 125)); //value of 75 explodes on stationary Hero
                     this.states.hasThrown = true;
                 }
                 if (this.animation.loops > this.throwtime) {
-                    this.animation.elapsedTime = 0;
-                    this.animation.loops = 0;
+                    this.animation.reset();
+                    this.animation.reset();
                     this.states.hasThrown = false;
                     this.states.throwing = false;
                     this.states.recovering = true;
@@ -116,7 +115,7 @@ define([
                 if (this.animation.isDone()) {
                     this.states.idling = true;
                     this.states.recovering = false;
-                    this.animation.elapsedTime = 0;
+                    this.animation.reset();
                     this.cooldownTimer = this.cooldown;
                 }
             }
@@ -127,7 +126,7 @@ define([
 
             this.yVelocity += this.gravity * this.gravity;
             this.lastBoundY = this.boundY;
-            this.changePos(0, this.yVelocity);
+            this.updatePos(0, this.yVelocity);
         }
 
         draw(ctx) {
@@ -162,17 +161,7 @@ define([
                     this.boundY = other.boundY - this.boundHeight;
                     this.y = this.boundY + this.boundHeight - 10;
                     this.yVelocity = 0;
-                    if (this.movementSpeed > 0) {
-                        this.movementSpeed += this.facing * this.movementSpeed * this.friction;
-                    }
-                    if (this.states.launching) {
-                        this.animation.elapsedTime = 0;
-                        this.animation.loops = 0;
-                        this.states.launching = false;
-                        this.states.activating = true;
-                    }
                 }
-
                 else if (direction === 'top') {
                     this.boundY = other.boundY + other.boundHeight;
                     this.y = this.boundY + this.boundHeight - 10;
@@ -215,7 +204,7 @@ define([
         }
 
         drawImg(ctx) {
-            //this.drawOutline(ctx);
+            this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
         }
     }

@@ -105,6 +105,11 @@ define([
             isDone () {
                 return (this.elapsedTime >= this.totalTime - 1);
             }
+
+            reset() {
+                this.elapsedTime = 0;
+                this.loops = 0;
+            }
     }
 
     return Animation;
