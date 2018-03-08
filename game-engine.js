@@ -246,7 +246,7 @@ define([
                 this.hero.setPos(this.hero.posCycle[this.hero.iPC][0],
                     this.hero.posCycle[this.hero.iPC][1]);
                 this.hero.setPosTimer = 20;
-                this.hero.iPC = (this.hero.iPC + 1) % this.hero.posCycle.length; 
+                this.hero.iPC = (this.hero.iPC + 1) % this.gameboard.level.checkpoints.length; 
             }
             if (this.controlKeys[this.controls.godToggle].active && this.hero.godToggleTimer <= 0) {
                 this.hero.states.invulnerable != this.hero.states.invulnerable;

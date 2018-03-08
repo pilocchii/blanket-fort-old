@@ -43,11 +43,11 @@ define([
             this.boundY += y;
         }
 
-        setPos(x, y) {
-            this.x = x;
-            this.boundX = x;
-            this.y = y;
-            this.boundY = y;
+        setPos(coordinates = [0, 0]) {
+            this.x = coordinates[0];
+            this.boundX = coordinates[0];
+            this.y = coordinates[1];
+            this.boundY = coordinates[1];
         }
     } 
     return Actor;

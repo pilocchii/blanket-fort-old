@@ -1,3 +1,4 @@
+// JavaScript source code
 define([
     'asset-manager',
     'game-engine',
@@ -12,7 +13,7 @@ define([
     "flames",
     "soldier-shield",
     "dino",
-    "crow",  
+    "crow",
     "bullet",
     "shotblast",
     "enemy",
@@ -21,7 +22,7 @@ define([
     "hand",
     "hazards",
     "sound"
-], function(
+], function (
     AssetManager,
     GameEngine,
     GameBoard,
@@ -35,7 +36,7 @@ define([
     Flames,
     Soldier_Shield,
     Dino,
-    Crow,  
+    Crow,
     Bullet,
     Shotblast,
     Enemy,
@@ -46,40 +47,139 @@ define([
     Sound
 ) {
 
-	class LevelTwo {
+    class LevelOne {
 
-		/* Define terrain */
-		constructor(gameEngine, assetManager, ctx) {
+        /* Define terrain */
+        constructor(gameEngine, assetManager, ctx) {
 
-			// instance variables
-			this.gameEngine = gameEngine;
-			this.assetManager = assetManager;
-			this.ctx = ctx;
+            // instance variables
+            this.gameEngine = gameEngine;
+            this.assetManager = assetManager;
+            this.ctx = ctx;
             this.tilesheet = assetManager.getAsset("img/pipes.png");
-            this.checkpoints = [[], [], []];
-            this.activatedCheckpoints = { "start": true, "first": false, "second": false, "third": false }
-            this.currentCheckpoint = 0; //Start = 0, 1 = first, etc...
 
-			this.tileSize = 96;
+            this.tileSize = 96;
 
-			this.tileMap = {
-				' ': null,
-				// '\n': null,
+            this.tileMap = {
+                ' ': null,
+                // '\n': null,
                 'i': [0, 6],
-				'!': [1, 0],
-				'[': [1, 4],
+                '!': [1, 0],
+                '[': [1, 4],
                 '<': [1, 6],
-				'{': [2, 0],
+                '{': [2, 0],
                 '>': [2, 6],
-				'_': [3, 0],
-				'#': [3, 1],
-				'-': [3, 4],
-				'}': [4, 0],
-				'j': [4, 3],
+                '_': [3, 0],
+                '#': [3, 1],
+                '-': [3, 4],
+                '}': [4, 0],
+                'j': [4, 3],
                 '|': [4, 6],
-				'l': [2, 3],
+                'l': [2, 3],
                 '~': [6, 0],
-				']': [6, 3],	
+                ']': [6, 3],
+            }
+            this.tileDimensions = {
+                //boundWidth, boundHeight, offX, offY
+                'i': [16, 32, 44, 0],
+                '!': [16, 32, 44, 0],
+                '[': [32, 32, 0, 0],
+                '<': [16, 16, 44, 24],
+                '{': [32, 32, 0, 0],
+                '>': [16, 16, 0, 24],
+                '_': [32, 32, 0, 0],
+                '#': [32, 32, 0, 0],
+                '-': [32, 32, 0, 0],
+                '}': [32, 32, 0, 0],
+                'j': [32, 32, 0, 0],
+                '|': [16, 32, 4, 0],
+                'l': [32, 32, 0, 0],
+                '~': [32, 16, 0, 24],
+                ']': [32, 32, 0, 0],
+            }
+            // 20 lines from top to bottom
+            this.map =
+                `{_____________________________}   []                                                           
+l-----------------------------j   []
+!                              {} []
+!                              lj []
+!   {________}                    []
+!   l--------j                    []
+!             {}    {}      {____}[]
+!             lj    lj      l----j[]
+<~~~~~~~~~>                      |[]
+          {}                     |[]               
+          []                     |[]
+          []{____}    {____}     |[]
+          []l----j    l----j     |[]
+          []                     |[]
+          lj                     |[]
+                              {__}[]
+                              l--j[]
+  {}{______}{}{___}{}{_________}{}[]
+  lj[------]lj[###]lj[#########]lj[]
+{}{}[]!~~|[]{}l---j{}l---------j{}[]
+lj[][]!  |[]lj~~~~~lj           lj[]
+`.split('\n');
+
+
+            this.constructTerrain();
+
+        }
+
+
+
+
+        constructTerrain() {
+            console.log("constructing terrain...")
+            console.log(this.map[0].length + " x " + this.map.length)
+            for (var col = 0; col < this.map[0].length; col++) {
+                for (var row = 0; row < this.map.length; row++) {
+                    var tile = this.tileMap[this.map[row][col]]
+                    if (tile != null) {
+                        var tileDimension = this.tileDimensions[this.map[row][col]];
+                        this.gameEngine.addEntity(new Terrain(this.gameEngine, col * this.tileSize, row * this.tileSize, [32, 32], this.tilesheet, this.ctx, 3, tile, tileDimension));
+                    }
+                }
+            }
+        }
+    }
+
+    class LevelTwo {
+
+        /* Define terrain */
+        constructor(gameEngine, assetManager, ctx) {
+
+            // instance variables
+            this.gameEngine = gameEngine;
+            this.assetManager = assetManager;
+            this.ctx = ctx;
+            this.tilesheet = assetManager.getAsset("img/pipes.png");
+            this.checkpoints = [[80, 1440], [3470, 1440], [7000, 1200], []];
+            this.activatedCheckpoints = { "start": true, "first": false, "second": false, "third": false }
+            //I'd like to use an array of functions (will let us have an actual Level superclass)
+            //this.sectionFunctions = null;
+
+            this.tileSize = 96;
+
+            this.tileMap = {
+                ' ': null,
+                // '\n': null,
+                'i': [0, 6],
+                '!': [1, 0],
+                '[': [1, 4],
+                '<': [1, 6],
+                '{': [2, 0],
+                '>': [2, 6],
+                '_': [3, 0],
+                '#': [3, 1],
+                '-': [3, 4],
+                '}': [4, 0],
+                'j': [4, 3],
+                '|': [4, 6],
+                'l': [2, 3],
+                '~': [6, 0],
+                ']': [6, 3],
             }
             this.tileDimensions = {
                 //boundWidth, boundHeight, offX, offY
@@ -100,9 +200,9 @@ define([
                 ']': [32, 32, 0, 0],
             }
 
-// 20 lines from top to bottom
-this.map = 
-`                                                                                                                                                                #
+            // 20 lines from top to bottom
+            this.map =
+                `                                                                                                                                                                #
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~     |
                                                                                |                                             
                                                                                |                                                          
@@ -120,35 +220,41 @@ this.map =
 {___}{}{}{______}{}{___}{}{_________}{}[]                                                                                   
 l---jljljl------jljl---jljl---------jlj[]                                                                                   
 `.split('\n');
-                
-		}
+
+        }
 
         load() {
             this.constructTerrain();
             this.populateMap();
         }
 
-		constructTerrain() {
-			console.log("constructing terrain...")
-			console.log(this.map[0].length + " x " + this.map.length)
-			for (var col = 0; col < this.map[0].length; col++) {
-				for (var row = 0; row < this.map.length; row++) {
+        constructTerrain() {
+            console.log("constructing terrain...")
+            console.log(this.map[0].length + " x " + this.map.length)
+            for (var col = 0; col < this.map[0].length; col++) {
+                for (var row = 0; row < this.map.length; row++) {
                     var tile = this.tileMap[this.map[row][col]];
                     if (tile != null) {
                         var tileDimension = this.tileDimensions[this.map[row][col]];
-						this.gameEngine.addEntity(new Terrain(this.gameEngine, col * this.tileSize, row * this.tileSize, [32, 32], this.tilesheet, this.ctx, 3, tile, tileDimension));
-					}
-				}
-			}
-		}
+                        this.gameEngine.addEntity(new Terrain(this.gameEngine, col * this.tileSize, row * this.tileSize, [32, 32], this.tilesheet, this.ctx, 3, tile, tileDimension));
+                    }
+                }
+            }
+        }
 
-        populateMap() {
+        populateMap(checkpoint) {
             //if (this.checkpointArray(true, false, false, false)) {
             //    this.section_1();
             //}
-            section_1();
-            section_2();
-            section_3();
+            if (checkpoint === 0) {
+                this.section_1();
+            }
+            if (checkpoint === 1) {
+                this.section_2();
+            }
+            if (checkpoint === 2) {
+                this.section_3();
+            }
         }
 
         /*Define Sections*/
@@ -165,7 +271,7 @@ l---jljljl------jljl---jljl---------jlj[]
             /***ITEMS***/
 
             /***TOP LAYER ENTITIES***/
-            
+
         }
 
         section_2() {
@@ -204,7 +310,7 @@ l---jljljl------jljl---jljl---------jlj[]
             this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 10598, 384, this.assetManager.getAsset("img/Enemies.png"), this.ctx));//x: 8652, y: 1152
             this.gameEngine.addEntity(new Dino(this.gameEngine, 11980, 384, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3));
 
-           
+
             /***ITEMS***/
             this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 7050, 1248, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 3, 1));
             this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 7080, 1248, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 3, 1));
@@ -231,6 +337,10 @@ l---jljljl------jljl---jljl---------jlj[]
             return false;
         }
     }
+        
 
-	return LevelTwo;
+    return {
+        "level-one": LevelOne,
+        "level-two": LevelTwo,
+    };
 });

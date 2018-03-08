@@ -4,25 +4,10 @@ define([
     "game-board",
     "camera",
     "hud",
-    "entity",
     "terrain",
     "background",
     "hero",
-    "leo",
-    "flames",
-    "level-one",
-    "level-two",
-    "soldier-shield",
-    "dino",
-    "crow",  
-    "bullet",
-    "shotblast",
-    "enemy",
-    "hurtbox",
-    "item",
-    "hand",
-    "hazards",
-    "sound"
+    "sound",
 
 ], function(
     AssetManager,
@@ -30,24 +15,9 @@ define([
     GameBoard,
     Camera,
     Hud,
-    Entity,
     Terrain,
     Background,
     Hero,
-    Leo,
-    Flames,
-    LevelOne,
-    LevelTwo,
-    Soldier_Shield,
-    Dino,
-    Crow,  
-    Bullet,
-    Shotblast,
-    Enemy,
-    Hurtbox,
-    Item,
-    Hand,
-    Hazards,
     Sound
 ) {
 
@@ -84,7 +54,7 @@ define([
 
         let gameEngine = new GameEngine(new Sound());
         let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, 2000, 2000);
-        let hero = new Hero(gameEngine, 400, 1120, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let hero = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
         
         // ### music ###
@@ -99,12 +69,14 @@ define([
 
 
         let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
-        let levelOne = new LevelOne(gameEngine, ASSET_MANAGER, ctx);
-        let levelTwo = new LevelTwo(gameEngine, ASSET_MANAGER, ctx);
-        let board = new GameBoard(gameEngine, hero);
+        let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx, hero);
 
         //hero as global variable
         gameEngine.hero = hero;
+        gameEngine.gameboard = board;
+
+        //Loads level n
+        board.getLevel(2);
 
         // let mapreader = new FileReader();
         // mapreader.onload = function(e) {
@@ -120,6 +92,7 @@ define([
 
 
         camera.follow(hero);
+        gameEngine.addEntity(board);
         gameEngine.addEntity(hero);
         gameEngine.addEntity(hud);
         gameEngine.init(ctx);
