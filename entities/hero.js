@@ -48,28 +48,32 @@ define([
             this.jumpsLeft = 2;
             this.maxJumps = 2;
 
-            this.maxHealth = 10;
-            this.maxEnergy = 10;
-            this.energy = 10;
-            this.health = 10;
-            this.slashEnergyCost = 10;
-            this.shootEnergyCost = 5;
-            this.dashEnergyCost = 3;
+            this.maxHealth = 30;
+            this.maxEnergy = 30;
+            this.energy = 30;
+            this.health = 30;
+            this.slashEnergyCost = 25;
+            this.shootCost = 2;
+            this.shootEnergyCost = 10;
+            this.dashEnergyCost = 7;
 
             this.stunDir = 0;
             this.multiplier = 1;
+            this.difficulty = 3;
             
             //Timers
             this.damageCooldownTimer = 0;
             this.damageCooldown = 16;
             this.energyCooldownTimer = 0;
-            this.energyCooldown = 60 / (this.multiplier * 2);
-            this.energyDelay = 20;
+            this.energyCooldown = 20 / (this.multiplier * 2);
+            this.energyDelay = 90;
             this.enregyDelayTimer = 0;
             this.velocityCooldown = 2;
             this.velocityCooldownTimer = 0;
             this.jumpTimer = 0;
             this.jumpCooldown = 20;
+            this.shootCooldownTimer = 0;
+            this.shootCooldown = 0;
 
             //Dev Tools
             this.setPosTimer = 0;
@@ -153,7 +157,7 @@ define([
                 this.states.grounded = false;
             }
             //shoot
-            if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked) {
+            if (this.game.controlKeys[this.game.controls.shoot].active && !this.states.framelocked &&!this.states.shotlocked) {
                 this.states.shooting = true;
             }
             //cleave
@@ -243,15 +247,16 @@ define([
                 }
             }
             //Shooting
-            if (this.states.shooting) {
+            if (this.states.shooting && !(this.shootCooldownTimer > 0)) {
                 if (!this.states.shotlocked) {
                     if (this.energy >= this.shootEnergyCost && this.states.energized) {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
                         this.energy -= this.shootEnergyCost;
                         this.energyDelayTimer = this.energyDelay;
                     }
-                    else {
+                    else if(this.energy >= this.shootCost && !this.states.energized){
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
+                        this.energy -= this.shootCost;
                     }
                     this.game.playSound("hero_shoot")
                     this.states.shotlocked = true;
@@ -259,6 +264,7 @@ define([
                 if (this.animation.isDone()) {
                     this.animation.reset();
                     this.states.shooting = false;
+                    this.shootCooldownTimer = this.shootCooldown;
                     this.states.framelocked = false;
                     this.states.shotlocked = false;
                 }
@@ -364,27 +370,22 @@ define([
             }
 
             //Timer Checks
-            if (this.energyCooldownTimer > 0) {
-                this.energyCooldownTimer--;
-            }
-            else if (this.energy < this.maxEnergy) {
-                this.energy++;
-                this.energyCooldownTimer = this.energyCooldown;
+            if (this.energyDelayTimer > 0) {
+                this.energyDelayTimer--;
+            } else {
+                if (this.energyCooldownTimer > 0) {
+                    this.energyCooldownTimer--;
+                }
+                else if (this.energy < this.maxEnergy) {
+                    this.energy++;
+                    this.energyCooldownTimer = this.energyCooldown;
+                }
             }
             if (this.damageCooldownTimer > 0) {
                 this.damageCooldownTimer--;
             }
-
-            //Grounded state logic
-            if (this.yVelocity === 0 && this.velocityCooldownTimer > 0) {
-                this.velocityCooldownTimer--;
-            }
-            else if (this.yVelocity === 0 && this.velocityCooldownTimer === 0) {
-                this.states.grounded = true;
-            }
-            else if (this.yVelocity !== 0) {
-                this.velocityCooldownTimer = this.velocityCooldown;
-                this.states.grounded = false;
+            if (this.shootCooldownTimer > 0) {
+                this.shootCooldownTimer--;
             }
 
             // update velocities based on gravity and friction
@@ -513,7 +514,7 @@ define([
                         //Determine interaction based on other's damage type
                         if (other.damageType === "health") {
                             this.game.playSound("hero_hurt")
-                            this.health -= other.damage;
+                            this.health -= this.difficulty*other.damage;
                             //reset states and put into stun anim and stunlock
                             this.hurt();
                             //determine which way hero should move during stun
@@ -528,7 +529,8 @@ define([
                             }
                         }
                         else if (other.damageType === "energy" && this.energy > 0) {
-                            this.energy -= other.damage;
+                            this.energyDelayTimer = this.energyDelay;
+                            this.energy = 7;
                         }
                     }
                 }
@@ -539,7 +541,7 @@ define([
                     this.hurt();
                     if (other.states.facingRight) { this.stunDir = 1; } else { this.stunDir = -1; }
                 } if (other.name === "Projectile") {
-                    this.health -= other.damage;
+                    this.health -= this.difficulty*other.damage;
                     other.removeFromWorld = true;
                     this.clearStates();
                     this.states.stunned = true;
@@ -552,7 +554,7 @@ define([
                     if (other.isEnemy) {
 
                         this.game.playSound("hero_hurt")
-                        this.health -= other.damage; 
+                        this.health -= this.difficulty*other.damage; 
                         this.damageCooldownTimer = this.damageCooldown;
                         //reset states and put into stun anim and stunlock
                         this.clearStates();

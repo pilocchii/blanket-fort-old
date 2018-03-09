@@ -128,7 +128,19 @@ define([
             this.top = this.resourceBarSegment(img, 
                 [src_coordinates[0], src_dimensions[1] + 0],
                 [this.width, 3]);
-            this.middle = this.resourceBarSegment(img, 
+            this.middle1 = this.resourceBarSegment(img, 
+                [src_coordinates[0], src_coordinates[1] + 3],
+                [this.width, 14]);
+            this.middle2 = this.resourceBarSegment(img,
+                [src_coordinates[0], src_coordinates[1] + 3],
+                [this.width, 14]);
+            this.middle3 = this.resourceBarSegment(img,
+                [src_coordinates[0], src_coordinates[1] + 3],
+                [this.width, 14]);
+            this.middle4 = this.resourceBarSegment(img,
+                [src_coordinates[0], src_coordinates[1] + 3],
+                [this.width, 14]);
+            this.middle5 = this.resourceBarSegment(img,
                 [src_coordinates[0], src_coordinates[1] + 3],
                 [this.width, 14]);
             this.bottom = this.resourceBarSegment(img, 
@@ -138,7 +150,9 @@ define([
                 [src_coordinates[0] + 3, src_coordinates[1] + 16],
                 [this.width-7, 3],
                 9, 11);
-            this.parts = [this.top, this.middle, this.bottom]
+            this.parts = [this.top,
+                        this.middle1, this.middle2, this.middle3, this.middle4, this.middle5,
+                        this.bottom]
 
         }
 
@@ -192,20 +206,35 @@ define([
             src_coordinates = [src_coordinates[0] + 15, src_coordinates[1]]
 
             // bar segments
-            this.top = this.resourceBarSegment(img, 
+            this.top = this.resourceBarSegment(img,
                 [src_coordinates[0], src_dimensions[1] + 0],
                 [this.width, 3]);
-            this.middle = this.resourceBarSegment(img, 
+            this.middle1 = this.resourceBarSegment(img,
                 [src_coordinates[0], src_coordinates[1] + 3],
                 [this.width, 14]);
-            this.bottom = this.resourceBarSegment(img, 
+            this.middle2 = this.resourceBarSegment(img,
+                [src_coordinates[0], src_coordinates[1] + 3],
+                [this.width, 14]);
+            this.middle3 = this.resourceBarSegment(img,
+                [src_coordinates[0], src_coordinates[1] + 3],
+                [this.width, 14]);
+            this.middle4 = this.resourceBarSegment(img,
+                [src_coordinates[0], src_coordinates[1] + 3],
+                [this.width, 14]);
+            this.middle5 = this.resourceBarSegment(img,
+                [src_coordinates[0], src_coordinates[1] + 3],
+                [this.width, 14]);
+
+            this.bottom = this.resourceBarSegment(img,
                 [src_coordinates[0], src_coordinates[1] + 19],
                 [this.width, 18]);
-            this.tick = this.resourceBarSegment(img, 
+            this.tick = this.resourceBarSegment(img,
                 [src_coordinates[0] + 3, src_coordinates[1] + 16],
-                [this.width-7, 3],
+                [this.width - 7, 3],
                 9, 11);
-            this.parts = [this.top, this.middle, this.bottom]
+            this.parts = [this.top,
+                        this.middle1, this.middle2, this.middle3, this.middle4, this.middle5,
+                        this.bottom]
 
         }
 

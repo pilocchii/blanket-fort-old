@@ -80,6 +80,7 @@ define([
 
             if (this.hero.states.respawned) {
                 var respawn = this.level.checkpoints[this.checkpoint];
+                respawn[1] -= 10;
                 //this.clearBoard("level");
                 this.hero.respawn();
                 this.hero.setPos(respawn);
