@@ -20,6 +20,8 @@ define([
             this.canvasHeight = canvasHeight; //this is the viewport, NOT the same as canvas in core.js
             this.worldWidth = worldWidth;
             this.worldHeight = worldHeight;
+            this.offX = 2;
+            this.offY = 1.5;
 
 
             // possible axis the camera can move in. not implemented yet
@@ -50,8 +52,8 @@ define([
             // Note: this logic feels HORRIBLY wrong, but it works for now, so yay?
             if (this.followed != null) {
                 //TODO: need to figure out world bounds for min and max clamping
-                this.xView = -this.followed.x + this.canvasWidth/2;
-                this.yView = -this.followed.y + this.canvasHeight/1.5;
+                this.xView = -this.followed.x + this.canvasWidth/this.offX;
+                this.yView = -this.followed.y + this.canvasHeight/this.offY;
             }
             
              //console.log("xView: " + this.xView);

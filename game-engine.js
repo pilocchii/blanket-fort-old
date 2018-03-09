@@ -20,6 +20,7 @@ define([
             this.entities = [];
             this.backgroundLayers = [];
             this.gameboard = gameboard;
+            this.camera = null;
             this.ctx = null;
             this.click = null;
             this.mouse = null;
@@ -205,7 +206,14 @@ define([
         */
         update () {
             let entitiesCount = this.entities.length;
-
+            if (this.gameboard.states.newLevel) {
+                for (let i = 0; i < entitiesCount; i++) {
+                    let entity = this.entities[i];
+                    if (entity.name !== "Gameboard" && entity.name !== "Camera") {
+                        entity.removeFromWorld = true;
+                    }
+                }
+            }
             for (let i = 0; i < entitiesCount; i++) {
                 let entity = this.entities[i];
                 if (!entity.removeFromWorld) {
@@ -213,12 +221,18 @@ define([
                 }
             }
 
+            if (this.gameboard.states.newLevel) {
+                let hero = new Hero(this, 0, 0, this.gameboard.assetManager, this.ctx);
+                let hud = new Hud(this, this.gameboard.assetManager, hero, [0, 0], [0, 0], [100, 100], 3, this.gameboard.hud.camera);
+                this.gameboard.hero = hero;
+                this.gameboard.hud = hud;
+            }
             for (let i = this.entities.length - 1; i >= 0; --i) {
-                if (this.entities[i].removeFromWorld) {
+                if (!this.gameboard.states.newLevel && this.entities[i].removeFromWorld) {
                     if (this.entities[i].hasOwnProperty("pointValue")) {
                         this.gameboard.score += this.entities[i].pointValue * this.hero.multiplier;
                         if(this.entities[i].pointValue > 0)
-                            this.hero.multiplier += .1;
+                            this.hero.multiplier += .5;
                         //console.log("score is now " + this.score);
                         //console.log("muliplier is " + this.hero.multiplier);
                     }
@@ -237,6 +251,7 @@ define([
                 }
                 
             }
+
             //DEV TOOLS
             if (this.controlKeys[this.controls.getPos].active) {
                 console.log("x: " + this.hero.x + ", y: " + this.hero.y);
@@ -247,7 +262,7 @@ define([
                 this.hero.iPC = (this.hero.iPC + 1) % this.gameboard.level.checkpoints.length; 
             }
             if (this.controlKeys[this.controls.godToggle].active && this.hero.godToggleTimer <= 0) {
-                this.hero.states.invulnerable != this.hero.states.invulnerable;
+                this.hero.states.isGod = !this.hero.states.isGod;
                 this.hero.godToggleTimer = 40;
             }
         }

@@ -253,7 +253,7 @@ define([
         }
 
         class Spikes extends Entity {
-            constructor(game, x, y, img = null, ctx = null, scale = null, active = true, timer, timeOffset = 0, length = 0) {
+            constructor(game, x, y, img = null, ctx = null, scale = null, active = true, timer, timeOffset = 0, length = 0, interval = 20) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Entity";
                 this.type = "Hazard";
@@ -269,6 +269,7 @@ define([
                 this.spikeCooldownTimer = timeOffset;
                 this.spikeCooldown = timer;
                 this.damage = 1; //this.game.hero.maxHealth
+                this.interval = interval;
 
                 this.states = {
                     "active": false,
@@ -284,10 +285,10 @@ define([
                 };
                 this.animation = this.animations.inactive_down;
                 if (length > 0) {
-                    var nextOffset = timeOffset + 20;
+                    var nextOffset = timeOffset + this.interval;
                     length--;
                     this.game.addEntity(new Spikes(this.game, this.x + this.spriteWidth,
-                        this.y, this.img, ctx, 2, true, this.spikeCooldown, nextOffset, length));
+                        this.y, this.img, ctx, 2, this.active, this.spikeCooldown, nextOffset, length, this.interval));
                 }
             }
 
