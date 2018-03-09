@@ -86,7 +86,7 @@ define([
                 console.log("respawn");
             }
             if (this.checkpoint === 3 && !this.states.changedCamera) {
-                this.game.camera.offY = 2;
+                this.game.camera.absOffY = 2;
                 this.states.changedCamera = true;
             }
         }

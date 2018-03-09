@@ -610,6 +610,7 @@ define([
         respawn() {
             this.states.respawned = false;
             this.clearStates();
+            this.yVelocity = 0;
             this.health = this.maxHealth;
             this.energy = this.maxEnergy;
             this.game.gameboard.score = this.game.gameboard.score/2;

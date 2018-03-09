@@ -37,15 +37,21 @@ define([
                 "KeyR": { "active": false },
                 "KeyF": { "active": false },
                 "KeyE": { "active": false },
+                "KeyP": { "active": false },
+                "KeyJ": { "active": false },
+                "KeyK": { "active": false },
+                "KeyL": { "active": false },
+                "KeyM": { "active": false },
                 "Numpad1": { "active": false },
                 "Numpad2": { "active": false },
                 "Numpad3": { "active": false },
                 "Numpad4": { "active": false },
                 "Numpad5": { "active": false },
                 "Numpad6": { "active": false },
+                "Numpad9": { "active": false },
             }
             // control mapping
-            this.controls = {
+            this.controlLayoutA = {
                 "jump": "Space",
                 "right": "KeyD",
                 "left": "KeyA",
@@ -57,7 +63,25 @@ define([
                 "getPos": "KeyE",
                 "setPos": "KeyR",
                 "godToggle": "KeyF",
+                "layoutA": "Numpad9",
+                "layoutB": "KeyP",
             }
+            this.controlLayoutB = {
+                "jump": "Space",
+                "right": "KeyD",
+                "left": "KeyA",
+                "shoot": "KeyJ",
+                "slash": "KeyK",
+                "cleave": "KeyL",
+                "energize": "KeyW",
+                "dash": "KeyM",
+                "getPos": "KeyE",
+                "setPos": "KeyR",
+                "godToggle": "KeyF",
+                "layoutA": "Numpad9",
+                "layoutB": "KeyP",
+            }
+            this.controls = this.controlLayoutA;
             this.score = 0;
             this.hero = hero;
         }
@@ -252,7 +276,7 @@ define([
                 
             }
 
-            //DEV TOOLS
+            //DEV TOOLS & PLAYER SETTINGS
             if (this.controlKeys[this.controls.getPos].active) {
                 console.log("x: " + this.hero.x + ", y: " + this.hero.y);
             }
@@ -264,6 +288,12 @@ define([
             if (this.controlKeys[this.controls.godToggle].active && this.hero.godToggleTimer <= 0) {
                 this.hero.states.isGod = !this.hero.states.isGod;
                 this.hero.godToggleTimer = 40;
+            }
+            if (this.controlKeys[this.controls.layoutA].active) {
+                this.controls = this.controlLayoutA;
+            }
+            if (this.controlKeys[this.controls.layoutB].active) {
+                this.controls = this.controlLayoutB;
             }
         }
 
