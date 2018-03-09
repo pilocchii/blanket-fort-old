@@ -267,9 +267,9 @@ define([
             for (let i = this.entities.length - 1; i >= 0; --i) {
                 if (!this.gameboard.states.newLevel && this.entities[i].removeFromWorld) {
                     if (this.entities[i].hasOwnProperty("pointValue")) {
-                        this.gameboard.score += this.entities[i].pointValue * this.hero.multiplier;
+                        this.gameboard.score += this.hero.difficulty*this.entities[i].pointValue * this.hero.multiplier;
                         if(this.entities[i].pointValue > 0)
-                            this.hero.multiplier += .5;
+                            this.hero.multiplier += this.hero.difficulty*.5;
                         //console.log("score is now " + this.score);
                         //console.log("muliplier is " + this.hero.multiplier);
                     }
@@ -310,9 +310,11 @@ define([
             }
             if (this.controlKeys[this.controls.easymode].active) {
                 this.hero.difficulty = 1;
+                this.gameboard.score = 0;
             }
             if (this.controlKeys[this.controls.hardmode].active) {
                 this.hero.difficulty = 3;
+                this.gameboard.score = 0;
             }
             if (this.controlKeys[this.controls.layoutA].active) {
                 this.controls = this.controlLayoutA;

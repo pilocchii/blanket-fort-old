@@ -70,7 +70,7 @@ define([
     */
     class HealthPack extends Item {
 
-        constructor(game, x, y, img, ctx, width, height, scale=3, health_value=1) {
+        constructor(game, x, y, img, ctx, width, height, scale=3, health_value=15) {
             super(game, x, y, img, ctx, width, height, scale);
             this.health_value = health_value;          
             this.animation = new Animation(this.img, [10, 8], 0, 4, 4, 4, true, this.scale, 0);
@@ -79,8 +79,11 @@ define([
         }
 
         on_pickup(hero) {
-            if(hero.health < hero.maxHealth)
-                hero.health += this.health_value;
+            console.log("HEEEYYY")
+            if (hero.health < hero.maxHealth)
+                hero.health += 15;
+            if (hero.health > hero.maxHealth)
+                hero.health = hero.maxHealth;
             this.removeFromWorld = true;
         }
     }
@@ -91,17 +94,20 @@ define([
     */
     class EnergyPack extends Item {
 
-        constructor(game, x, y, img, ctx, width, height, scale=3, energy_value=1) {
+        constructor(game, x, y, img, ctx, width, height, scale=3, energy_value=15) {
             super(game, x, y, img, ctx, width, height, scale);
-            this.energy_value = energy_value;          
+            this.energy_value = 15;          
             this.animation = new Animation(this.img, [8, 8], 0, 4, 4, 4, true, this.scale, 0);
             this.xOffset = 10;
             this.yOffset = -30;
         }
 
         on_pickup(hero) {
+            console.log("HEEEYYY")
             if(hero.energy < hero.maxEnergy)
-                hero.energy += this.energy_value;
+                hero.energy += 15;
+            if (hero.energy > hero.maxEnergy)
+                hero.energy = hero.maxEnergy;
             this.removeFromWorld = true;
         }
     }

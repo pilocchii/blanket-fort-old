@@ -21,6 +21,7 @@ define([
             this.hud = hud;
             this.level;
             this.checkpoint = 0; //current checkpoint for this.level (-1 is for unloaded)
+            this.cameraCheck = null;
             this.nextCheck = null;
             this.states = {
                 "performanceMode": false,
@@ -86,9 +87,12 @@ define([
                 this.hero.setPos(respawn);
                 console.log("respawn");
             }
-            if (this.checkpoint === 3 && !this.states.changedCamera) {
+            if (this.hero.x - this.cameraCheck >= 0 && this.game.camera.absOffY !== 2) {
                 this.game.camera.absOffY = 2;
                 this.states.changedCamera = true;
+            }
+            else if (this.hero.x - this.cameraCheck < 0 && this.game.camera.absOffY !== 1.5) {
+                this.game.camera.absOffY = 1.5;
             }
         }
 
@@ -124,7 +128,9 @@ define([
                 this.level = new Levels["level-one"](this.game, this.assetManager, this.ctx);
             }
             if (level === 2) {
-                this.level = new Levels["level-two"](this.game, this.assetManager, this.ctx)
+                this.level = new Levels["level-two"](this.game, this.assetManager, this.ctx);
+                var temp = this.level.checkpoints[3];
+                this.cameraCheck = temp[0];
             }
         }
 
