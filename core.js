@@ -52,7 +52,7 @@ define([
         console.log("canvas width: " + canvas.width);
         console.log("canvas height: " + canvas.height);
 
-        let gameEngine = new GameEngine(new Sound());
+        let gameEngine = new GameEngine();
         let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, 2000, 2000);
         let hero = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx);
@@ -63,9 +63,7 @@ define([
         board.hero = hero;
         
         // ### music ###
-        let audio = new Audio("./audio/track_1.wav");
-        audio.volume = 1;
-        audio.play();
+        
         //TODO: Placeholder magic numbers until we decide on how to handle world boundary and camera
 
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
