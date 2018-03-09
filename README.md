@@ -65,4 +65,4 @@ TCSS 491 Computational Worlds project
 	**Press R** to toggle through the different checkpoints of the game.
 	**Press G** to toggle godMode. (Lava will still kill you though, because even Gods fear lava).
 
-Published on [Github io](https://greenfour.github.io/pencil-knight/) 
+# Published on [Github io](https://greenfour.github.io/pencil-knight/) 
