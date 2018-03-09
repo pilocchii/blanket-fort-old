@@ -2,12 +2,14 @@ define([
     "asset-manager",
     "hero",
     "hud",
-    "background"
+    "background",
+    "sound"
 ], function (
     AssetManager,
     Hero,
     Hud,
     Background,
+    Sound
 ){
 
      /***************
@@ -15,8 +17,8 @@ define([
     ****************/
     class GameEngine {
 
-        constructor (sound, gameboard, hero) {
-            this.sound = sound;
+        constructor (gameboard, hero) {
+            this.sound = new Sound();
             this.entities = [];
             this.backgroundLayers = [];
             this.gameboard = gameboard;
@@ -27,6 +29,7 @@ define([
             this.wheel = null;
             this.surfaceWidth = null;
             this.surfaceHeight = null;
+            this.music = null;
             // KB input keycodes
             this.controlKeys = {
                 "Space": { "active": false },
@@ -104,6 +107,9 @@ define([
         start () {
             console.log("starting game");
             let that = this;
+            this.music = new Audio("./audio/track_1.wav");
+            this.music.volume = 1;
+            this.music.play();
             (function gameLoop() {
                 that.loop();
                 requestAnimFrame(gameLoop, that.ctx.canvas);
@@ -274,6 +280,12 @@ define([
                     }
                 }
                 
+            }
+
+            // music
+            if (this.music.currentTime >= 63.95) {
+                 this.music.currentTime = 0;
+                 this.music.play();
             }
 
             //DEV TOOLS & PLAYER SETTINGS
