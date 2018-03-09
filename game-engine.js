@@ -242,8 +242,7 @@ define([
                 console.log("x: " + this.hero.x + ", y: " + this.hero.y);
             }
             if (this.controlKeys[this.controls.setPos].active && this.hero.setPosTimer <= 0) {
-                this.hero.setPos(this.hero.posCycle[this.hero.iPC][0],
-                    this.hero.posCycle[this.hero.iPC][1]);
+                this.hero.setPos(this.gameboard.level.checkpoints[this.hero.iPC]);
                 this.hero.setPosTimer = 20;
                 this.hero.iPC = (this.hero.iPC + 1) % this.gameboard.level.checkpoints.length; 
             }
