@@ -1,8 +1,10 @@
 #pencil-knight
 TCSS 491 Computational Worlds project
 
-Controls and Basic Instructions:
-    There are two different control layouts. Press Numpad 9 for layout A, and P for layout B.
+#Controls and Basic Instructions
+    There are two different control layouts. 
+	**Press Numpad 9** for layout A
+	**Press P** for layout B.
     Control layout can be changed at any time during the game.
 
     Both layouts share the following controls:
@@ -12,33 +14,38 @@ Controls and Basic Instructions:
     Space - Jump
 
     The unique layout keys are as follows:
-    For layout A (Numpad 9)
+    For **layout A** (Numpad 9)
         Numpad 1 = dash,
         Numpad 4 = shoot,
         Numpad 5 = slash,
         Numpad 6 = cleave,
         
-    For layout B (P)
+    For **layout B** (P)
         J = shoot,
         K = slash,
         L = cleave,
         M = dash,
-        
-How To Play
+    
+#Difficulty
+    **Press T** for the intended difficulty. This will increase enemy damage and increase your score accumulation.
+	**Press Y** for an easier difficulty. This will decrease enemy damage and decrease score accumulation.
+	Pressing these buttons will reset your score to 0, so use them at the beginning of the game.
+
+#How To Play
     The Hero, aka Pencil Knight, has two resources. Energy, and Health. Bars for these resources can be seen in the top left of the screen.
-    Energy lets Pencil Knight perform special and enhanced actions.
+    **Energy** lets Pencil Knight perform special and enhanced actions.
         Hold W to "energize" PK.
         W + shoot: Stronger and faster shot.
         W + slash: A super powerful sword projectile. It's expensive, but it may save your life.
     
-    Dash
+    **Dash**
         Dash is a great tool for moving around the map and avoiding damage. Dash also has a window of invulnerability. Use it to get around pesky enemies or incoming projectiles.
         Dash will always cost energy to use. (You didn't think we'd give you a tool like this without a cost, do you?)
         A grounded dash can be interrupted by using a slash attack. Use this to your advantage! All other actions are disabled during a dash.
-    Jumping
+    **Jumping**
         Like all great heros, Pencil Knight can jump! But can he jump twice?
         
-    Enemies
+    **Enemies**
         We recommend playing the game and learning through experience, but here are some helpful hints if you're having trouble:
         Soldier
             The Soldier can't be damaged from the front if he's holding up his shield. You'll have to get behind him to hit his back, or hit him during the startup or cooldown of one of his attacks.
@@ -51,7 +58,11 @@ How To Play
             A Zombomber can't be killed with plasma. You'll need to give it an up-close and personal look at your sword if you want to send it back from whence it came. Just be careful not to hit it while it's launching another bomb.
         Environmental Hazards
             If it looks like it will hurt you, you probably shouldn't touch it! This goes extra for lava. You didn't know it, but all your time playing "the floor is lava" as a kid was preparing you for this moment.
-    Items 
+    **Items** 
         Items currently just restore your respective resources. Perhaps, if you keep coming back to play, you'll find that they do something a bit more interesting.
+
+#Dev Tools, which we generously offer to you.
+	**Press R** to toggle through the different checkpoints of the game.
+	**Press G** to toggle godMode. (Lava will still kill you though, because even Gods fear lava).
 
 Published on [Github io](https://greenfour.github.io/pencil-knight/) 

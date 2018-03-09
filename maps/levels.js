@@ -301,7 +301,10 @@ l---jljljl------jljl---jljl---------jlj[]
             /***HAZARDS***/
 
             /***ENEMIES***/
-            this.gameEngine.addEntity(new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+            var hand1 = new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx);
+            hand1.distance = 75;
+            this.gameEngine.addEntity(hand1);
+            //this.gameEngine.addEntity(new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
             this.gameEngine.addEntity(new Dino(this.gameEngine, 1960, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, 400, 250));
             this.gameEngine.addEntity(new Crow(this.gameEngine, 750, 1000, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
                 /*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
@@ -339,7 +342,7 @@ l---jljljl------jljl---jljl---------jlj[]
             this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 7692,
                 700 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 4.5, 0, 3));
             this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 8064,
-                250 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 40, 20));
+                250 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 7, 40, 20));
 
             this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 7965, -300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 7, 7, [0, 1], 120, 160))
 

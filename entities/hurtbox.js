@@ -85,7 +85,7 @@ define([
 
 
             drawImg(ctx) {
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
         return Hurtbox;

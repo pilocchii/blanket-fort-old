@@ -81,7 +81,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
@@ -248,7 +248,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
@@ -350,7 +350,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
@@ -450,7 +450,7 @@ define([
 
             drawImg(ctx) {
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
@@ -515,7 +515,7 @@ define([
 
             drawImg(ctx) {
                 //this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
-                this.drawOutline(ctx);
+                //this.drawOutline(ctx);
             }
         }
 
