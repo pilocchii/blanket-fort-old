@@ -27,6 +27,7 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = null, spriteWidth = 64) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Enemy";
+                this.type = "Hazard";
                 this.y += (96 * 3 - 6 * 3);
                 this.scale = scale;
                 this.spriteWidth = spriteWidth;
@@ -88,6 +89,7 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = null, cooldown = 150, ySpeed = 12, spawnOffset) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Enemy";
+                this.type = "Hazard";
                 this.scale = scale;
                 this.spriteWidth = 60;
                 this.spriteHeight = 60;
@@ -254,6 +256,7 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = null, active = true, timer, timeOffset = 0, length = 0) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Entity";
+                this.type = "Hazard";
                 this.scale = scale;
                 this.spriteWidth = 60;
                 this.spriteHeight = 60;
@@ -354,6 +357,7 @@ define([
             constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, directions, lifespan) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Enemy";
+                this.type = "Hazard";
                 //this.y += 44; Give a +44 offset when instantiating 
                 this.scale = scale;
                 this.origX = this.x;
@@ -454,6 +458,7 @@ define([
                             xSpeed, ySpeed, directions, cooldown, projectileLifespan, launchTimeOffset = 0) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Entity";
+                this.type = "Hazard";
                 //this.y += 44; Give a +44 offset when instantiating 
                 this.scale = scale;
                 this.spriteWidth = 60;

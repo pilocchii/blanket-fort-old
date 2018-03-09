@@ -208,7 +208,6 @@ define([
 
             for (let i = 0; i < entitiesCount; i++) {
                 let entity = this.entities[i];
-
                 if (!entity.removeFromWorld) {
                     entity.update();
                 }
@@ -220,8 +219,8 @@ define([
                         this.score += this.entities[i].pointValue * this.hero.multiplier;
                         if(this.entities[i].pointValue > 0)
                             this.hero.multiplier += .1;
-                        console.log("score is now " + this.score);
-                        console.log("muliplier is " + this.hero.multiplier);
+                        //console.log("score is now " + this.score);
+                        //console.log("muliplier is " + this.hero.multiplier);
                     }
                     this.entities.splice(i, 1);
                 }

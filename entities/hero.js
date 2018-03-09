@@ -97,6 +97,7 @@ define([
                 "framelocked": false,
                 "stunned": false,
                 "dead": false,
+                "respawned": false,
                 "grounded": true,
                 "hasGravity": true,
                 "facingRight": true,
@@ -349,8 +350,15 @@ define([
             //DEAD
             if (this.states.dead) {
                 if (this.animation.loops > 3) {
-                    this.removeFromWorld = true;
+                    this.animation.reset();
+                    this.states.dead = false;
+                    this.states.respawned = true;
                 }
+            }
+            //Respawn
+            if (this.states.respawned) {
+                //respawn
+                this
             }
 
             //Timer Checks
@@ -390,7 +398,7 @@ define([
                 this.clearStates();
                 this.states.dead = true;
                 this.states.framelocked = true;
-                this.gravity = 0;
+                this.states.hasGravity = false;
                 this.yVelocity = 0;
             }
         }
@@ -585,6 +593,9 @@ define([
 
         clearStates() {
             this.setStates(false, false, false, false, this.states.facingRight, false, false, false, false, this.states.energized, false, false);
+            this.states.hasGravity = true;
+            this.states.stunned = false;
+            this.states.dead = false;
         }
 
         hurt() {
@@ -592,6 +603,15 @@ define([
             this.animation.reset();
             this.states.stunned = true;
             this.states.framelocked = true;
+        }
+
+        respawn() {
+            this.states.respawned = false;
+            this.clearStates();
+            this.health = this.maxHealth;
+            this.energy = this.maxEnergy;
+            this.game.gameboard.score -= 10;
+            this.multiplier = 1;
         }
 
         drawOutline (ctx) {

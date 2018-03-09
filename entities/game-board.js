@@ -19,8 +19,9 @@ define([
             this.hero = hero;
             this.level;
             this.checkpoint = 0; //current checkpoint for this.level (-1 is for unloaded)
-            this.checkCoords = null;
+            this.nextCheck = null;
             this.states = {
+                "performanceMode": false,
                 "loadedLevel": false,
                 "loadedCheckpoint": false,
                 "newLevel": false,
@@ -35,18 +36,37 @@ define([
                 this.level.load();
                 this.checkCoords = this.level.checkpoints[this.checkpoint];
                 this.hero.setPos(this.checkCoords);
-                ////placeholder populates until checkpoint system is actually finished
-                this.level.populateMap(0);
-                this.level.populateMap(1);
-                this.level.populateMap(2);
+                if (this.states.performanceMode) {
+                    this.level.populateMap(0);
+                }
+                else {
+                    this.level.populateMap(0);
+                    this.level.populateMap(1);
+                    this.level.populateMap(2);
+                    this.game.addEntity(this.hero);
+                }
+                this.nextCheck = this.level.checkpoints[this.checkpoint + 1];
                 this.states.loadedLevel = true;
             }
-            //if (Math.abs(this.hero.x - this.checkCoords[0]) <= 5 && !this.states.loadedCheckpoint) {//TODO: implement distance function in Hero
-            //    this.level.populateMap(this.checkpoint);
-            //    this.checkpoint++;
-            //    this.checkCoords = this.level.checkpoints[this.checkpoint];
-            //    this.states.loadedCheckpoint = true;
-            //}
+            //loads sections as player moved. Only needed if performance is an issue.
+            if (Math.abs(this.hero.x - this.nextCheck[0]) <= 5 && !this.level.activatedCheckpoints[this.checkpoint + 1]) {//TODO: implement distance function in Hero
+                if (this.states.performanceMode) {
+                    this.level.populateMap(this.checkpoint + 1);
+                    this.level.activatedCheckpoints[this.checkpoint] = true;
+                    this.checkCoords = this.level.checkpoints[this.checkpoint];
+                }
+                this.checkpoint++;
+                this.nextCheck = this.level.checkpoints[this.checkpoint + 1];
+                this.level.activatedCheckpoints[this.checkpoint] = true;
+                console.log("checkpoint: " + this.checkpoint);
+            }
+            if (this.hero.states.respawned) {
+                var respawn = this.level.checkpoints[this.checkpoint];
+                //this.clearBoard("level");
+                this.hero.respawn();
+                this.hero.setPos(respawn);
+                console.log("respawn");
+            }
         }
 
         draw(ctx) {
@@ -54,7 +74,26 @@ define([
         }
 
         clearBoard(scope) {
-
+            //scope will range from actors only, to the entire level.
+            if (scope === "actors") {
+                for (let i = 0; i < this.game.entitiesCount; i++) {
+                    let entity = this.game.entities[i];
+                    if (entity.parentClass === "Enemy" || (entity.parentClass === "Actor" && entity.name !== "Hero")
+                        || entity.type === "Hazard" || entity.name === "Item") {
+                        entity.removeFromWorld = true;
+                    }
+                }
+            }
+            else if (scope === "level") {
+                for (let i = 0; i < this.game.entitiesCount; i++) {
+                    let entity = this.game.entities[i];
+                    if (entity.parentClass === "Enemy" || (entity.parentClass === "Actor" && entity.name !== "Hero")
+                        || entity.type === "Hazard" || entity.name === "Item" || entity.name === "Terrain") {
+                        entity.removeFromWorld = true;
+                    }
+                }
+            }
+            console.log("Board Cleared");
         }
 
         getLevel(level) {

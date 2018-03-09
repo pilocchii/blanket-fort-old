@@ -67,7 +67,6 @@ define([
 
         gameEngine.addEntity(camera);
 
-
         let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
         let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx, hero);
 
@@ -93,7 +92,7 @@ define([
 
         camera.follow(hero);
         gameEngine.addEntity(board);
-        gameEngine.addEntity(hero);
+        //gameEngine.addEntity(hero);
         gameEngine.addEntity(hud);
         gameEngine.init(ctx);
         gameEngine.start();

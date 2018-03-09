@@ -155,8 +155,8 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             this.assetManager = assetManager;
             this.ctx = ctx;
             this.tilesheet = assetManager.getAsset("img/pipes.png");
-            this.checkpoints = [[80, 1440], [3470, 1440], [7000, 1200], []];
-            this.activatedCheckpoints = { "start": true, "first": false, "second": false, "third": false }
+            this.checkpoints = [[80, 1440], [3470, 1400], [7000, 1200], []];
+            this.activatedCheckpoints = [true, false, false, false]
             //I'd like to use an array of functions (will let us have an actual Level superclass)
             //this.sectionFunctions = null;
 
@@ -321,20 +321,6 @@ l---jljljl------jljl---jljl---------jlj[]
             this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 7500, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
             this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 8400, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
             this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 9300, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
-
-        }
-
-        checkpointArray(start, first, second, third) {
-            if (this.states.activatedCheckpionts.start === start) {
-                if (this.states.activatedCheckpoints.first === first) {
-                    if (this.states.activatedCheckpoints.second === second) {
-                        if (this.states.activatedCheckpoints.third === third) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
         }
     }
         
