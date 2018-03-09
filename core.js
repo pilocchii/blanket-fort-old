@@ -55,6 +55,9 @@ define([
         let gameEngine = new GameEngine(new Sound());
         let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, 2000, 2000);
         let hero = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx, hero);
+        gameEngine.hero = hero;
+        gameEngine.gameboard = board;
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
         
         // ### music ###
@@ -68,11 +71,6 @@ define([
         gameEngine.addEntity(camera);
 
         let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
-        let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx, hero);
-
-        //hero as global variable
-        gameEngine.hero = hero;
-        gameEngine.gameboard = board;
 
         //Loads level n
         board.getLevel(2);

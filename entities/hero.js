@@ -72,9 +72,6 @@ define([
             //Dev Tools
             this.setPosTimer = 0;
             this.godToggleTimer = 0;
-            var posCycle1 = [400, 1120];
-            var posCycle2 = [7000, 1120];
-            this.posCycle = [posCycle1, posCycle2];
             this.iPC = 0;
 
             this.states = {
@@ -358,7 +355,6 @@ define([
             //Respawn
             if (this.states.respawned) {
                 //respawn
-                this
             }
 
             //Timer Checks
@@ -610,7 +606,7 @@ define([
             this.clearStates();
             this.health = this.maxHealth;
             this.energy = this.maxEnergy;
-            this.game.gameboard.score -= 10;
+            this.game.gameboard.score = this.game.gameboard.score/2;
             this.multiplier = 1;
         }
 

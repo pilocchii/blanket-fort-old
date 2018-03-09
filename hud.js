@@ -1,9 +1,7 @@
 define([
     "asset-manager",
-    'soldier-shield',
 ], function (
     AssetManager,
-    Soldier_Shield,
 ){
 
     class Hud {
@@ -37,7 +35,7 @@ define([
     class ScoreBoard {
 
         constructor(game_engine, dest_coordinates, scale=3, camera) {
-            this.score = game_engine.score;
+            this.score = game_engine.gameboard.score;
             this.game_engine = game_engine;
             this.camera = camera;
             this.scale = scale;
@@ -45,7 +43,7 @@ define([
         }
 
         update() {
-            this.score = Math.floor(this.game_engine.score);
+            this.score = Math.floor(this.game_engine.gameboard.score);
             this.dest_coords = [-this.camera.xView + 200, -this.camera.yView + 100]
         }
 

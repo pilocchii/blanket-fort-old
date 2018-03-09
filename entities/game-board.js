@@ -16,6 +16,7 @@ define([
             super(game, 0, 0, null, ctx);
             this.game = game;
             this.assetManager = assetManager;
+            this.score = 0;
             this.hero = hero;
             this.level;
             this.checkpoint = 0; //current checkpoint for this.level (-1 is for unloaded)
