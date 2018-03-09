@@ -53,9 +53,7 @@ define([
         update() {
             // Note: this logic feels HORRIBLY wrong, but it works for now, so yay?
             if (this.followed != null) {
-                if (this.offY + 10 < Math.floor(this.canvasHeight / this.absOffY)) { this.offY += 11; }
-                else if (this.offY - 10 > Math.floor(this.canvasHeight / this.absOffY)) { this.offY -= 11; }
-                else(this.offY = this.canvasHeight/this.absOffY)
+                this.updateBounds();
                 //TODO: need to figure out world bounds for min and max clamping
                 this.xView = -this.followed.x + this.offX;
                 this.yView = -this.followed.y + this.offY;
@@ -66,6 +64,19 @@ define([
              //console.log("hero x: " + this.followed.x);
              //console.log("hero y: " + this.followed.y);
 
+        }
+
+        updateBounds() {
+            if (!(this.offX === this.canvasWidth / this.absOffX)) {
+                if (this.offX + 10 < Math.floor(this.canvasWidth / this.absOffX)) { this.offX += 8; }
+                else if (this.offX - 10 > Math.floor(this.canvasWidth / this.absOffX)) { this.offX -= 8; }
+                else (this.offX = this.canvasWidth / this.absOffX);
+            }
+            if (!(this.offY === this.canvasHeight / this.absOffY)) {
+                if (this.offY + 10 < Math.floor(this.canvasHeight / this.absOffY)) { this.offY += 8; }
+                else if (this.offY - 10 > Math.floor(this.canvasHeight / this.absOffY)) { this.offY -= 8; }
+                else (this.offY = this.canvasHeight / this.absOffY);
+            }
         }
 
         boundsCheck(val, min, max) {

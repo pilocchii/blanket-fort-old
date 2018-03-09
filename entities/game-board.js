@@ -79,6 +79,15 @@ define([
                 console.log("checkpoint: " + this.checkpoint);
             }
 
+            //Check if camera should be offset
+            if (this.hero.x - this.cameraCheck >= 0 && this.game.camera.absOffY !== 2) {
+                this.game.camera.absOffY = 2;
+                this.states.changedCamera = true;
+            }
+            else if (this.hero.x - this.cameraCheck < 0 && this.game.camera.absOffY !== 1.5) {
+                this.game.camera.absOffY = 1.5;
+            }
+
             if (this.hero.states.respawned) {
                 var respawn = this.level.checkpoints[this.checkpoint];
                 respawn[1] -= 10;
@@ -86,13 +95,6 @@ define([
                 this.hero.respawn();
                 this.hero.setPos(respawn);
                 console.log("respawn");
-            }
-            if (this.hero.x - this.cameraCheck >= 0 && this.game.camera.absOffY !== 2) {
-                this.game.camera.absOffY = 2;
-                this.states.changedCamera = true;
-            }
-            else if (this.hero.x - this.cameraCheck < 0 && this.game.camera.absOffY !== 1.5) {
-                this.game.camera.absOffY = 1.5;
             }
         }
 
