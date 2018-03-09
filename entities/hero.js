@@ -86,6 +86,7 @@ define([
                 "running": false,
                 "jumping": false,
                 "dashing": false,
+                "energyDash": false,
                 "dashingStart": false,
                 "dashingMid": false,
                 "dashingEnd": false,
@@ -307,7 +308,10 @@ define([
                         this.states.hasGravity = false;
                         this.yVelocity = 0;
                         console.log(this.energy);
-                        this.energy -= this.dashEnergyCost;
+                        if (this.energy >= this.dashEnergyCost) {
+                            this.energy -= this.dashEnergyCost;
+                            this.states.energyDash = true; //NOT USED FOR NOW (Don't like it);
+                        }
                         console.log(this.energy);
                         this.energyDelayTimer = this.energyDelay;
                         this.states.hasDashed = false;
@@ -317,13 +321,15 @@ define([
                         this.states.dashingStart = false;
                         this.updateHitbox(60, 60, 37, 15, 0, -10);
                         this.states.dashingMid = true;
-                        this.states.invulnerable = true;
+                        if(this.states.energyDash) 
+                            this.states.invulnerable = true;
                     }
                 }
                 else if (this.states.dashingMid) {
                     if (this.animation.isDone()) {
                         this.animation.reset();
                         this.states.invulnerable = false;
+                        this.states.energyDash = false;
                         this.states.dashingMid = false;
                         this.states.dashingEnd = true;
                         this.updateHitbox(60, 60, 25, 25);
