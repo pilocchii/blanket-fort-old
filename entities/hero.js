@@ -48,13 +48,13 @@ define([
             this.jumpsLeft = 2;
             this.maxJumps = 2;
 
-            this.maxHealth = 12;
-            this.maxEnergy = 6;
-            this.energy = 6;
-            this.health = 12;
-            this.slashEnergyCost = 4;
-            this.shootEnergyCost = 2;
-            this.dashEnergyCost = 1;
+            this.maxHealth = 10;
+            this.maxEnergy = 10;
+            this.energy = 10;
+            this.health = 10;
+            this.slashEnergyCost = 8;
+            this.shootEnergyCost = 6;
+            this.dashEnergyCost = 4;
 
             this.stunDir = 0;
             this.multiplier = 1;
@@ -63,7 +63,9 @@ define([
             this.damageCooldownTimer = 0;
             this.damageCooldown = 16;
             this.energyCooldownTimer = 0;
-            this.energyCooldown = 240/(this.multiplier*2); 
+            this.energyCooldown = 60 / (this.multiplier * 2);
+            this.energyDelay = 20;
+            this.enregyDelayTimer = 0;
             this.velocityCooldown = 2;
             this.velocityCooldownTimer = 0;
             this.jumpTimer = 0;
@@ -71,9 +73,7 @@ define([
 
             //Dev Tools
             this.setPosTimer = 0;
-            var posCycle1 = [400, 1120];
-            var posCycle2 = [7000, 1120];
-            this.posCycle = [posCycle1, posCycle2];
+            this.godToggleTimer = 0;
             this.iPC = 0;
 
             this.states = {
@@ -96,6 +96,7 @@ define([
                 "framelocked": false,
                 "stunned": false,
                 "dead": false,
+                "respawned": false,
                 "grounded": true,
                 "hasGravity": true,
                 "facingRight": true,
@@ -125,6 +126,9 @@ define([
             //Dev Tool Updates
             if (this.setPosTimer > 0) {
                 this.setPosTimer--;
+            }
+            if (this.godToggleTimer > 0) {
+                this.godToggleTimer--;
             }
             /////////// all button checks go here ///////////
             // KEY DOWN
@@ -243,7 +247,7 @@ define([
                     if (this.energy >= this.shootEnergyCost && this.states.energized) {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
                         this.energy -= this.shootEnergyCost;
-                        //this.energyCooldownTimer = this.energyCooldown;
+                        this.energyDelayTimer = this.energyDelay;
                     }
                     else {
                         this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
@@ -266,7 +270,7 @@ define([
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                     this.states.shotlocked = true;
                     this.energy -= this.slashEnergyCost;
-                    //this.energyCooldownTimer = this.energyCooldown;
+                    this.energyDelayTimer = this.energyDelayCooldown;
                 }
                 if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {//Hurtbox
                     if (this.states.facingRight)//facing right
@@ -296,6 +300,7 @@ define([
                         this.states.hasGravity = false;
                         this.yVelocity = 0;
                         this.energy -= this.dashEnergyCost;
+                        this.energyDelayTimer = this.energyDelay;
                         this.states.hasDashed = false;
                     }
                     if (this.animation.isDone()) {
@@ -345,17 +350,28 @@ define([
             //DEAD
             if (this.states.dead) {
                 if (this.animation.loops > 3) {
-                    this.removeFromWorld = true;
+                    this.animation.reset();
+                    this.states.dead = false;
+                    this.states.respawned = true;
                 }
+            }
+            //Respawn
+            if (this.states.respawned) {
+                //respawn
             }
 
             //Timer Checks
-            if (this.energyCooldownTimer > 0) {
-                this.energyCooldownTimer--;
+            if (this.energyDelayTimer <= 0) {
+                if (this.energyCooldownTimer > 0) {
+                    this.energyCooldownTimer--;
+                }
+                else if (this.energy < this.maxEnergy) {
+                    this.energy++;
+                    this.energyCooldownTimer = this.energyCooldown;
+                }
             }
-            else if (this.energy < this.maxEnergy) {
-                this.energy++;
-                this.energyCooldownTimer = this.energyCooldown;// Energy restores more slowly (one energy per cooldown)
+            else {
+                this.energyDelayTimer--;
             }
             if (this.damageCooldownTimer > 0) {
                 this.damageCooldownTimer--;
@@ -386,7 +402,7 @@ define([
                 this.clearStates();
                 this.states.dead = true;
                 this.states.framelocked = true;
-                this.gravity = 0;
+                this.states.hasGravity = false;
                 this.yVelocity = 0;
             }
         }
@@ -581,6 +597,9 @@ define([
 
         clearStates() {
             this.setStates(false, false, false, false, this.states.facingRight, false, false, false, false, this.states.energized, false, false);
+            this.states.hasGravity = true;
+            this.states.stunned = false;
+            this.states.dead = false;
         }
 
         hurt() {
@@ -588,6 +607,15 @@ define([
             this.animation.reset();
             this.states.stunned = true;
             this.states.framelocked = true;
+        }
+
+        respawn() {
+            this.states.respawned = false;
+            this.clearStates();
+            this.health = this.maxHealth;
+            this.energy = this.maxEnergy;
+            this.game.gameboard.score = this.game.gameboard.score/2;
+            this.multiplier = 1;
         }
 
         drawOutline (ctx) {

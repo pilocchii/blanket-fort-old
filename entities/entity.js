@@ -17,6 +17,7 @@ define([
             this.name = this.constructor.name;
             this.game = game;
             this.parentClass = null;
+            this.type = null;
             this.x = x;
             this.y = y;
             this.gravity = .9;

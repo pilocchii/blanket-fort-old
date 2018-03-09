@@ -97,6 +97,7 @@ define([
                 if (!this.states.exploded) {
                     this.spriteHeight = 60;
                     this.spriteWidth = 60;
+                    this.states.facingRight = true;
                     this.x -= 2 * this.spriteWidth - 30;
                     this.y += 30;
                     var explosionX = 150;

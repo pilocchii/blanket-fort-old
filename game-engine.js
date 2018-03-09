@@ -15,10 +15,11 @@ define([
     ****************/
     class GameEngine {
 
-        constructor (sound, hero) {
+        constructor (sound, gameboard, hero) {
             this.sound = sound;
             this.entities = [];
             this.backgroundLayers = [];
+            this.gameboard = gameboard;
             this.ctx = null;
             this.click = null;
             this.mouse = null;
@@ -54,6 +55,7 @@ define([
                 "dash": "Numpad1",
                 "getPos": "KeyE",
                 "setPos": "KeyR",
+                "godToggle": "KeyF",
             }
             this.score = 0;
             this.hero = hero;
@@ -206,7 +208,6 @@ define([
 
             for (let i = 0; i < entitiesCount; i++) {
                 let entity = this.entities[i];
-
                 if (!entity.removeFromWorld) {
                     entity.update();
                 }
@@ -215,11 +216,11 @@ define([
             for (let i = this.entities.length - 1; i >= 0; --i) {
                 if (this.entities[i].removeFromWorld) {
                     if (this.entities[i].hasOwnProperty("pointValue")) {
-                        this.score += this.entities[i].pointValue * this.hero.multiplier;
+                        this.gameboard.score += this.entities[i].pointValue * this.hero.multiplier;
                         if(this.entities[i].pointValue > 0)
                             this.hero.multiplier += .1;
-                        console.log("score is now " + this.score);
-                        console.log("muliplier is " + this.hero.multiplier);
+                        //console.log("score is now " + this.score);
+                        //console.log("muliplier is " + this.hero.multiplier);
                     }
                     this.entities.splice(i, 1);
                 }
@@ -241,10 +242,13 @@ define([
                 console.log("x: " + this.hero.x + ", y: " + this.hero.y);
             }
             if (this.controlKeys[this.controls.setPos].active && this.hero.setPosTimer <= 0) {
-                this.hero.setPos(this.hero.posCycle[this.hero.iPC][0],
-                    this.hero.posCycle[this.hero.iPC][1]);
+                this.hero.setPos(this.gameboard.level.checkpoints[this.hero.iPC]);
                 this.hero.setPosTimer = 20;
-                this.hero.iPC = (this.hero.iPC + 1) % this.hero.posCycle.length; 
+                this.hero.iPC = (this.hero.iPC + 1) % this.gameboard.level.checkpoints.length; 
+            }
+            if (this.controlKeys[this.controls.godToggle].active && this.hero.godToggleTimer <= 0) {
+                this.hero.states.invulnerable != this.hero.states.invulnerable;
+                this.hero.godToggleTimer = 40;
             }
         }
 
