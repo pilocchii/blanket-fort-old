@@ -215,20 +215,22 @@ define([
             }
             for (let i = 0; i < this.entities.length; i++) {
                 //Draw the camera and hud first
-                if (i === 0) {
+                // if (i === 0) {
+                //     this.entities[i].draw(this.ctx);
+                // }
+                ////Draw only terrain that is within the canvas view (numbers are negative because the camera is weird like that.
+                ////postive numbers would screw the translate process)
+                if (this.entities[i].type === "Terrain") {
+                    if((-this.entities[i].x - this.entities[i].boundWidth < this.entities[0].xView 
+                    && -this.entities[i].x > this.entities[0].xView - this.ctx.canvas.width 
+                    && -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
+                    && -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height)) {
+                       this.entities[i].draw(this.ctx);
+                    }
+                }
+                else {
                     this.entities[i].draw(this.ctx);
                 }
-                ////Draw only what is within the canvas view (numbers are negative because the camera is weird like that.
-                ////postive numbers would screw the translate process)
-                //else if((-this.entities[i].x - this.entities[i].boundWidth < this.entities[0].xView 
-                //&& -this.entities[i].x > this.entities[0].xView - this.ctx.canvas.width 
-                //&& -this.entities[i].y - this.entities[i].boundHeight< this.entities[0].yView 
-                //&& -this.entities[i].y > this.entities[0].yView - this.ctx.canvas.height)
-                //|| this.entities[i].name ===  "Hud") {
-                //    this.entities[i].draw(this.ctx);
-                //}
-                else
-                    this.entities[i].draw(this.ctx);
             }
             
 
@@ -281,10 +283,23 @@ define([
                 let entity = this.entities[i];
                 for (let j = 0; j < this.entities.length; j++) {
                     let other = this.entities[j];
-                    if (entity != other && entity.isColliding(other) != 'none') { /// D.prototype = new C(), links C to prototype linkage of D OR put property "something_type" or whatever and check for that
+                    // this prevents each piece of terrain from checking collision, causing slowdown
+                    if (entity.type === "Terrain") continue;
+                    else if (other.type === "Terrain") {
+                        let dist = Math.abs(entity.x - other.x);
+                        if (dist < 100) {
+                            if (entity != other && entity.isColliding(other) != 'none') { /// D.prototype = new C(), links C to prototype linkage of D OR put property "something_type" or whatever and check for that
+                                let direction = entity.isColliding(other);
+                                entity.collided(other, direction);
+                            }
+                        }
+
+                    }
+                    else if (entity != other && entity.isColliding(other) != 'none') { /// D.prototype = new C(), links C to prototype linkage of D OR put property "something_type" or whatever and check for that
                         let direction = entity.isColliding(other);
                         entity.collided(other, direction);
                     }
+
                 }
                 
             }
