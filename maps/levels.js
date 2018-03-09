@@ -320,14 +320,15 @@ l---jljljl------jljl---jljl---------jlj[]
         }
 
         section_3() {
+            /***BOTTOM LAYER ENTITIES***/
+            this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 8665, 950, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 3, 1));
+            this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 8635, 1000, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 3, 1));
 
             /***HAZARDS***/
             this.gameEngine.addEntity(new Hazards["fireball"](this.gameEngine, 7300, 1450 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 4,
                                 /*cooldown*/ 50, /*speed*/ 20));
             this.gameEngine.addEntity(new Hazards["fireball"](this.gameEngine, 7820, 1450 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 4,
                                 /*cooldown*/ 50, /*speed*/ 20, /*offset*/ 25));
-            //this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 700,
-            //                        1440 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20*6, 0, 18));
             this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 7512,
                 1152 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 4, 0, 3));
             this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 7980,
@@ -351,8 +352,6 @@ l---jljljl------jljl---jljl---------jlj[]
             /***ITEMS***/
             this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 7050, 1248, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 3, 1));
             this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 7080, 1248, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 3, 1));
-            this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 8665, 950, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 3, 1));
-            this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 8635, 1000, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 3, 1));
 
             /***TOP LAYER ENTITIES***/
             this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 7500, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));

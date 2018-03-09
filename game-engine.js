@@ -40,11 +40,13 @@ define([
                 "KeyR": { "active": false },
                 "KeyF": { "active": false },
                 "KeyE": { "active": false },
-                "KeyP": { "active": false },
                 "KeyJ": { "active": false },
                 "KeyK": { "active": false },
                 "KeyL": { "active": false },
                 "KeyM": { "active": false },
+                "KeyP": { "active": false },
+                "KeyT": { "active": false },
+                "KeyY": { "active": false },
                 "Numpad1": { "active": false },
                 "Numpad2": { "active": false },
                 "Numpad3": { "active": false },
@@ -66,6 +68,8 @@ define([
                 "getPos": "KeyE",
                 "setPos": "KeyR",
                 "godToggle": "KeyF",
+                "hardmode": "KeyT",
+                "easymode": "KeyY",
                 "layoutA": "Numpad9",
                 "layoutB": "KeyP",
             }
@@ -81,6 +85,8 @@ define([
                 "getPos": "KeyE",
                 "setPos": "KeyR",
                 "godToggle": "KeyF",
+                "hardmode": "KeyT",
+                "easymode": "KeyY",
                 "layoutA": "Numpad9",
                 "layoutB": "KeyP",
             }
@@ -300,6 +306,12 @@ define([
             if (this.controlKeys[this.controls.godToggle].active && this.hero.godToggleTimer <= 0) {
                 this.hero.states.isGod = !this.hero.states.isGod;
                 this.hero.godToggleTimer = 40;
+            }
+            if (this.controlKeys[this.controls.easymode].active) {
+                this.hero.difficulty = 1;
+            }
+            if (this.controlKeys[this.controls.hardmode].active) {
+                this.hero.difficulty = 3;
             }
             if (this.controlKeys[this.controls.layoutA].active) {
                 this.controls = this.controlLayoutA;
