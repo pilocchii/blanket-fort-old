@@ -79,7 +79,6 @@ define([
         }
 
         on_pickup(hero) {
-            console.log("HEEEYYY")
             if (hero.health < hero.maxHealth)
                 hero.health += 15;
             if (hero.health > hero.maxHealth)
@@ -103,7 +102,6 @@ define([
         }
 
         on_pickup(hero) {
-            console.log("HEEEYYY")
             if(hero.energy < hero.maxEnergy)
                 hero.energy += 15;
             if (hero.energy > hero.maxEnergy)
