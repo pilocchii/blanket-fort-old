@@ -55,10 +55,12 @@ define([
         let gameEngine = new GameEngine(new Sound());
         let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, 2000, 2000);
         let hero = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
-        let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx, hero);
+        let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx);
         gameEngine.hero = hero;
         gameEngine.gameboard = board;
         let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
+        board.hud = hud;
+        board.hero = hero;
         
         // ### music ###
         let audio = new Audio("./audio/track_1.wav");
@@ -69,29 +71,17 @@ define([
         /**NOTE: IT IS VERY IMPORTANT CAMERA IS THE FIRST ADDED ENTITY**/
 
         gameEngine.addEntity(camera);
+        gameEngine.camera = camera;
 
         let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
 
         //Loads level n
         board.getLevel(2);
 
-        // let mapreader = new FileReader();
-        // mapreader.onload = function(e) {
-        //     console.log(mapreader.result);
-        // }
-        // mapreader.readAsText("maps/testmap");
-
-        // gameEngine.showOutlines = true;
-
-        // let gameboard = new GameBoard();
-
-        // gameEngine.addEntity(gameboard);
-
-
         camera.follow(hero);
         gameEngine.addEntity(board);
         //gameEngine.addEntity(hero);
-        gameEngine.addEntity(hud);
+        //gameEngine.addEntity(hud);
         gameEngine.init(ctx);
         gameEngine.start();
     });

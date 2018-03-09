@@ -52,9 +52,9 @@ define([
             this.maxEnergy = 10;
             this.energy = 10;
             this.health = 10;
-            this.slashEnergyCost = 8;
-            this.shootEnergyCost = 6;
-            this.dashEnergyCost = 4;
+            this.slashEnergyCost = 10;
+            this.shootEnergyCost = 5;
+            this.dashEnergyCost = 3;
 
             this.stunDir = 0;
             this.multiplier = 1;
@@ -100,6 +100,7 @@ define([
                 "grounded": true,
                 "hasGravity": true,
                 "facingRight": true,
+                "isGod": false,
             };
             this.animations = {
                 "idle": new Animation(this.img, [spriteWidth, spriteHeight], 0, 9, 3, 9, true, this.scale), //50x50
@@ -172,7 +173,7 @@ define([
                 this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
             }
             //dash
-            if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy > 0 && !this.states.shooting) {
+            if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy >= this.dashEnergyCost && !this.states.shooting) {
                 this.states.dashing = true;
                 this.states.dashingStart = true;
                 this.states.hasDashed = true;
@@ -266,7 +267,7 @@ define([
             if (this.states.slashing) {
                 this.states.hasGravity = true; //Fixes super-duper jump bug. (When interrupting dash, dash doesn't enter isDone() so grav isn't reset)
                 if (this.animation.currentFrame() === 2 && this.states.energized
-                    && !this.states.shotlocked && this.energy >= this.maxEnergy / 2) {
+                    && !this.states.shotlocked && this.energy >= this.slashEnergyCost) {
                     this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                     this.states.shotlocked = true;
                     this.energy -= this.slashEnergyCost;
@@ -299,7 +300,9 @@ define([
                         this.updateHitbox(60, 60, 25, 25);
                         this.states.hasGravity = false;
                         this.yVelocity = 0;
+                        console.log(this.energy);
                         this.energy -= this.dashEnergyCost;
+                        console.log(this.energy);
                         this.energyDelayTimer = this.energyDelay;
                         this.states.hasDashed = false;
                     }
@@ -361,17 +364,12 @@ define([
             }
 
             //Timer Checks
-            if (this.energyDelayTimer <= 0) {
-                if (this.energyCooldownTimer > 0) {
-                    this.energyCooldownTimer--;
-                }
-                else if (this.energy < this.maxEnergy) {
-                    this.energy++;
-                    this.energyCooldownTimer = this.energyCooldown;
-                }
+            if (this.energyCooldownTimer > 0) {
+                this.energyCooldownTimer--;
             }
-            else {
-                this.energyDelayTimer--;
+            else if (this.energy < this.maxEnergy) {
+                this.energy++;
+                this.energyCooldownTimer = this.energyCooldown;
             }
             if (this.damageCooldownTimer > 0) {
                 this.damageCooldownTimer--;
@@ -509,7 +507,7 @@ define([
                 this.game.playSound("hero_hurt")
             }
             //If Hero can take damage, check if...
-            if (this.damageCooldownTimer <= 0 && !this.states.invulnerable && !this.states.dead && !this.states.stunned) { 
+            if (!this.states.isGod && this.damageCooldownTimer <= 0 && !this.states.invulnerable && !this.states.dead && !this.states.stunned) { 
                 if (other.parentClass === "Enemy") {             
                     if (other.damage > 0) {
                         //Determine interaction based on other's damage type

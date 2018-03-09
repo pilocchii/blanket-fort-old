@@ -57,6 +57,9 @@ define([
             this.assetManager = assetManager;
             this.ctx = ctx;
             this.tilesheet = assetManager.getAsset("img/pipes.png");
+            this.checkpoints = [[15, 1824], [3358, 0]];
+            this.nextLevel = 2;
+            this.activatedCheckpoints = [true, false]
 
             this.tileSize = 96;
 
@@ -122,12 +125,12 @@ l-----------------------------j   []
 lj[][]!  |[]lj~~~~~lj           lj[]
 `.split('\n');
 
-
-            this.constructTerrain();
-
         }
 
-
+        load() {
+            this.constructTerrain();
+            this.populateMap();
+        }
 
 
         constructTerrain() {
@@ -143,6 +146,36 @@ lj[][]!  |[]lj~~~~~lj           lj[]
                 }
             }
         }
+
+        populateMap(checkpoint) {
+            if (checkpoint === -1) {
+                this.section_1();
+            }
+            else {
+                if (checkpoint === 0) {
+                    this.section_1();
+                }
+            }
+        }
+
+        section_1() {
+        this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 2935, 1200, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8));
+        this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 2965, 1200, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8));
+        this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 300, 400, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8));
+        this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 330, 400, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8));
+
+        this.gameEngine.addEntity(new Hand(this.gameEngine, 1800, 1450, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+        this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1800, 1450, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+        this.gameEngine.addEntity(new Crow(this.gameEngine, 1350, 1300, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+        this.gameEngine.addEntity(new Crow(this.gameEngine, 2950, 1700, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+
+
+        this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1300, 1100, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+        this.gameEngine.addEntity(new Crow(this.gameEngine, 400, 300, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+
+        this.gameEngine.addEntity(new Dino(this.gameEngine, 2130, 1061, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, 400, 250));
+        this.gameEngine.addEntity(new Dino(this.gameEngine, 1980, 582, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+        }
     }
 
     class LevelTwo {
@@ -155,8 +188,9 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             this.assetManager = assetManager;
             this.ctx = ctx;
             this.tilesheet = assetManager.getAsset("img/pipes.png");
-            this.checkpoints = [[80, 1440], [3470, 1400], [7000, 1200], []];
-            this.activatedCheckpoints = [true, false, false, false]
+            this.checkpoints = [[80, 1440], [3470, 1440], [7000, 1200], [9955, 384], [], [], [], []];
+            this.activatedCheckpoints = [true, false, false, false];
+            this.nextLevel = -1;
             //I'd like to use an array of functions (will let us have an actual Level superclass)
             //this.sectionFunctions = null;
 
@@ -204,20 +238,20 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             this.map =
                 `                                                                                                                                                                #
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~     |
-                                                                               |                                             
-                                                                               |                                                          
-                                                                               |                      []{}{______}{}{___}{}{_________}{}[]
-                                                                               |                      []ljl------jljl---jljl---------jlj[]                
-                                                                               |
-                                                                               |                           
-                                                                       <                                                             
-                                                                                 
-                   <~~~~~>                                            <~~                                                                                                              
-                                                                                   
-                                                                       <                               
-                                       []{}{______}{}{___}{}{_________}{}[]                                                     
-                       {}              []ljl------jljl---jljl---------jlj[]                                                     
-{___}{}{}{______}{}{___}{}{_________}{}[]                                                                                   
+                                                                               |                                              
+                                                                               |                                               ~           
+                                                                               |                       {}
+                                                                               |                       []          ~                 
+                                                                               |                       []                           ~
+                                                                               |                       []                  
+                                                                       <                               []      ~            ~      
+                                                                                                       []
+                   <~~~~~>                                            <~~                              []                                                                             
+                                                                                                       []             ~
+                                                                       <                               [] 
+                                       []{}{______}{}{___}{}{_________}{}[]                            []                          
+                       {}              []ljl------jljl---jljl---------jlj[]                            []                          
+{___}{}{}{______}{}{___}{}{_________}{}[]                                                              lj                      
 l---jljljl------jljl---jljl---------jlj[]                                                                                   
 `.split('\n');
 
@@ -243,17 +277,22 @@ l---jljljl------jljl---jljl---------jlj[]
         }
 
         populateMap(checkpoint) {
-            //if (this.checkpointArray(true, false, false, false)) {
-            //    this.section_1();
-            //}
-            if (checkpoint === 0) {
+            if (checkpoint === -1) {
                 this.section_1();
-            }
-            if (checkpoint === 1) {
                 this.section_2();
-            }
-            if (checkpoint === 2) {
                 this.section_3();
+                this.section_4();
+            }
+            else {
+                if (checkpoint === 0) {
+                    this.section_1();
+                }
+                if (checkpoint === 1) {
+                    this.section_2();
+                }
+                if (checkpoint === 2) {
+                    this.section_3();
+                }
             }
         }
 
@@ -305,10 +344,8 @@ l---jljljl------jljl---jljl---------jlj[]
 
             /***ENEMIES***/
             this.gameEngine.addEntity(new Crow(this.gameEngine, 9600, -200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                [1000, 700], true, [[-400, 600], [-800, 2000]]));
+                [1000, 700], true, [[-400, 600], [-800, 700]]));
             this.gameEngine.addEntity(new Hand(this.gameEngine, 6825, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
-            this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 10598, 384, this.assetManager.getAsset("img/Enemies.png"), this.ctx));//x: 8652, y: 1152
-            this.gameEngine.addEntity(new Dino(this.gameEngine, 11980, 384, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3));
 
 
             /***ITEMS***/
@@ -321,6 +358,31 @@ l---jljljl------jljl---jljl---------jlj[]
             this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 7500, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
             this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 8400, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
             this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 9300, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+        }
+
+        section_4() {
+            /***HAZARDS***/
+            var spikes1 = new Hazards["spikes"](this.gameEngine, 10630,
+                672 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 0, 2, 0);
+            var spikes1 = new Hazards["spikes"](this.gameEngine, 11246,
+                872 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 0, 2, 0);
+
+            /***ENEMIES***/
+            this.gameEngine.addEntity(new Crow(this.gameEngine, 12963, 200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+                [1000, 800], true, [[-400, 600], [-800, 700]]));
+            this.gameEngine.addEntity(new Crow(this.gameEngine, 13000, 100, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+                [1000, 800], true, [[-400, 600], [-800, 700]]));
+            this.gameEngine.addEntity(new Crow(this.gameEngine, 12700, 500, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+                [1000, 800], true, [[-400, 600], [-800, 700]]));
+            this.gameEngine.addEntity(new Crow(this.gameEngine, 12800, 300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+                [1000, 800], true, [[-400, 600], [-800, 700]]));
+
+            /***ITEMS***/
+
+            /***TOP LAYER ENTITIES***/
+            this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 10200, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+            this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 11100, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+            this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 12000, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
         }
     }
         

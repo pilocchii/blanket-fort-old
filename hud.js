@@ -9,6 +9,7 @@ define([
         constructor(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3, camera) {
             this.img = img;
             this.hero = hero;
+            this.camera = camera;
             this.healthbar = new HealthBar(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3, camera);
             this.energybar = new EnergyBar(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3, camera);
             this.scoreboard = new ScoreBoard(game_engine, dest_coordinates, scale, camera);
