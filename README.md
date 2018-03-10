@@ -1,7 +1,7 @@
-#pencil-knight
+# pencil-knight
 TCSS 491 Computational Worlds project
 
-#Controls and Basic Instructions
+# Controls and Basic Instructions
     There are two different control layouts. 
 	**Press Numpad 9** for layout A
 	**Press P** for layout B.
@@ -26,12 +26,11 @@ TCSS 491 Computational Worlds project
         L = cleave,
         M = dash,
     
-#Difficulty
+# Difficulty
     **Press T** for the intended difficulty. This will increase enemy damage and increase your score accumulation.
 	**Press Y** for an easier difficulty. This will decrease enemy damage and decrease score accumulation.
 	Pressing these buttons will reset your score to 0, so use them at the beginning of the game.
-
-#How To Play
+# How To Play
     The Hero, aka Pencil Knight, has two resources. Energy, and Health. Bars for these resources can be seen in the top left of the screen.
     **Energy** lets Pencil Knight perform special and enhanced actions.
         Hold W to "energize" PK.
@@ -61,7 +60,7 @@ TCSS 491 Computational Worlds project
     **Items** 
         Items currently just restore your respective resources. Perhaps, if you keep coming back to play, you'll find that they do something a bit more interesting.
 
-#Dev Tools, which we generously offer to you.
+# Dev Tools, which we generously offer to you.
 	**Press R** to toggle through the different checkpoints of the game.
 	**Press G** to toggle godMode. (Lava will still kill you though, because even Gods fear lava).
 
