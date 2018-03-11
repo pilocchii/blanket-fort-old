@@ -68,13 +68,13 @@ define([
 
         updateBounds() {
             if (!(this.offX === this.canvasWidth / this.absOffX)) {
-                if (this.offX + 10 < Math.floor(this.canvasWidth / this.absOffX)) { this.offX += 8; }
-                else if (this.offX - 10 > Math.floor(this.canvasWidth / this.absOffX)) { this.offX -= 8; }
+                if (this.offX + 10 < Math.floor(this.canvasWidth / this.absOffX)) { this.offX += 4; }
+                else if (this.offX - 10 > Math.floor(this.canvasWidth / this.absOffX)) { this.offX -= 4; }
                 else (this.offX = this.canvasWidth / this.absOffX);
             }
             if (!(this.offY === this.canvasHeight / this.absOffY)) {
-                if (this.offY + 10 < Math.floor(this.canvasHeight / this.absOffY)) { this.offY += 8; }
-                else if (this.offY - 10 > Math.floor(this.canvasHeight / this.absOffY)) { this.offY -= 8; }
+                if (this.offY + 10 < Math.floor(this.canvasHeight / this.absOffY)) { this.offY += 4; }
+                else if (this.offY - 10 > Math.floor(this.canvasHeight / this.absOffY)) { this.offY -= 4; }
                 else (this.offY = this.canvasHeight / this.absOffY);
             }
         }
