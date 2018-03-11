@@ -188,8 +188,8 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             this.assetManager = assetManager;
             this.ctx = ctx;
             this.tilesheet = assetManager.getAsset("img/pipes.png");
-            this.checkpoints = [[80, 1440], [3470, 1440], [7000, 1200], [9955, 384], []];
-            this.camVals = [[2, 1.5], [1.5, 1.5], [2, 1.5], [2, 2]];
+            this.checkpoints = [[80, 1440], [3350, 1440], [7000, 1200], [9955, 384]];
+            this.camVals = [[2, 1.5], [2.75, 1.75], [2, 1.5], [2, 2]];
             this.activatedCheckpoints = [true, false, false, false];
             this.nextLevel = -1;
             //I'd like to use an array of functions (will let us have an actual Level superclass)
@@ -253,8 +253,8 @@ lj[][]!  |[]lj~~~~~lj           lj[]
                                        {}{}{______}{}{___}{}{_________}{}{}                            []                          
                        {}              []ljl------jljl---jljl---------jlj[]                            []                          
 {___}{}{}{______}{}{___}{}{_________}{}[]                                []                            lj                      
-[###]ljlj[######]ljl---j[]l---------jlj[]                                []{___________________________}
-[###]    [######]       []             []                                [][###########################]
+[###]ljlj[######]ljl---j[]l---------jlj[]                                
+[###]    [######]       []             []                                
 [###]    [######]       []             []                                
 [###]    [######]       []             []                                                      
 `.split('\n');
