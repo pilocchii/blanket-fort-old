@@ -127,29 +127,50 @@ define([
         }
 
         getLevel(level) {
+            console.log("LEVEL2!?");
             if (level === 1) {
                 this.level = new Levels["level-one"](this.game, this.assetManager, this.ctx);
             }
             if (level === 2) {
+                console.log("level2?");
                 this.level = new Levels["level-two"](this.game, this.assetManager, this.ctx);
                 //Should move this into the LevelTwo class
                 var currCheckPos = this.level.checkpoints[0];
                 var currCheckX = currCheckPos[0];
                 var currCheckY = currCheckPos[1];
                 var listFront = new Checkpoint(this.game, currCheckX, currCheckY, this.ctx, 0, this.level.camVals[0], null, null);
+                listFront.states.isFront = true;
+                listFront.num = 0;
+                listFront.active = true;
+                listFront.activated = true;
                 var currCheck = null;
                 var prevCheck = listFront;
+                var i;
+                console.log("preLoop");
                 //instantiate checkpoint linked list
-                for (var i = 1; i < this.level.checkpoints.length; i++) {
+                for (i = 1; i < this.level.checkpoints.length; i++) {
                     currCheckPos = this.level.checkpoints[i];
                     currCheckX = currCheckPos[0];
                     currCheckY = currCheckPos[1];
                     if (i === this.level.checkpoints.length - 1) {
                         currCheck = new Checkpoint(this.game, currCheckX, currCheckY, this.ctx, i, this.level.camVals[i], null, prevCheck);
+                        currCheck.states.hasNext = false;
+                        currCheck.states.isBack = true;
                     }
                     else {
                         currCheck = new Checkpoint(this.game, currCheckX, currCheckY, this.ctx, i, this.level.camVals[i], null, prevCheck);
+                        currCheck.num = i;
+                        currCheck.states.hasNext = true;
                     }
+                    currCheck.num = i;
+                    prevCheck.next = currCheck;
+                    prevCheck = currCheck;
+                    console.log("CheckNode");
+                }
+                /*DBG*/
+                var printCheck = listFront;
+                while(printCheck.next !== null) {
+                    console.log("Stats: " + printCheck.num + ", (" + printCheck.x + ", " + printCheck.y + ")");
                 }
                 this.checkpoints = listFront;
                 //temp
@@ -163,10 +184,10 @@ define([
 
     //Checkpoint "node"
     class Checkpoint extends Entity {
-        constructor(game, x, y, ctx, num, cameraShift = [2, 1.5], next = null, previous = null) {
+        constructor(game, x, y, ctx, num, cameraShift = [2, 1.5], next = null, prev = null) {
             super(game, 0, 0, null, ctx);
             this.next = next;
-            this.prev = previous;
+            this.prev = prev;
             this.camOffX = cameraShift[0];
             this.camOffY = cameraShift[1];
             if (this.next !== null) {
@@ -184,7 +205,8 @@ define([
             this.activationRadius = [60, 60]
             this.num = num; //Checkpoint's order in list
             this.states = {
-                "front": false,
+                "isFront": false,
+                "isBack": false,
                 "active": false,
                 "activated": false,
                 "hasNext": false,

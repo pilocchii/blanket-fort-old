@@ -214,10 +214,6 @@ define([
 
             }
             for (let i = 0; i < this.entities.length; i++) {
-                //Draw the camera and hud first
-                // if (i === 0) {
-                //     this.entities[i].draw(this.ctx);
-                // }
                 ////Draw only terrain that is within the canvas view (numbers are negative because the camera is weird like that.
                 ////postive numbers would screw the translate process)
                 if (this.entities[i].type === "Terrain") {
