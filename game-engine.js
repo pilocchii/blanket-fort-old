@@ -17,7 +17,8 @@ define([
     ****************/
     class GameEngine {
 
-        constructor (gameboard, hero) {
+        constructor(gameboard, hero) {
+            this.drawBoxes = false;
             this.sound = new Sound();
             this.entities = [];
             this.backgroundLayers = [];
@@ -30,7 +31,6 @@ define([
             this.surfaceWidth = null;
             this.surfaceHeight = null;
             this.music = null;
-            this.drawBoxes = true;
             // KB input keycodes
             this.controlKeys = {
                 "Space": { "active": false },

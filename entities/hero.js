@@ -66,6 +66,7 @@ define([
             this.damageCooldown = 16;
             this.energyCooldownTimer = 0;
             this.energyCooldown = 15 / (this.multiplier * 2);
+            this.energyCooldownMin = 15 / (this.multiplier * 2);
             this.energyDelay = 20;
             this.enregyDelayTimer = 0;
             this.velocityCooldown = 2;
@@ -124,7 +125,7 @@ define([
                 "dash": new Animation(this.img, [60, 60], 5, 7, 3, 7, false, this.scale),
                 "dash_start": new Animation(this.img, [60, 60], 5, 7, 3, 1, false, this.scale),
                 "dash_mid": new Animation(this.img, [60, 60], 5, 7, 3, 5, false, this.scale, 1),
-                "dash_end": new Animation(this.img, [60, 60], 5, 7, 3, 1, false, this.scale, 6),
+                "dash_end": new Animation(this.img, [60, 60], 5, 7, 3, 1, false, this.scale, 5),
             };
         }
 
@@ -382,6 +383,12 @@ define([
                 }
                 else if (this.energy < this.maxEnergy) {
                     this.energy++;
+                    if (this.energyCooldown > this.energyCooldownMin) { //energy cooldown time decreases non-linearly
+                        this.energyCooldown *= .75;
+                    }
+                    else if (this.energyCooldown < this.energyCooldownMin) {
+                        this.energyCooldown = this.energyCooldownMin;
+                    }
                     this.energyCooldownTimer = this.energyCooldown;
                 }
             }
@@ -533,8 +540,8 @@ define([
                             }
                         }
                         else if (other.damageType === "energy" && this.energy > 0) {
-                            this.energyDelayTimer = this.energyDelay;
-                            this.energy = 7;
+                            this.energyCooldown = this.energyCooldownMin*24;
+                            this.energy = Math.floor(this.energy/2);
                         }
                     }
                 }

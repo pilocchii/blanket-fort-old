@@ -306,13 +306,13 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             /***HAZARDS***/
 
             /***ENEMIES***/
-            //var hand1 = new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx);
-            //hand1.distance = 75;
-            //this.gameEngine.addEntity(hand1);
-            ////this.gameEngine.addEntity(new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
-            //this.gameEngine.addEntity(new Dino(this.gameEngine, 1960, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, 400, 250));
-            //this.gameEngine.addEntity(new Crow(this.gameEngine, 750, 1000, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-            //    /*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
+            var hand1 = new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx);
+            hand1.distance = 75;
+            this.gameEngine.addEntity(hand1);
+            //this.gameEngine.addEntity(new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+            this.gameEngine.addEntity(new Dino(this.gameEngine, 1960, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, 400, 250));
+            this.gameEngine.addEntity(new Crow(this.gameEngine, 2300, 550, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+                /*sightRadius*/[300, 1000], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
             this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1300, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx));//x: 8652, y: 1152
 
             /***ITEMS***/
@@ -322,9 +322,9 @@ lj[][]!  |[]lj~~~~~lj           lj[]
         }
 
         section_2() {
-            this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875, 792 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 90, 370, 20))
-            this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875 - 95, 984 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 90, 370, 50))
-            this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875, 1176 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 45, 370, 60))
+            this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875, 792 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 90, 350, 20))
+            this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875 - 95, 984 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 90, 350, 50))
+            this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875, 1176 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 45, 350, 60))
         }
 
         section_3() {
@@ -352,9 +352,9 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 7965, -300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 7, 7, [0, 1], 120, 160))
 
             /***ENEMIES***/
-            //this.gameEngine.addEntity(new Crow(this.gameEngine, 9600, -200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-            //    [1000, 700], true, [[-400, 600], [-800, 700]]));
-            //this.gameEngine.addEntity(new Hand(this.gameEngine, 6825, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+            this.gameEngine.addEntity(new Crow(this.gameEngine, 9600, -200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+                [1000, 700], true, [[-400, 600], [-800, 700]]));
+            this.gameEngine.addEntity(new Hand(this.gameEngine, 6825, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
 
 
             /***ITEMS***/
@@ -387,14 +387,8 @@ lj[][]!  |[]lj~~~~~lj           lj[]
                 312 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20*3, 2, 0);
 
             /***ENEMIES***/
-            //this.gameEngine.addEntity(new Crow(this.gameEngine, 12963, 200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-            //    [1000, 800], true, [[-400, 600], [-800, 700]]));
             this.gameEngine.addEntity(new Crow(this.gameEngine, 12500, 1100, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
                 [550, 400], true, [[-1200, -500], [-400, -900]]));
-            //this.gameEngine.addEntity(new Crow(this.gameEngine, 12700, 500, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-            //    [1000, 800], true, [[-400, 600], [-800, 700]]));
-            //this.gameEngine.addEntity(new Crow(this.gameEngine, 12800, 300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-            //    [1000, 800], true, [[-400, 600], [-800, 700]]));
 
             /***ITEMS***/
 

@@ -24,8 +24,8 @@ define([
                 this.ySpeed = 0;
                 this.maxX = 8;
                 this.maxY = 4;
-                this.xAccel = .25;
-                this.yAccel = .1;
+                this.xAccel = .4;
+                this.yAccel = .17;
                 this.y -= 70
                 if (!facingRight) { this.x -= 100; } else { this.x += 100 };//offset to match gun
                 this.scale = scale;
@@ -46,6 +46,7 @@ define([
 
                 //Stats
                 this.damageType = "energy";
+                this.drainTime = 120;
                 this.damage = 2;
                 this.health = 50;
 

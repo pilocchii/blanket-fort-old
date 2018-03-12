@@ -162,15 +162,15 @@ define([
 
             draw(ctx) {
                 if (this.states.idling) {
-                    this.updateHitbox(90, 60, 50, 45)
+                    this.updateHitbox(90, 60, 25, 45)
                     this.animation = this.animations.idle;
                 }
                 if (this.states.walking) {
-                    this.updateHitbox(90, 60, 50, 45, -this.facing * 10)
+                    this.updateHitbox(90, 60, 25, 45)
                     this.animation = this.animations.walk_straight;
                 }
                 if (this.states.shooting) {
-                    this.updateHitbox(90, 70, 50, 45, -this.facing * 10)
+                    this.updateHitbox(90, 70, 25, 45)
                     this.animation = this.animations.shoot_diagonal;   
                 }
                 this.drawImg(ctx);
