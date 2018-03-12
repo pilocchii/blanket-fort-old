@@ -222,8 +222,10 @@ define([
         }
 
         drawImg(ctx) {
-            //this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+            if (this.game.drawBoxes) {
+                this.drawOutline(ctx);
+            }
         }
     }
     return Bomb;

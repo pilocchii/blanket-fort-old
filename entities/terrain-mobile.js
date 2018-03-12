@@ -36,7 +36,6 @@ define([
                     for (var i = 0; i < 1; i++) {
                         let col = this.tiles[0]
                         let row = this.tiles[1]
-                        //this.drawOutline(ctx);
                         ctx.drawImage(this.img,
                             (col * this.src_width),
                             (row * this.src_height),
@@ -46,6 +45,9 @@ define([
                             this.src_width * 3,
                             this.src_height * 3
                         );
+                        if (this.game.drawBoxes) {
+                            this.drawOutline(ctx);
+                        }
                     }
                 }
             }

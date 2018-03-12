@@ -39,7 +39,7 @@ define([
                 this.maxX = this.startX + patrolDistance; //Change this to alter dino's patrol distance
                 
                 //Timers
-                this.shotCooldown = 500;
+                this.shotCooldown = 250;
                 this.shotCooldownTimer = shotTimeOffset;
                 //Stats
                 this.pointValue = 15
@@ -235,8 +235,10 @@ define([
             }
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                if (this.game.drawBoxes) {
+                    this.drawOutline(ctx);
+                }
             }
 
         }

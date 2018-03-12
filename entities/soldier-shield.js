@@ -34,7 +34,7 @@ define([
                 this.boundHeight = this.scale * 45;
                 this.boundX = this.centerX - (this.boundWidth / 2);
                 this.boundY = this.y - this.boundHeight + (this.spriteHeight / 2 - 10);
-                this.updateHitbox(50, 50, 38, 40);
+                //this.updateHitbox(50, 50, 38, 40);
 
                 //Stats
                 this.pointValue = 30;
@@ -94,12 +94,10 @@ define([
                         && Math.abs(this.y - this.game.hero.y) < this.sightRadius[1]) {
                         //Face Enemy
                         if (this.game.hero.x > this.x && !this.states.facingRight && !this.states.blocking) {
-                            this.updateHitbox(50, 50, 38, 40);
                             this.states.turning = true;
                             this.states.idling = false;
                         }
                         else if (this.game.hero.x < this.x && this.states.facingRight && !this.states.blocking) {
-                            this.updateHitbox(50, 50, 38, 40);
                             this.states.turning = true;
                             this.states.idling = false;
                         }
@@ -109,7 +107,9 @@ define([
                             this.states.slashing_start = true;
                             this.states.idling = false;
                             this.animation.reset();
-                            this.updateHitbox(80, 60, 50, 40);
+                            if (!this.states.facingRight) {
+                                this.x -= 20;
+                            }
                         }
                         //Shoot when in range
                         if (Math.abs(this.x - this.game.hero.x) >= 200
@@ -132,7 +132,6 @@ define([
                                 this.animation.reset();
                                 this.states.shooting_startup = true;
                                 this.states.idling = false;
-                                this.updateHitbox(50, 50, 38, 40);
                             }
                         }
                     }
@@ -158,13 +157,11 @@ define([
                             this.states.runningAway = false;
                             this.states.running = false;
                             this.states.turning = true;
-                            // this.states.idling = true;
                         }
                         else if (this.runAwayTimer > 0 && !this.states.turning) {
                             this.states.running = true;
                             this.states.idling = false;
                         }
-
                     }
 
                     if (this.states.running) { //running
@@ -181,7 +178,6 @@ define([
                             this.animation.reset();
                             this.states.shooting_startup = false;
                             this.states.shooting_active = true;
-                            this.updateHitbox(50, 50, 38, 40);
                         }
                     }
                     if (this.states.shooting_active) { //shooting active
@@ -209,40 +205,40 @@ define([
                                 this.states.idling = true;
                         }
                     }
-                    if (this.states.slashing_start && !this.states.framelocked) { //slashing start  this.updateHitbox(80, 60, 50, 40);
+                    if (this.states.slashing_start && !this.states.framelocked) { //slashing start
                         if (this.animation.currentFrame() === 8) {
                             if (this.states.facingRight)
-                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 40, 100,
+                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 5, 100,
                                     this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                             else
-                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 85, 100,
+                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 2*65, 100,
                                     this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                         }
                         if (this.animation.isDone()) {
                             this.animation.reset();
                             this.states.slashing_start = false;
                             this.states.slashing_end = true;
-                            this.updateHitbox(100, 60, 50, 40);
                         }
                     }
                     if (this.states.slashing_end) { //slashing end
                         if (this.animation.currentFrame() >= 0 && this.animation.currentFrame() <= 1) {
                             if (this.states.facingRight)
-                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 25, 100,
+                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 5, 100,
                                     this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                             else
-                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 80, 100,
+                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 2*65, 100,
                                     this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
                         }
                         if (this.animation.isDone()) {
                             this.animation.reset();
                             this.states.slashing_end = false;
                             this.states.idling = true;
-                            this.updateHitbox(50, 50, 38, 40);
+                            if (!this.states.facingRight) {
+                                this.x += 20;
+                            }
                         }
                     }
                     if (this.states.blocking) { //blocking
-                        //this.UpdateHitbox(50, 50, 45, 45);
                         // a little knockback
                         if (this.states.facingRight) {
                             this.x -= 1;
@@ -251,15 +247,10 @@ define([
                             this.x += 1;
                             this.boundX += 1;
                         }
-
-
                         if (this.animation.isDone()) {
                             this.animation.reset();
-                            this.animation.reset();
-                            this.states.blocking = false;
-                            //for demo                        
+                            this.states.blocking = false;                   
                             this.states.idling = true;
-                            this.updateHitbox(50, 50, 38, 40);
                         }
                     }
                     if (this.states.turning) { //turning
@@ -271,7 +262,6 @@ define([
                             this.facing *= -1; //see above statement
                             this.states.framelocked = false;
                             this.states.idling = true;
-                            this.updateHitbox(50, 50, 38, 40);
                         }
                     }
                     this.yVelocity += this.gravity * this.gravity;
@@ -286,30 +276,39 @@ define([
 
             draw(ctx) {
                 if (this.states.idling) {
+                    this.updateHitbox(50, 50, 30, 35, 10, 0);
                     this.animation = this.animations.idle;
                 }
                 if (this.states.running) {
+                    this.updateHitbox(50, 50, 30, 35, 5, 0);
                     this.animation = this.animations.run;
                 }
                 if (this.states.shooting_startup) {
+                    this.updateHitbox(50, 50, 30, 35, 5, 0);
                     this.animation = this.animations.shoot_startup;
                 }
                 if (this.states.shooting_active) {
+                    this.updateHitbox(50, 50, 30, 35, 5, 0);
                     this.animation = this.animations.shoot_active;
                 }
                 if (this.states.shooting_recover) {
+                    this.updateHitbox(50, 50, 30, 35, 5, 0);
                     this.animation = this.animations.shoot_recover;
                 }
                 if (this.states.slashing_start) {
+                    this.updateHitbox(100, 60, 25, 35, -15, 0);
                     this.animation = this.animations.slash_start;
                 }
                 if (this.states.slashing_end) {
+                    this.updateHitbox(100, 60, 25, 35, -15, 0);
                     this.animation = this.animations.slash_end;
                 }
                 if (this.states.blocking) {
+                    this.updateHitbox(50, 50, 30, 35, -10, 0);
                     this.animation = this.animations.block;
                 }
                 if (this.states.turning) {
+                    this.updateHitbox(50, 50, 30, 35, -10, 0);
                     this.animation = this.animations.turn;
                 }
                 this.drawImg(ctx);
@@ -320,7 +319,7 @@ define([
                 this.centerX = this.x + ((fWidth * this.scale) / 2) - fWidth;
                 this.boundWidth = this.scale * bWidth;
                 this.boundHeight = this.scale * bHeight;
-                this.boundX = this.centerX - this.boundWidth / 2;
+                this.boundX = this.centerX - this.boundWidth / 2 + this.facing*offX;
                 this.boundY = this.y - this.boundHeight + (fHeight / 2 - 10);
             }
 
@@ -328,7 +327,7 @@ define([
                 if (other.name ===  "Terrain") {
                     if (direction === 'bottom') {
                         this.boundY = other.boundY - this.boundHeight;
-                        this.y = this.boundY + this.boundHeight - 20; //fix magic number (drawn slightly below hitbox without the 20 offset)
+                        this.y = this.boundY + this.boundHeight -10; //fix magic number (drawn slightly below hitbox without the 20 offset)
                         this.yVelocity = 0;
                         this.jumpsLeft = this.maxJumps;
                         this.states.jumping = false;
@@ -409,8 +408,10 @@ define([
             }
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                if (this.game.drawBoxes) {
+                    this.drawOutline(ctx);
+                }
             }
         }
         return Soldier_Shield;

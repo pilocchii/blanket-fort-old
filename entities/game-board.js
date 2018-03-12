@@ -14,6 +14,7 @@ define([
         // so this prototype.call() is calling the Entity constructor with (game=null, x=0, y=0)
         constructor (game, assetManager, ctx, hero, hud) {
             super(game, 0, 0, null, ctx);
+            this.testPos = [11580, 310]; //DBG/Dev Tool
             this.game = game;
             this.assetManager = assetManager;
             this.score = 0;

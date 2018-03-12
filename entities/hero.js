@@ -65,8 +65,8 @@ define([
             this.damageCooldownTimer = 0;
             this.damageCooldown = 16;
             this.energyCooldownTimer = 0;
-            this.energyCooldown = 20 / (this.multiplier * 2);
-            this.energyDelay = 90;
+            this.energyCooldown = 15 / (this.multiplier * 2);
+            this.energyDelay = 20;
             this.enregyDelayTimer = 0;
             this.velocityCooldown = 2;
             this.velocityCooldownTimer = 0;
@@ -307,12 +307,10 @@ define([
                         this.updateHitbox(60, 60, 25, 25);
                         this.states.hasGravity = false;
                         this.yVelocity = 0;
-                        console.log(this.energy);
                         if (this.energy >= this.dashEnergyCost) {
                             this.energy -= this.dashEnergyCost;
                             this.states.energyDash = true; //NOT USED FOR NOW (Don't like it);
                         }
-                        console.log(this.energy);
                         this.energyDelayTimer = this.energyDelay;
                         this.states.hasDashed = false;
                     }
@@ -504,7 +502,7 @@ define([
                 }
                 //console.log(`${this.name} colliding with ${other.name} from ${direction}`);
             }
-            if (other.name === "Lava" && !this.states.dead) {
+            if (other.name === "Lava" && !this.states.dead && !this.states.isGod) {
                 this.clearStates();
                 this.health = 0;
                 this.states.stunned = true;
@@ -637,8 +635,10 @@ define([
 
 
         drawImg (ctx) {
-            //this.drawOutline(ctx);
             this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+            if (this.game.drawBoxes) {
+                this.drawOutline(ctx);
+            }
         }
     }
 

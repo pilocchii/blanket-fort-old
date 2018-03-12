@@ -33,7 +33,9 @@ define([
 
         draw (ctx) {
             this.animation.drawFrame(1, ctx, this.x + this.xOffset, this.y + this.yOffset, true);
-            //this.drawOutline(ctx);
+            if (this.game.drawBoxes) {
+                this.drawOutline(ctx);
+            }
         }
 
         drawOutline (ctx) {

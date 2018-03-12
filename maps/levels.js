@@ -241,21 +241,21 @@ lj[][]!  |[]lj~~~~~lj           lj[]
                 `                                                                                                                                                                #
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~     |
                                                                                |                                              
-                                                                               |                                               ~           
+                                                                               |                                   
                                                                                |                       {}
-                                                                               |                       []          ~                 
-                                                                               |                       []                           ~
+                                                                               |                       []                     
+                                                                               |                       []               
                                                                                |                       []                  
-                                                                       <                               []      ~            ~      
+                                                                       <                               []              
                                                                                                        []
                    <~~~~~>                                            <~~                              []                                                                             
-                                                                                                       []             ~
+                                                                                                       []            
                                                                        <                               [] 
-                                       {}{}{______}{}{___}{}{_________}{}{}                            []                          
-                       {}              []ljl------jljl---jljl---------jlj[]                            []                          
-{___}{}{}{______}{}{___}{}{_________}{}[]                                []                            lj                      
-[###]ljlj[######]ljl---j[]l---------jlj[]                                
-[###]    [######]       []             []                                
+                                       {}{}{______}{}{___}{}{_________}{}{}                            []                          ]
+                       {}              []ljl------jljl---jljl---------jlj[]                            []                          ]
+{___}{}{}{______}{}{___}{}{_________}{}[]                                []                            lj                          ]
+[###]ljlj[######]ljl---j[]l---------jlj[]                                lj--------------------------------------------------------j
+[###]    [######]       []             []                                                              
 [###]    [######]       []             []                                
 [###]    [######]       []             []                                                      
 `.split('\n');
@@ -306,13 +306,13 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             /***HAZARDS***/
 
             /***ENEMIES***/
-            var hand1 = new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx);
-            hand1.distance = 75;
-            this.gameEngine.addEntity(hand1);
-            //this.gameEngine.addEntity(new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
-            this.gameEngine.addEntity(new Dino(this.gameEngine, 1960, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, 400, 250));
-            this.gameEngine.addEntity(new Crow(this.gameEngine, 750, 1000, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                /*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
+            //var hand1 = new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx);
+            //hand1.distance = 75;
+            //this.gameEngine.addEntity(hand1);
+            ////this.gameEngine.addEntity(new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+            //this.gameEngine.addEntity(new Dino(this.gameEngine, 1960, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, 400, 250));
+            //this.gameEngine.addEntity(new Crow(this.gameEngine, 750, 1000, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+            //    /*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
             this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1300, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx));//x: 8652, y: 1152
 
             /***ITEMS***/
@@ -352,9 +352,9 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 7965, -300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 7, 7, [0, 1], 120, 160))
 
             /***ENEMIES***/
-            this.gameEngine.addEntity(new Crow(this.gameEngine, 9600, -200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                [1000, 700], true, [[-400, 600], [-800, 700]]));
-            this.gameEngine.addEntity(new Hand(this.gameEngine, 6825, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+            //this.gameEngine.addEntity(new Crow(this.gameEngine, 9600, -200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+            //    [1000, 700], true, [[-400, 600], [-800, 700]]));
+            //this.gameEngine.addEntity(new Hand(this.gameEngine, 6825, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
 
 
             /***ITEMS***/
@@ -369,20 +369,32 @@ lj[][]!  |[]lj~~~~~lj           lj[]
 
         section_4() {
             /***HAZARDS***/
-            var spikes1 = new Hazards["spikes"](this.gameEngine, 10630,
-                672 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 0, 2, 0);
-            var spikes1 = new Hazards["spikes"](this.gameEngine, 11246,
-                872 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 0, 2, 0);
+            var spikes1 = new Hazards["spikes"](this.gameEngine, 10530,
+                792 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20, 2, 0);
+            var spikes2 = new Hazards["spikes"](this.gameEngine, 11246,
+                872 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20, 2, 0);
+            var spikes3 = new Hazards["spikes"](this.gameEngine, 11058,
+                504 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20*3, 2, 0);
+            var spikes4 = new Hazards["spikes"](this.gameEngine, 11600,
+                1148 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 0, 2, 0);
+            var spikes5 = new Hazards["spikes"](this.gameEngine, 11910,
+                792 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20*3, 2, 0);
+            var spikes6 = new Hazards["spikes"](this.gameEngine, 11500,
+                312 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20, 2, 0);
+            var spikes7 = new Hazards["spikes"](this.gameEngine, 12686,
+                600 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 0, 2, 0);
+            var spikes8 = new Hazards["spikes"](this.gameEngine, 12203,
+                312 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20*3, 2, 0);
 
             /***ENEMIES***/
-            this.gameEngine.addEntity(new Crow(this.gameEngine, 12963, 200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                [1000, 800], true, [[-400, 600], [-800, 700]]));
-            this.gameEngine.addEntity(new Crow(this.gameEngine, 13000, 100, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                [1000, 800], true, [[-400, 600], [-800, 700]]));
-            this.gameEngine.addEntity(new Crow(this.gameEngine, 12700, 500, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                [1000, 800], true, [[-400, 600], [-800, 700]]));
-            this.gameEngine.addEntity(new Crow(this.gameEngine, 12800, 300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                [1000, 800], true, [[-400, 600], [-800, 700]]));
+            //this.gameEngine.addEntity(new Crow(this.gameEngine, 12963, 200, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+            //    [1000, 800], true, [[-400, 600], [-800, 700]]));
+            this.gameEngine.addEntity(new Crow(this.gameEngine, 12500, 1100, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+                [550, 400], true, [[-1200, -500], [-400, -900]]));
+            //this.gameEngine.addEntity(new Crow(this.gameEngine, 12700, 500, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+            //    [1000, 800], true, [[-400, 600], [-800, 700]]));
+            //this.gameEngine.addEntity(new Crow(this.gameEngine, 12800, 300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
+            //    [1000, 800], true, [[-400, 600], [-800, 700]]));
 
             /***ITEMS***/
 

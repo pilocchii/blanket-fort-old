@@ -30,6 +30,7 @@ define([
             this.surfaceWidth = null;
             this.surfaceHeight = null;
             this.music = null;
+            this.drawBoxes = true;
             // KB input keycodes
             this.controlKeys = {
                 "Space": { "active": false },
@@ -48,6 +49,7 @@ define([
                 "KeyP": { "active": false },
                 "KeyT": { "active": false },
                 "KeyY": { "active": false },
+                "KeyV": { "active": false },
                 "Numpad1": { "active": false },
                 "Numpad2": { "active": false },
                 "Numpad3": { "active": false },
@@ -73,6 +75,7 @@ define([
                 "easymode": "KeyY",
                 "layoutA": "Numpad9",
                 "layoutB": "KeyP",
+                "testPos": "KeyV",
             }
             this.controlLayoutB = {
                 "jump": "Space",
@@ -332,6 +335,9 @@ define([
             }
             if (this.controlKeys[this.controls.layoutB].active) {
                 this.controls = this.controlLayoutB;
+            }
+            if (this.controlKeys[this.controls.testPos].active) {
+                this.hero.setPos(this.gameboard.testPos);
             }
         }
 
