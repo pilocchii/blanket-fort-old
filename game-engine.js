@@ -93,6 +93,7 @@ define([
                 "easymode": "KeyY",
                 "layoutA": "Numpad9",
                 "layoutB": "KeyP",
+                "testPos": "KeyV",
             }
             this.controls = this.controlLayoutA;
             this.score = 0;
