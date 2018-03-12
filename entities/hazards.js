@@ -295,8 +295,8 @@ define([
             /*Updates the entity each game loop. i.e. what does this entity do? */
             update() {
                 if (this.states.active) {
-                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX + 3, this.boundY, -this.spriteWidth - .5 * this.boundWidth, 0,
-                        this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 3, this.boundHeight - 36, this.scale, this.damage, this.states.facingRight,
+                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX + 19, this.boundY, -this.spriteWidth - .5 * this.boundWidth, 0,
+                        this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 13, this.boundHeight - 42, this.scale, this.damage, this.states.facingRight,
                         "health", 2, true));
                     if (this.animation.isDone()) {
                         this.animation.reset();
