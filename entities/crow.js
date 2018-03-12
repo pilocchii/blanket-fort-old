@@ -151,14 +151,23 @@ define([
                         this.animation.reset();
                         this.states.attacking = true;
                         this.states.flying = false;
+                        this.rand = Math.floor(Math.random() * 3);
                         this.game.sound.play("crow_caw");
                     }
                 }
                 if (this.states.attacking) {
-                    this.y -= 4;
-                    this.boundY -= 4;
-                    this.x -= this.facing*7;
-                    this.boundX -= this.facing*7;                    
+                    if (this.rand === 0) {
+                        //this.y -= this.attackAngle1;
+                        //this.boundY -= this.attackAngle2;
+                        this.updatePos(-this.facing * this.xAttack/2, -this.attackAngle1);
+                    }
+                    else {
+                        //this.y -= this.attackAngle2;
+                        //this.boundY -= this.attackAngle2;
+                        this.updatePos(-this.facing * this.xAttack/2, -this.attackAngle2);
+                    }
+                    //this.x -= this.facing*7;
+                    //this.boundX -= this.facing*7;                    
                     
                     if (this.animation.isDone()) {
                         this.animation.reset();
@@ -166,7 +175,6 @@ define([
                         //randomly determine angle of attack (makes prediction harder)
                         //min attack angle of 2
                         //this.attackAngle = 2 + Math.random() * 8; 
-                        this.rand = Math.floor(Math.random() * 3);
                         this.states.attacking_final = true;
                     }
                 }
@@ -223,7 +231,6 @@ define([
                     }
                     if (this.animation.loops > 8) {
                         //reset animation
-                        this.damage = 1;
                         this.animation.reset();
                         this.animation.reset();
                         //disable states
@@ -278,8 +285,6 @@ define([
                     this.states.hurt = true;
                 }
                 if (other.name ===  "Hurtbox" && !this.states.hurt && !this.states.idling) {
-                    //other.hasOwnProperty("isEnemy");
-                    //other.hasOwnProperty("damage");
                     if (!other.isEnemy) {
                         this.health -= other.damage;
                         this.states.flying = false;

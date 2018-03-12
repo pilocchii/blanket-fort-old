@@ -188,9 +188,8 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             this.assetManager = assetManager;
             this.ctx = ctx;
             this.tilesheet = assetManager.getAsset("img/pipes.png");
-            this.checkpoints = [[80, 1440], [3200, 1440], [7000, 1200], [9955, 384]];
-            this.camVals = [[2, 1.5], [2.75, 1.75], [2, 1.5], [2, 2]];
-            this.camSpeeds = [[7, 7], [7, 4], [4, 4], [4, 4]];
+            this.checkpoints = [[80, 1440], [3470, 1440], [7000, 1200], [9955, 384]];
+            this.camVals = [[2, 1.5], [1.5, 1.5], [2, 1.5], [2, 2]];
             this.activatedCheckpoints = [true, false, false, false];
             this.nextLevel = -1;
             //I'd like to use an array of functions (will let us have an actual Level superclass)
@@ -254,8 +253,8 @@ lj[][]!  |[]lj~~~~~lj           lj[]
                                        {}{}{______}{}{___}{}{_________}{}{}                            []                          
                        {}              []ljl------jljl---jljl---------jlj[]                            []                          
 {___}{}{}{______}{}{___}{}{_________}{}[]                                []                            lj                      
-[###]ljlj[######]ljl---j[]l---------jlj[]                                
-[###]    [######]       []             []                                
+[###]ljlj[######]ljl---j[]l---------jlj[]                                []{___________________________}
+[###]    [######]       []             []                                [][###########################]
 [###]    [######]       []             []                                
 [###]    [######]       []             []                                                      
 `.split('\n');
@@ -308,12 +307,12 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             /***ENEMIES***/
             var hand1 = new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx);
             hand1.distance = 75;
-            //this.gameEngine.addEntity(hand1);
-            //this.gameEngine.addEntity(new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+            this.gameEngine.addEntity(hand1);
+            this.gameEngine.addEntity(new Hand(this.gameEngine, 2283, 1344, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
             //this.gameEngine.addEntity(new Dino(this.gameEngine, 1960, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, 400, 250));
             //this.gameEngine.addEntity(new Crow(this.gameEngine, 750, 1000, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                ///*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
-            this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1300, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx));//x: 8652, y: 1152
+            //    /*sightRadius*/[400, 400], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
+            //this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1300, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx));//x: 8652, y: 1152
 
             /***ITEMS***/
 

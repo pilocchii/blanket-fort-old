@@ -109,7 +109,6 @@ define([
                             this.states.slashing_start = true;
                             this.states.idling = false;
                             this.animation.reset();
-                            this.animation.reset();
                             this.updateHitbox(80, 60, 50, 40);
                         }
                         //Shoot when in range
@@ -410,7 +409,7 @@ define([
             }
 
             drawImg(ctx) {
-                //this.drawOutline(ctx);
+                this.drawOutline(ctx);
                 this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
             }
         }

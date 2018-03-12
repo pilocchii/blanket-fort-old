@@ -48,6 +48,9 @@ define([
                 "KeyP": { "active": false },
                 "KeyT": { "active": false },
                 "KeyY": { "active": false },
+                "KeyC": { "active": false },
+                "KeyV": { "active": false },
+                "KeyB": { "active": false },
                 "Numpad1": { "active": false },
                 "Numpad2": { "active": false },
                 "Numpad3": { "active": false },
@@ -73,6 +76,10 @@ define([
                 "easymode": "KeyY",
                 "layoutA": "Numpad9",
                 "layoutB": "KeyP",
+                //cam speed selector
+                "slowCam": "KeyC",
+                "midCam": "KeyV",
+                "fastCam": "KeyB",
             }
             this.controlLayoutB = {
                 "jump": "Space",
@@ -90,6 +97,10 @@ define([
                 "easymode": "KeyY",
                 "layoutA": "Numpad9",
                 "layoutB": "KeyP",
+                //cam speed selector
+                "slowCam": "KeyC",
+                "midCam": "KeyV",
+                "fastCam": "KeyB",
             }
             this.controls = this.controlLayoutA;
             this.score = 0;
@@ -214,10 +225,6 @@ define([
 
             }
             for (let i = 0; i < this.entities.length; i++) {
-                //Draw the camera and hud first
-                // if (i === 0) {
-                //     this.entities[i].draw(this.ctx);
-                // }
                 ////Draw only terrain that is within the canvas view (numbers are negative because the camera is weird like that.
                 ////postive numbers would screw the translate process)
                 if (this.entities[i].type === "Terrain") {
@@ -336,6 +343,18 @@ define([
             }
             if (this.controlKeys[this.controls.layoutB].active) {
                 this.controls = this.controlLayoutB;
+            }
+            if (this.controlKeys[this.controls.slowCam].active) {
+                this.camera.camSpeedX = 4;
+                this.camera.camSpeedY = 4;
+            }
+            if (this.controlKeys[this.controls.midCam].active) {
+                this.camera.camSpeedX = 8;
+                this.camera.camSpeedY = 8;
+            }
+            if (this.controlKeys[this.controls.fastCam].active) {
+                this.camera.camSpeedX = 11;
+                this.camera.camSpeedY = 11;
             }
         }
 
