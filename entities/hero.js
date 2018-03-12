@@ -59,7 +59,7 @@ define([
 
             this.stunDir = 0;
             this.multiplier = 1;
-            this.difficulty = 3;
+            this.difficulty = 1;
             
             //Timers
             this.damageCooldownTimer = 0;

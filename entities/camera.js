@@ -21,9 +21,11 @@ define([
             this.worldWidth = worldWidth;
             this.worldHeight = worldHeight;
             this.absOffX = 2;
-            this.absOffY = 1.5
+            this.absOffY = 1.5;
             this.offX = this.canvasWidth/this.absOffX;
-            this.offY = this.canvasHeight/this.absOffY + 100;
+            this.offY = this.canvasHeight / this.absOffY + 100;
+            this.camSpeedX = 8;
+            this.camSpeedY = 8;
 
 
             // possible axis the camera can move in. not implemented yet
@@ -68,13 +70,13 @@ define([
 
         updateBounds() {
             if (!(this.offX === this.canvasWidth / this.absOffX)) {
-                if (this.offX + 10 < Math.floor(this.canvasWidth / this.absOffX)) { this.offX += 4; }
-                else if (this.offX - 10 > Math.floor(this.canvasWidth / this.absOffX)) { this.offX -= 4; }
+                if (this.offX + 10 < Math.floor(this.canvasWidth / this.absOffX)) { this.offX += this.camSpeedX; }
+                else if (this.offX - 10 > Math.floor(this.canvasWidth / this.absOffX)) { this.offX -= this.camSpeedX; }
                 else (this.offX = this.canvasWidth / this.absOffX);
             }
             if (!(this.offY === this.canvasHeight / this.absOffY)) {
-                if (this.offY + 10 < Math.floor(this.canvasHeight / this.absOffY)) { this.offY += 4; }
-                else if (this.offY - 10 > Math.floor(this.canvasHeight / this.absOffY)) { this.offY -= 4; }
+                if (this.offY + 10 < Math.floor(this.canvasHeight / this.absOffY)) { this.offY += this.camSpeedY; }
+                else if (this.offY - 10 > Math.floor(this.canvasHeight / this.absOffY)) { this.offY -= this.camSpeedY; }
                 else (this.offY = this.canvasHeight / this.absOffY);
             }
         }
