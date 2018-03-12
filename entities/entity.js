@@ -16,6 +16,8 @@ define([
         constructor (game, x, y, img=null, ctx=null) {
             this.name = this.constructor.name;
             this.game = game;
+            this.level = null;
+            this.section = null;
             this.parentClass = null;
             this.type = null;
             this.x = x;
@@ -108,7 +110,6 @@ define([
                     // console.log("rect1 cur: " + rect1.y);
                     // console.log("rect1 last: " + rect1.lastY);
                     // console.log("rect2: " + rect2.y);
-
                 }
 
             }

@@ -96,7 +96,6 @@ define([
                 "testPos": "KeyV",
             }
             this.controls = this.controlLayoutA;
-            this.score = 0;
             this.hero = hero;
         }
 
@@ -196,6 +195,10 @@ define([
         */
         addEntity (entity) {
             //console.log('added entity');
+            if (this.gameboard.states.loadingLevel || this.gameboard.states.respawnSection) {
+                entity.level = this.gameboard.levelNum;
+                entity.section = this.gameboard.level.sectionNum;
+            }
             this.entities.push(entity);
         }
 
@@ -245,35 +248,45 @@ define([
         */
         update () {
             let entitiesCount = this.entities.length;
-            if (this.gameboard.states.newLevel) {
-                for (let i = 0; i < entitiesCount; i++) {
-                    let entity = this.entities[i];
-                    if (entity.name !== "Gameboard" && entity.name !== "Camera") {
-                        entity.removeFromWorld = true;
-                    }
-                }
-            }
             for (let i = 0; i < entitiesCount; i++) {
                 let entity = this.entities[i];
+                if (this.gameboard.states.respawnSection) {
+                    if (entity.level === this.gameboard.levelNum && entity.section === this.gameboard.sectionNum) {
+                        //console.log("values - level: " + this.gameboard.levelNum + ", section: " + this.gameboard.sectionNum);
+                        //console.log("entity - level: " + entity.level + ", section: " + entity.section);
+                        entity.removeFromWorld = true;
+                        entity.pointValue = 0;
+                    }
+                }
+                else if (this.gameboard.states.newLevel) {
+                    if (entity.level === this.gameboard.levelNum || entity.name === "Terrain" || entity.name === "Hero") {
+                        //console.log("values - level: " + this.gameboard.levelNum + ", section: " + this.gameboard.sectionNum);
+                        //console.log("entity - level: " + entity.level + ", section: " + entity.section);
+                        entity.removeFromWorld = true;
+                        entity.pointValue = 0;
+                    }
+                }
                 if (!entity.removeFromWorld) {
                     entity.update();
                 }
             }
-
-            if (this.gameboard.states.newLevel) {
-                let hero = new Hero(this, 0, 0, this.gameboard.assetManager, this.ctx);
-                let hud = new Hud(this, this.gameboard.assetManager, hero, [0, 0], [0, 0], [100, 100], 3, this.gameboard.hud.camera);
-                this.gameboard.hero = hero;
-                this.gameboard.hud = hud;
+            if (this.gameboard.states.respawnSection) {
+                this.gameboard.states.respawnSection = false;
             }
+            if (this.gameboard.states.newLevel) {
+                this.gameboard.states.newLevel = false;
+                this.gameboard.states.loadNextLevel = true;
+            }
+
+            //TODO Move into first update() for loop?
             for (let i = this.entities.length - 1; i >= 0; --i) {
-                if (!this.gameboard.states.newLevel && this.entities[i].removeFromWorld) {
-                    if (this.entities[i].hasOwnProperty("pointValue")) {
-                        this.gameboard.score += this.hero.difficulty*this.entities[i].pointValue * this.hero.multiplier;
-                        if(this.entities[i].pointValue > 0)
-                            this.hero.multiplier += this.hero.difficulty*.5;
-                        //console.log("score is now " + this.score);
-                        //console.log("muliplier is " + this.hero.multiplier);
+                if (this.entities[i].removeFromWorld) {
+                    if (this.entities[i].hasOwnProperty("pointValue") && !this.gameboard.states.respawnSection) {
+                        if (this.entities[i].pointValue > 0) {
+                            //TODO Refactor hero multiplier and difficulty to gameboard
+                            this.gameboard.score += this.hero.difficulty * this.entities[i].pointValue * this.hero.multiplier;
+                            this.hero.multiplier += this.hero.difficulty * .5;
+                        }
                     }
                     this.entities.splice(i, 1);
                 }

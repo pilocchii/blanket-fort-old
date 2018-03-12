@@ -100,8 +100,14 @@ define([
                         //enable states
                         this.states.flying = true;
                         if (this.murderLeader) {
-                            this.game.addEntity(new Crow(this.game, this.x + this.droogOne[0], this.y + this.droogOne[1], this.img, this.ctx, this.scale, this.spriteWidth, this.spriteHeight, [2000, 2000]));
-                            this.game.addEntity(new Crow(this.game, this.x + this.droogTwo[0], this.y + this.droogTwo[1], this.img, this.ctx, this.scale, this.spriteWidth, this.spriteHeight, [2000, 2000]));
+                            var droog1 = new Crow(this.game, this.x + this.droogOne[0], this.y + this.droogOne[1], this.img, this.ctx, this.scale, this.spriteWidth, this.spriteHeight, [2000, 2000]);
+                            var droog2 = new Crow(this.game, this.x + this.droogTwo[0], this.y + this.droogTwo[1], this.img, this.ctx, this.scale, this.spriteWidth, this.spriteHeight, [2000, 2000]);
+                            droog1.level = this.level;
+                            droog1.section = this.section;
+                            droog2.level = this.level;
+                            droog2.section = this.section;
+                            this.game.addEntity(droog1);
+                            this.game.addEntity(droog2);
                         }
                     }
                 }

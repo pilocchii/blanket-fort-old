@@ -74,7 +74,7 @@ define([
         let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
 
         //Loads level n
-        board.getLevel(2);
+        board.getLevel(1);
 
         camera.follow(hero);
         gameEngine.addEntity(board);
