@@ -33,6 +33,7 @@ define([
             this.surfaceHeight = null;
             this.music = null;
             this.addedpoints = 0;
+            this.difficulty = "Normal (But Kinda Easy)";
 
             //DEV TOOL FIELDS
             this.toggleCooldown= 20;
@@ -40,6 +41,14 @@ define([
             this.setPosTimer = 0;
             this.godToggleTimer = 0;
             this.checkpointCycleCount = 1;
+
+            this.paused = false;
+            this.pauseToggleCooldown = 0;
+            this.pauseGeneral = 40;
+            this.pauseLayoutA = 350;
+            this.pauseLayoutB = 350;
+            this.pauseFlavorX = 800;
+            this.pauseFlavorY = 250;
 
             // KB input keycodes
             this.controlKeys = {
@@ -61,6 +70,7 @@ define([
                 "KeyY": { "active": false },
                 "KeyV": { "active": false },
                 "KeyC": { "active": false },
+                "Enter": { "active": false },
                 "Numpad1": { "active": false },
                 "Numpad2": { "active": false },
                 "Numpad3": { "active": false },
@@ -88,6 +98,7 @@ define([
                 "layoutB": "KeyP",
                 "testPos": "KeyV",
                 "toggleBoxes": "KeyC",
+                "pause": "Enter",
             }
             this.controlLayoutB = {
                 "jump": "Space",
@@ -107,6 +118,7 @@ define([
                 "layoutB": "KeyP",
                 "testPos": "KeyV",
                 "toggleBoxes": "KeyC",
+                "pause": "Enter",
             }
             this.controls = this.controlLayoutA;
             this.hero = hero;
@@ -245,7 +257,126 @@ define([
                     }
                 }
                 else {
-                    this.entities[i].draw(this.ctx);
+                    if(!this.paused || this.entities[i].name === "Camera") 
+                        this.entities[i].draw(this.ctx);
+                    if (this.paused) {
+                        this.ctx.font = "25px Verdana";
+                        this.ctx.fillStyle = "#e5e5e5";
+                        this.ctx.fillText("Universal Controls",
+                            -this.camera.xView + 50,
+                            -this.camera.yView + this.pauseGeneral + 40
+                        );
+                        this.ctx.fillText("Run left: S",
+                            -this.camera.xView + 125,
+                            -this.camera.yView + this.pauseGeneral + 80
+                        )
+                        this.ctx.fillText("Run right: D",
+                            -this.camera.xView + 125,
+                            -this.camera.yView + this.pauseGeneral + 120
+                        )
+                        this.ctx.fillText("Energize: W",
+                            -this.camera.xView + 125,
+                            -this.camera.yView + this.pauseGeneral + 160
+                        )
+                        this.ctx.fillText("Jump: Space",
+                            -this.camera.xView + 125,
+                            -this.camera.yView + this.pauseGeneral + 200
+                        )
+                        this.ctx.fillText("Normal Difficulty (default): Y",
+                            -this.camera.xView + 50,
+                            -this.camera.yView + this.pauseGeneral + 240
+                        )
+                        this.ctx.fillText("Tough Difficulty (not default): T",
+                            -this.camera.xView + 50,
+                            -this.camera.yView + this.pauseGeneral + 280
+                        )
+                        this.ctx.fillText("God Mode Toggle (for cheaters): G",
+                            -this.camera.xView + 50,
+                            -this.camera.yView + this.pauseGeneral + 320
+                        )
+                        this.ctx.fillText("Abilities",
+                            -this.camera.xView + 500,
+                            -this.camera.yView + this.pauseGeneral + 40
+                        )
+                        this.ctx.fillText("Power Shot: Energize + Shoot",
+                            -this.camera.xView + 500,
+                            -this.camera.yView + this.pauseGeneral + 80
+                        )
+                        this.ctx.fillText("Sword Blast: Energize + Slash",
+                            -this.camera.xView + 500,
+                            -this.camera.yView + this.pauseGeneral + 120
+                        )
+                        this.ctx.fillText("Reflect: Energize + Cleave",
+                            -this.camera.xView + 500,
+                            -this.camera.yView + this.pauseGeneral + 160
+                        )
+                        this.ctx.fillText("Layout A (Numpad 9)",
+                            -this.camera.xView + 50,
+                            -this.camera.yView + this.pauseLayoutA + 200
+                        );
+                        this.ctx.fillText("Shoot: Numpad 4",
+                            -this.camera.xView + 125,
+                            -this.camera.yView + this.pauseLayoutA + 240
+                        )
+                        this.ctx.fillText("Dash: Numpad 1",
+                            -this.camera.xView + 125,
+                            -this.camera.yView + this.pauseLayoutA + 280
+                        )
+                        this.ctx.fillText("Slash: Numpad 5",
+                            -this.camera.xView + 125,
+                            -this.camera.yView + this.pauseLayoutA + 320
+                        )
+                        this.ctx.fillText("Cleave: Numpad 6",
+                            -this.camera.xView + 125,
+                            -this.camera.yView + this.pauseLayoutA + 360
+                        )
+                        this.ctx.fillText("Layout B (P)",
+                            -this.camera.xView + 500,
+                            -this.camera.yView + this.pauseLayoutB + 200
+                        );
+                        this.ctx.fillText("Shoot: J",
+                            -this.camera.xView + 575,
+                            -this.camera.yView + this.pauseLayoutB + 240
+                        )
+                        this.ctx.fillText("Dash: M",
+                            -this.camera.xView + 575,
+                            -this.camera.yView + this.pauseLayoutB + 280
+                        )
+                        this.ctx.fillText("Slash: K",
+                            -this.camera.xView + 575,
+                            -this.camera.yView + this.pauseLayoutB + 320
+                        )
+                        this.ctx.fillText("Cleave: L",
+                            -this.camera.xView + 575,
+                            -this.camera.yView + this.pauseLayoutB + 360
+                        )
+                        this.ctx.fillText("Current Difficulty is " + this.difficulty,
+                            -this.camera.xView + 1100,
+                            -this.camera.yView + this.pauseGeneral + 40
+                        )
+                        this.ctx.font = "20px Verdana";
+                        this.ctx.fillText("(this can be changed at any time, including while paused)",
+                            -this.camera.xView + 1100,
+                            -this.camera.yView + this.pauseGeneral + 80
+                        )
+                        this.ctx.font = "Italic 40px Times New Roman";
+                        this.ctx.fillText("The forces of evil are still finishing arrangements",
+                            -this.camera.xView + this.pauseFlavorX,
+                            -this.camera.yView + this.pauseFlavorY + 80
+                        )
+                        this.ctx.fillText("on the expansion of their dungeons and throne rooms.",
+                            -this.camera.xView + this.pauseFlavorX,
+                            -this.camera.yView + this.pauseFlavorY + 120
+                        )
+                        this.ctx.fillText("Prepare for the inevitable showdown with this villianous",
+                            -this.camera.xView + this.pauseFlavorX,
+                            -this.camera.yView + this.pauseFlavorY + 160
+                        )
+                        this.ctx.fillText("scum by trying to get as high a score as possible.",
+                            -this.camera.xView + this.pauseFlavorX,
+                            -this.camera.yView + this.pauseFlavorY + 200
+                        )
+                    }
                 }
             }
             
@@ -259,97 +390,101 @@ define([
         /*
         Updates all entities, calls their update methods
         */
-        update () {
-            let entitiesCount = this.entities.length;
-            for (let i = 0; i < entitiesCount; i++) {
-                let entity = this.entities[i];
-                if (this.gameboard.states.respawnSection) {
-                    if (entity.level === this.gameboard.levelNum && entity.section === this.gameboard.sectionNum) {
-                        //console.log("values - level: " + this.gameboard.levelNum + ", section: " + this.gameboard.sectionNum);
-                        //console.log("entity - level: " + entity.level + ", section: " + entity.section);
-                        entity.removeFromWorld = true;
-                        entity.pointValue = 0;
-                    }
-                }
-                else if (this.gameboard.states.newLevel) {
-                    if (entity.level === this.gameboard.levelNum || entity.name === "Terrain" || entity.name === "Hero" || entity.name === "HUD" || entity.name === "Portal") {
-                        //console.log("values - level: " + this.gameboard.levelNum + ", section: " + this.gameboard.sectionNum);
-                        //console.log("entity - level: " + entity.level + ", section: " + entity.section);
-                        entity.removeFromWorld = true;
-                        entity.pointValue = 0;
-                    }
-                }
-                if (!entity.removeFromWorld) {
-                    entity.update();
-                }
-            }
-            if (this.gameboard.states.respawnSection) {
-                this.gameboard.states.respawnSection = false;
-            }
-            if (this.gameboard.states.newLevel) {
-                this.gameboard.states.newLevel = false;
-                this.gameboard.states.loadNextLevel = true;
-            }
-
-            //TODO Move into first update() for loop?
-            for (let i = this.entities.length - 1; i >= 0; --i) {
-                if (this.entities[i].removeFromWorld) {
-                    if (this.entities[i].hasOwnProperty("pointValue") && !this.gameboard.states.respawnSection) {
-                        if (this.entities[i].pointValue > 0) {
-                            //TODO Refactor hero multiplier and difficulty to gameboard
-                            //if (!this.gameboard.states.showPointValues) {
-                                
-                            //    this.gameboard.states.showPointValues = true;
-                            //    this.gameboard.pvt = this.gameboard.pvtt;
-                            //}
-                            this.addedpoints = this.hero.difficulty * this.entities[i].pointValue * this.hero.multiplier;
-                            this.gameboard.deadEnemies.push([[this.entities[i].x, this.entities[i].y], this.addedpoints, 30]);
-                            this.gameboard.score += this.addedpoints;
-                            this.hero.multiplier += this.hero.difficulty * .5;
+        update() {
+            if (!this.paused) {
+                let entitiesCount = this.entities.length;
+                for (let i = 0; i < entitiesCount; i++) {
+                    let entity = this.entities[i];
+                    if (this.gameboard.states.respawnSection) {
+                        if (entity.level === this.gameboard.levelNum && entity.section === this.gameboard.sectionNum) {
+                            //console.log("values - level: " + this.gameboard.levelNum + ", section: " + this.gameboard.sectionNum);
+                            //console.log("entity - level: " + entity.level + ", section: " + entity.section);
+                            entity.removeFromWorld = true;
+                            entity.pointValue = 0;
                         }
                     }
-                    this.entities.splice(i, 1);
+                    else if (this.gameboard.states.newLevel) {
+                        if (entity.level === this.gameboard.levelNum || entity.name === "Terrain" || entity.name === "Hero" || entity.name === "HUD" || entity.name === "Portal") {
+                            //console.log("values - level: " + this.gameboard.levelNum + ", section: " + this.gameboard.sectionNum);
+                            //console.log("entity - level: " + entity.level + ", section: " + entity.section);
+                            entity.removeFromWorld = true;
+                            entity.pointValue = 0;
+                        }
+                    }
+                    if (!entity.removeFromWorld) {
+                        entity.update();
+                    }
                 }
-            }
+                if (this.gameboard.states.respawnSection) {
+                    this.gameboard.states.respawnSection = false;
+                }
+                if (this.gameboard.states.newLevel) {
+                    this.gameboard.states.newLevel = false;
+                    this.gameboard.states.loadNextLevel = true;
+                }
 
-            for (let i = 0; i < this.entities.length; i++) {
-                let entity = this.entities[i];
-                for (let j = 0; j < this.entities.length; j++) {
-                    let other = this.entities[j];
-                    // this prevents each piece of terrain from checking collision, causing slowdown
-                    if (entity.type === "Terrain") continue;
-                    else if (other.type === "Terrain") {
-                        let dist = Math.abs(entity.x - other.x);
-                        if (dist < 100) {
-                            if (entity != other && entity.isColliding(other) != 'none') { /// D.prototype = new C(), links C to prototype linkage of D OR put property "something_type" or whatever and check for that
-                                let direction = entity.isColliding(other);
-                                entity.collided(other, direction);
+                //TODO Move into first update() for loop?
+                for (let i = this.entities.length - 1; i >= 0; --i) {
+                    if (this.entities[i].removeFromWorld) {
+                        if (this.entities[i].hasOwnProperty("pointValue") && !this.gameboard.states.respawnSection) {
+                            if (this.entities[i].pointValue > 0) {
+                                //TODO Refactor hero multiplier and difficulty to gameboard
+                                //if (!this.gameboard.states.showPointValues) {
+
+                                //    this.gameboard.states.showPointValues = true;
+                                //    this.gameboard.pvt = this.gameboard.pvtt;
+                                //}
+                                this.addedpoints = this.hero.difficulty * this.entities[i].pointValue * this.hero.multiplier;
+                                this.gameboard.deadEnemies.push([[this.entities[i].x, this.entities[i].y], this.addedpoints, 30]);
+                                this.gameboard.score += this.addedpoints;
+                                this.hero.multiplier += this.hero.difficulty * .5;
                             }
                         }
-
+                        this.entities.splice(i, 1);
                     }
-                    else if (entity != other && entity.isColliding(other) != 'none') { /// D.prototype = new C(), links C to prototype linkage of D OR put property "something_type" or whatever and check for that
-                        let direction = entity.isColliding(other);
-                        entity.collided(other, direction);
+                }
+
+                for (let i = 0; i < this.entities.length; i++) {
+                    let entity = this.entities[i];
+                    for (let j = 0; j < this.entities.length; j++) {
+                        let other = this.entities[j];
+                        // this prevents each piece of terrain from checking collision, causing slowdown
+                        if (entity.type === "Terrain") continue;
+                        else if (other.type === "Terrain") {
+                            let dist = Math.abs(entity.x - other.x);
+                            if (dist < 100) {
+                                if (entity != other && entity.isColliding(other) != 'none') { /// D.prototype = new C(), links C to prototype linkage of D OR put property "something_type" or whatever and check for that
+                                    let direction = entity.isColliding(other);
+                                    entity.collided(other, direction);
+                                }
+                            }
+
+                        }
+                        else if (entity != other && entity.isColliding(other) != 'none') { /// D.prototype = new C(), links C to prototype linkage of D OR put property "something_type" or whatever and check for that
+                            let direction = entity.isColliding(other);
+                            entity.collided(other, direction);
+                        }
+
                     }
 
                 }
-                
             }
 
             // music
             if (this.music.currentTime >= 63.95) {
-                 this.music.currentTime = 0;
-                 this.music.play();
+                this.music.currentTime = 0;
+                this.music.play();
             }
 
             //PLAYER SETTINGS
             if (this.controlKeys[this.controls.easymode].active) {
                 //TODO Move difficulty to gameboard
+                this.difficulty = "Normal (But Kinda Easy)";
                 this.hero.difficulty = 1;
                 this.gameboard.score = 0;
             }
             if (this.controlKeys[this.controls.hardmode].active) {
+                this.difficulty = "Tough";
                 this.hero.difficulty = 3;
                 this.gameboard.score = 0;
             }
@@ -359,9 +494,15 @@ define([
             if (this.controlKeys[this.controls.layoutB].active) {
                 this.controls = this.controlLayoutB;
             }
-
+            if (this.controlKeys[this.controls.pause].active && this.pauseToggleCooldown === 0) {
+                this.paused = !this.paused;
+                this.pauseToggleCooldown = this.toggleCooldown;
+            }
+            if (this.pauseToggleCooldown > 0) {
+                this.pauseToggleCooldown--;
+            }
             //DEV TOOLS
-            if (this.devMode) {
+            if (this.devMode && !this.paused) {
                 if (this.controlKeys[this.controls.getPos].active) {
                     console.log("x: " + this.hero.x + ", y: " + this.hero.y);
                 }
