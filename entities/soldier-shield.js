@@ -209,10 +209,10 @@ define([
                         if (this.animation.currentFrame() === 8) {
                             if (this.states.facingRight)
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 5, 100,
-                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, 2*this.damage, this.states.facingRight, true));
                             else
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 2*65, 100,
-                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, 2*this.damage, this.states.facingRight, true));
                         }
                         if (this.animation.isDone()) {
                             this.animation.reset();
@@ -224,10 +224,10 @@ define([
                         if (this.animation.currentFrame() >= 0 && this.animation.currentFrame() <= 1) {
                             if (this.states.facingRight)
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, 5, 100,
-                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, 2*this.damage, this.states.facingRight, true));
                             else
                                 this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 2*65, 100,
-                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, this.damage, this.states.facingRight, true));
+                                    this.spriteWidth, this.spriteHeight, 70, 100, this.scale, 2*this.damage, this.states.facingRight, true));
                         }
                         if (this.animation.isDone()) {
                             this.animation.reset();
