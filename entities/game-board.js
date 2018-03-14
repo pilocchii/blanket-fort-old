@@ -64,10 +64,8 @@ define([
                     this.game.addEntity(this.level.portal);
                     this.hero.removeFromWorld = false;
                     this.hero.states.active = true;
-                    if (this.states.newBoard) {
-                        this.game.addEntity(this.hud);
-                        this.states.newBoard = false;
-                    }
+                    this.game.addEntity(this.hud);
+                    this.hud.removeFromWorld = false;
                 }
                 if (this.states.loadingSection) {
                     this.states.respawnSection = true;

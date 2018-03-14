@@ -67,7 +67,7 @@ define([
             this.activatedCheckpoints = [true, false, false, false];
             this.nextLevel = 2;
             this.activatedCheckpoints = [true, false];
-            this.portal = new Portal(this.gameEngine, 3870, -20, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, false);
+            this.portal = new Portal(this.gameEngine, 3870, -20, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, true);
 
             this.tileSize = 96;
 
@@ -489,20 +489,34 @@ l-j
             this.boundX = this.centerX - this.scale * 5;
             this.boundY = this.y - this.spriteHeight * this.scale / 2 + 5 * this.scale;
 
-            this.cooldown = 50;
+            this.cooldown = 20;
+            this.cooldownTimer = 0;
 
             this.states = {
                 "facingRight": facingRight,
                 "active": true,
             };
             this.animations = {
-                "active": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 11, 8, 5, 8, true, this.scale),
+                "active": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 11, 8, 5, 8, false, this.scale),
             };
             this.animation = this.animations.active;
         }
 
         /*Updates the entity each game loop. i.e. what does this entity do? */
         update() {
+            if (this.states.active) {
+                if (this.animation.isDone()) {
+                    this.states.active = false;
+                    this.animation.reset();
+                    this.cooldownTimer = this.cooldown;
+                }
+            }
+            else if (this.cooldownTimer > 0) {
+                this.cooldownTimer--;
+            }
+            else {
+                this.states.active = true;
+            }
 
         }
 
@@ -523,8 +537,8 @@ l-j
         draw(ctx) {
             if (this.states.active) {
                 this.animation = this.animations.active;
+                this.drawImg(ctx);
             }
-            this.drawImg(ctx);
         }
 
         drawImg(ctx) {

@@ -19,7 +19,7 @@ define([
 
         constructor(gameboard, hero) {
             this.drawBoxes = false;
-            this.devMode = false;
+            this.devMode = true;
             this.sound = new Sound();
             this.entities = [];
             this.backgroundLayers = [];
@@ -271,7 +271,7 @@ define([
                     }
                 }
                 else if (this.gameboard.states.newLevel) {
-                    if (entity.level === this.gameboard.levelNum || entity.name === "Terrain" || entity.name === "Hero") {
+                    if (entity.level === this.gameboard.levelNum || entity.name === "Terrain" || entity.name === "Hero" || entity.name === "HUD" || entity.name === "Portal") {
                         //console.log("values - level: " + this.gameboard.levelNum + ", section: " + this.gameboard.sectionNum);
                         //console.log("entity - level: " + entity.level + ", section: " + entity.section);
                         entity.removeFromWorld = true;
@@ -351,15 +351,7 @@ define([
             if (this.controlKeys[this.controls.layoutB].active) {
                 this.controls = this.controlLayoutB;
             }
-            if (this.controlKeys[this.controls.setPos].active && this.setPosTimer <= 0) {
-                this.hero.setPos(this.gameboard.level.checkpoints[this.checkpointCycleCount]);
-                this.setPosTimer = this.toggleCooldown;
-                this.checkpointCycleCount = (this.checkpointCycleCount + 1) % this.gameboard.level.checkpoints.length;
-            }
-            if (this.controlKeys[this.controls.godToggle].active && this.godToggleTimer <= 0) {
-                this.hero.states.isGod = !this.hero.states.isGod;
-                this.godToggleTimer = this.toggleCooldown;
-            }
+
             //DEV TOOLS
             if (this.devMode) {
                 if (this.controlKeys[this.controls.getPos].active) {
@@ -400,7 +392,6 @@ define([
             for (let i = 0; i < this.backgroundLayers.length; i++) {
                 //Draw the camera and hud first
                 this.backgroundLayers[i].draw(this.ctx);
-
             }
             if (drawCallback) {
                 drawCallback(this);
