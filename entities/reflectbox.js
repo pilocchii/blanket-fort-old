@@ -84,7 +84,6 @@ define([
                     }
                 }
                 if (other.name === "Bomb") {
-                    other.launching = true;
                     other.xVelocity = -this.facing * 5;
                     other.yVelocity = -20;
                     other.damage = 50;

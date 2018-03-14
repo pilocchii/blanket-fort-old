@@ -29,7 +29,7 @@ define([
                 this.boundHeight = 0; //120
                 this.boundX = this.centerX - (this.boundWidth / 2);
                 this.boundY = this.y - this.boundHeight;
-                this.lastBoundY = this.boundY; // This will help stop Hero from slipping at edges, particularly for horizontally longer blocks of terrain
+                this.lastBoundY = this.boundY;
 
                 //Stats
                 this.health = 5;
@@ -58,7 +58,6 @@ define([
                 } else {
                     this.x -= this.movementSpeed;
                     this.boundX -= this.movementSpeed;
-                    
                 }
 
                 if (this.states.starting) {
@@ -84,20 +83,18 @@ define([
                 }
                 if (!this.states.recovering) {//Hurtbox  active unless in recovery frames
                     if (this.states.facingRight) {
-                        var hurtbox = new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - 80, 100 - 120,
-                            this.spriteWidth, this.spriteHeight, 150, 100, this.scale, this.damage, this.states.facingRight);
+                        var hurtbox = new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - 80 - 40, 0,
+                            this.spriteWidth, this.spriteHeight, 170, 90, this.scale, this.damage, this.states.facingRight);
                         hurtbox.parent = this.name;
                         this.game.addEntity(hurtbox);
                     }
                     else {
-                        var hurtbox = new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - 150 - 200, 100 - 120,
-                            this.spriteWidth, this.spriteHeight, 150, 100, this.scale, this.damage, this.states.facingRight);
+                        var hurtbox = new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -100 - 150 - 200 - 15, 0,
+                            this.spriteWidth, this.spriteHeight, 170, 90, this.scale, this.damage, this.states.facingRight);
                         hurtbox.parent = this.name;
                         this.game.addEntity(hurtbox);  
                     }
-
                 }
-
             };
 
             draw(ctx) {

@@ -375,14 +375,20 @@ define([
                 if (other.name ===  "Hurtbox") {
                     // blocking from left & right
                     if (!other.isEnemy) {
-                        if (this.states.idling || this.states.blocking) {
-                            if (this.x - this.game.hero.x < 0 && this.states.facingRight/*direction == 'left' && other.x < this.x*/) {
-                                this.states.blocking = true;
-                                this.states.idling = false;
-                            }
-                            else if (this.x - this.game.hero.x > 0 && !this.states.facingRight/*direction == 'right' && other.x > this.x*/) {
-                                this.states.blocking = true;
-                                this.states.idling = false;
+                        if (other.parent === "Bomb") {
+                            if (this.states.idling || this.states.blocking) {
+                                if (this.x - other.x < 0 && this.states.facingRight/*direction == 'left' && other.x < this.x*/) {
+                                    this.states.blocking = true;
+                                    this.states.idling = false;
+                                }
+                                else if (this.x - other.x > 0 && !this.states.facingRight/*direction == 'right' && other.x > this.x*/) {
+                                    this.states.blocking = true;
+                                    this.states.idling = false;
+                                }
+                                else {
+                                    this.health -= other.damage;
+                                    console.log("OUCH!")
+                                }
                             }
                             else {
                                 this.health -= other.damage;
@@ -390,9 +396,26 @@ define([
                             }
                         }
                         else {
-                            this.health -= other.damage;
-                            console.log("OUCH!")
+                            if (this.states.idling || this.states.blocking) {
+                                if (this.x - this.game.hero.x < 0 && this.states.facingRight/*direction == 'left' && other.x < this.x*/) {
+                                    this.states.blocking = true;
+                                    this.states.idling = false;
+                                }
+                                else if (this.x - this.game.hero.x > 0 && !this.states.facingRight/*direction == 'right' && other.x > this.x*/) {
+                                    this.states.blocking = true;
+                                    this.states.idling = false;
+                                }
+                                else {
+                                    this.health -= other.damage;
+                                    console.log("OUCH!")
+                                }
+                            }
+                            else {
+                                this.health -= other.damage;
+                                console.log("OUCH!")
+                            }
                         }
+
                     }
                 }
             }

@@ -104,8 +104,10 @@ define([
                     var explosionX = 150;
                     var explosionY = 150;
                     this.game.playSound("explosion_1")
-                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -1.75 * explosionX + 10, this.spriteHeight - 20,
-                        this.spriteWidth, this.spriteHeight, explosionX, explosionY, this.scale + 2, Math.max(4, this.damage), this.states.facingRight, !this.states.reflected, "health", 15));
+                    var hurtbox = new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -1.75 * explosionX + 10, this.spriteHeight - 20,
+                        this.spriteWidth, this.spriteHeight, explosionX, explosionY, this.scale + 2, Math.max(4, this.damage), this.states.facingRight, !this.states.reflected, "health", 15);
+                    hurtbox.parent = this.name;
+                    this.game.addEntity(hurtbox);
                     this.states.exploded = true;
                 }
                 if (this.animation.isDone()) {
@@ -176,18 +178,14 @@ define([
                     this.yVelocity = 0;
                     this.lastBoundY = this.boundY;
                 }
-                //else if (direction === 'left') {
-                //    this.boundX = other.boundX + other.boundWidth;
-                //    this.x = this.boundX + 87;
-                //    this.states.facingRight = true;
-                //    this.facing = -1;
-                //}
-                //else if (direction === 'left') {
-                //    this.boundX = other.boundX + other.boundWidth;
-                //    this.x = this.boundX - 87;
-                //    this.states.facingRight = false;
-                //    this.facing = 1;
-                //}
+                else if (direction === 'left') {
+                    this.boundX = other.boundX + other.boundWidth;
+                    this.x = this.boundX;
+                }
+                else if (direction === 'right') {
+                    this.boundX = other.boundX - this.boundWidth;
+                    this.x = this.boundX;
+                }
             }
             if (other.name === "Projectile") {
                 this.states.launching = false,
