@@ -96,6 +96,21 @@ define([
                         this.removeFromWorld = true;
                     }
                 }
+                if (other.name === "Reflectbox") {
+                    this.states.facingRight = !this.states.facingRight;
+                    this.name = "Projectile";
+                    this.health = 1;
+                    this.damage = 150;
+                }
+                if (this.name === "Projectile") {
+                    if (other.name === "Bullet") {
+                        other.removeFromWorld = true;
+                        this.removeFromWorld = true;
+                    }
+                    if (other.parentClass === "Enemy") {
+                        this.removeFromWorld = true;
+                    }
+                }
                 if (this.health <= 0) {
                     this.removeFromWorld = true;
                 }

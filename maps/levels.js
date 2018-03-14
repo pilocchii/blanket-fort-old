@@ -282,7 +282,7 @@ l-j
 
         load() {
             this.constructTerrain();
-            //mapStart (saves work for now. Not good practice)
+            //mapStart (this saves work for now. Not good practice. Unless we formalize it?)
             for (var col = 0; col < this.mapStart[0].length; col++) {
                 for (var row = 0; row < this.mapStart.length; row++) {
                     var tile = this.tileMap[this.mapStart[row][col]];
@@ -343,7 +343,7 @@ l-j
             hand1.sightRadius[0] = 2300;
             this.gameEngine.addEntity(hand1);
             this.gameEngine.addEntity(new Crow(this.gameEngine, 500, 1000, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40, [300, 1000]));
-            this.gameEngine.addEntity(new Dino(this.gameEngine, 1460, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, /*patrol distance*/300, /*shot time offset*/ 0));
+            //this.gameEngine.addEntity(new Dino(this.gameEngine, 1460, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, /*patrol distance*/300, /*shot time offset*/ 0));
             this.gameEngine.addEntity(new Crow(this.gameEngine, 2300, 1000, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
                 /*sightRadius*/[300, 1000], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
             this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1000, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
@@ -461,7 +461,7 @@ l-j
           
             /***ENEMIES***/
             this.gameEngine.addEntity(new Crow(this.gameEngine, 12150, 900, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
-                [500, 500], true, [[-1200, 0], [-600, -700]]));
+                [650, 500], true, [[-1200, 0], [-600, -700]]));
 
             /***ITEMS***/
 

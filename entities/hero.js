@@ -7,6 +7,7 @@ define([
     "soldier-shield",
     "enemy",
     "hurtbox",
+    "reflectbox",
     "hazards",
     "rocket",
 ], function (
@@ -18,6 +19,7 @@ define([
     Soldier_Shield,
     Enemy,
     Hurtbox,
+    Reflectbox,
     Hazards,
     Rocket,
 ){
@@ -53,6 +55,7 @@ define([
             this.energy = 30;
             this.health = 30;
             this.slashEnergyCost = 25;
+            this.cleaveEnergyCost = 20;
             this.shootCost = 2;
             this.shootEnergyCost = 10;
             this.dashEnergyCost = 7;
@@ -68,7 +71,7 @@ define([
             this.energyCooldown = 15 / (this.multiplier * 2);
             this.energyCooldownMin = 15 / (this.multiplier * 2);
             this.energyDelay = 20;
-            this.enregyDelayTimer = 0;
+            this.energyDelayTimer = 0;
             this.velocityCooldown = 2;
             this.velocityCooldownTimer = 0;
             this.jumpTimer = 0;
@@ -229,35 +232,57 @@ define([
                 }
                 //Cleaving
                 if (this.states.cleaving) {
-                    if (this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 6) {//Upper hurtbbox
-                        if (this.states.facingRight)
-                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -230, 0,
-                                this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 150, this.states.facingRight));
-                        else
-                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -70 - this.spriteWidth - 150, 0,
-                                this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 150, this.states.facingRight));
+                    if (!this.states.energized && !this.states.hasReflected) {
+                        if (this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 6) {//Upper hurtbbox
+                            if (this.states.facingRight)
+                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -230, 0,
+                                    this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 150, this.states.facingRight));
+                            else
+                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -70 - this.spriteWidth - 150, 0,
+                                    this.spriteWidth, this.spriteHeight, 150, 50, this.scale, 150, this.states.facingRight));
+                        }
+                        if (this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 6) {//Lower hurtbox
+                            if (this.states.facingRight)
+                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
+                                    this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 150, this.states.facingRight));
+                            else
+                                this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
+                                    this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 150, this.states.facingRight));
+                        }
                     }
-                    if (this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 6) {//Lower hurtbox
-                        if (this.states.facingRight)
-                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60, 100,
-                                this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 150, this.states.facingRight));
-                        else
-                            this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -60 - this.spriteWidth - 120, 100,
-                                this.spriteWidth, this.spriteHeight, 80, 100, this.scale, 150, this.states.facingRight));
+                    else {
+                        if (this.states.energized && !this.states.hasReflected &&this.animation.currentFrame() >= 3 && this.animation.currentFrame() <= 6) {
+                            if (this.energy >= this.cleaveEnergyCost) {
+                                if (this.states.facingRight) {
+                                    this.game.addEntity(new Reflectbox(this.game, this.ctx, this.boundX, this.boundY, 30, 100,
+                                        this.spriteWidth, this.spriteHeight, 40, 120, this.scale, this.states.facingRight, this, 4))
+                                }
+                                else {
+                                    this.game.addEntity(new Reflectbox(this.game, this.ctx, this.boundX, this.boundY, 60, 100,
+                                        this.spriteWidth, this.spriteHeight, 40, 120, this.scale, this.states.facingRight, this, 4))
+                                }
+                                this.useEnergy(this.cleaveEnergyCost);
+                                this.states.hasReflected = true;
+                            }
+                            else {
+                                //Womp Wooomp
+                            }
+                        }
                     }
                     if (this.animation.isDone()) {
                         this.animation.reset();
                         this.states.cleaving = false;
                         this.states.framelocked = false;
+                        this.states.hasReflected = false;
                     }
+
                 }
                 //Shooting
                 if (this.states.shooting && !(this.shootCooldownTimer > 0)) {
                     if (!this.states.shotlocked) {
                         if (this.energy >= this.shootEnergyCost && this.states.energized) {
-                            this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized))
-                            this.energy -= this.shootEnergyCost;
-                            this.energyDelayTimer = this.energyDelay;
+                            this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized));
+                            this.useEnergy(this.shootEnergyCost);
                         }
                         else if (this.energy >= this.shootCost && !this.states.energized) {
                             this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
@@ -281,8 +306,7 @@ define([
                         && !this.states.shotlocked && this.energy >= this.slashEnergyCost) {
                         this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
                         this.states.shotlocked = true;
-                        this.energy -= this.slashEnergyCost;
-                        this.energyDelayTimer = this.energyDelayCooldown;
+                        this.useEnergy(this.slashEnergyCost);
                     }
                     if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {//Hurtbox
                         if (this.states.facingRight)//facing right
@@ -629,6 +653,11 @@ define([
             this.animation.reset();
             this.states.stunned = true;
             this.states.framelocked = true;
+        }
+
+        useEnergy(cost) {
+            this.energy -= cost;
+            this.energyDelayTimer = this.energyDelayCooldown;
         }
 
         respawn() {

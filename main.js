@@ -33,6 +33,7 @@ require.config({
         "shotblast": "entities/shotblast",
         "enemy": "entities/enemy",
         "hurtbox": "entities/hurtbox",
+        "reflectbox": "entities/reflectbox",
         "item": "entities/items/item",
         "bomb": "entities/bomb",
         "hand": "entities/hand",

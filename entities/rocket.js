@@ -49,6 +49,11 @@ define([
                 this.drainTime = 120;
                 this.damage = 2;
                 this.health = 50;
+                this.bounceCount = 0;
+                this.bounceTimer = 0;
+                this.bounceTime = 35;
+                this.timer = 500;
+                this.safeTimer = 0;
 
                 this.states = {
                     "active": true,
@@ -93,8 +98,10 @@ define([
                     }
                     if (this.animation.loops > 15) {
                         this.animation.reset();
-                        this.animation.reset();
                         this.removeFromWorld = true;
+                    }
+                    if (this.bounceTimer > 0) {
+                        this.bounceTimer--;
                     }
                 }
             };
@@ -108,12 +115,36 @@ define([
 
             collided(other, direction) {
                 // collide with terrain
-                if (other.name ===  "Terrain") {
-                    if (this.animation.loops > 3)
-                        this.removeFromWorld = true;
-                }
-                else if (other.name === "Hero" || other.name === "Projectile") {
+                if (other.name === "Terrain" && this.animation.loops > 3) {
                     this.removeFromWorld = true;
+                }
+                if (other.name === "Hero") {
+                    if (other.name === "Hero" && other.states.invulnerable) {
+                        //keep on the map
+                    }
+                    else {
+                        this.removeFromWorld = true;
+                    }
+                }
+                else if (other.name === "Hurtbox" && !other.isEnemy && this.game.hero.states.slashing) {
+                    this.drainTime += 10;
+                    this.xSpeed = -this.facing * this.maxX * 2;
+                    if (Math.random() * 100 < 50) {
+                        this.ySpeed = -1;
+                    }
+                    else {
+                        this.ySpeed = 1;
+                    }
+                    //if (this.bounceCount > 3) {
+                    //    this.removeFromWorld = true;
+                    //}
+                    //else {
+                    //    this.bounceTimer = this.bounceTime;
+                    //    this.bounceCount++;
+                    //}
+                }
+                else if (other.name === "Projectile" && other.states.blue) {
+                    this.removeFromWorld;
                 }
             }
 
