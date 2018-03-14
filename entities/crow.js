@@ -4,6 +4,7 @@ define([
     "terrain",
     "hurtbox",
     "projectile",
+    "item",
 
 ], function (
     Enemy,
@@ -11,6 +12,7 @@ define([
     Terrain,
     Hurtbox,
     Projectile,
+    Item,
     ) {
 
 
@@ -248,6 +250,10 @@ define([
                         this.updateHitbox(50, 40, 20, 15);
                         if (this.health <= 0) {
                             this.removeFromWorld = true;
+                            if (Math.random() * 100 <= 27) {
+                                this.game.addEntity(new Item.HealthPack(this.game, this.x, this.y, this.game.gameboard.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 3, 5));
+                                this.game.addEntity(new Item.EnergyPack(this.game, this.x + 30, this.y, this.game.gameboard.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 3, 5));
+                            }
                         }
                     }
                 }
@@ -266,7 +272,10 @@ define([
                 if (this.states.hurt) {
                     this.animation = this.animations.hurt;
                 }
-                this.drawImg(ctx);
+                if (!this.states.idling) {
+                    this.drawImg(ctx);
+                }
+
             }
 
             updateHitbox(fWidth, fHeight, bWidth, bHeight) {

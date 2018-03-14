@@ -82,7 +82,7 @@ define([
 
         on_pickup(hero) {
             if (hero.health < hero.maxHealth)
-                hero.health += 15;
+                hero.health += this.health_value;
             if (hero.health > hero.maxHealth)
                 hero.health = hero.maxHealth;
             this.removeFromWorld = true;
@@ -105,7 +105,7 @@ define([
 
         on_pickup(hero) {
             if(hero.energy < hero.maxEnergy)
-                hero.energy += 15;
+                hero.energy += this.energy_value;
             if (hero.energy > hero.maxEnergy)
                 hero.energy = hero.maxEnergy;
             this.removeFromWorld = true;

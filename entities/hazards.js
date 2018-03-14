@@ -298,10 +298,18 @@ define([
 
             /*Updates the entity each game loop. i.e. what does this entity do? */
             update() {
-                if (this.states.active) {
-                    this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX + 19, this.boundY, -this.spriteWidth - .5 * this.boundWidth, 0,
-                        this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 13, this.boundHeight - 42, this.scale, this.damage, this.states.facingRight,
-                        "health", 2, true));
+                if (this.states.active && this.spikeCooldownTimer === 0) {
+                    if (this.animation.currentFrame() !== 1 && this.animation.currentFrame() !== 5) {
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX + 19, this.boundY, -this.spriteWidth - .5 * this.boundWidth, 0,
+                            this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 13, this.boundHeight - 42, this.scale, this.damage, this.states.facingRight,
+                            "health", 2, true));
+                    }
+                    else {
+                        this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX + 19, this.boundY, -this.spriteWidth - .5 * this.boundWidth, 0,
+                            this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 13, this.boundHeight - 56, this.scale, this.damage, this.states.facingRight,
+                            "health", 2, true));
+                    }
+
                     if (this.animation.isDone()) {
                         this.animation.reset();
                         this.states.active = false;
@@ -309,22 +317,22 @@ define([
                         this.spikeCooldownTimer = this.spikeCooldown;
                     }
                 }
+                if (this.spikeCooldownTimer > 0) {
+                    this.spikeCooldownTimer--;
+                }
                 if (this.states.inactive_down) {
-                    if (this.spikeCooldownTimer > 0) {//TODO: Entity "check timer" helper function
-                        this.spikeCooldownTimer--;
-                    }
-                    else {
-                        this.animation.reset();
+                    if (this.spikeCooldownTimer === 0) {
                         this.animation.reset();
                         this.states.active = true;
                         this.states.inactive_down = false;
+                        //this.spikeCooldownTimer = this.spikeCooldown;
                     }
                 }
                 else if (this.states.inactive_up) {
                     if (Math.abs(this.x - this.game.hero.x) < 300 && Math.abs(this.y - this.game.hero.y) < 300) {
                         this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX + 3, this.boundY, -this.spriteWidth - .5*this.boundWidth, 0,
-                            this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 3, this.boundHeight - 36, this.scale, this.damage, this.states.facingRight,
-                            "health", 2, true));
+                            this.spriteWidth / 2, this.spriteHeight / 2, this.boundWidth - 13, this.boundHeight - 42, this.scale, this.damage, this.states.facingRight,
+                            "health", this.damage, this.states.facingRight));
                     }
                 }
             }
@@ -445,11 +453,109 @@ define([
                 if (this.states.active) {
                     this.animation = this.animations.active;
                 }
-                if (this.states.inactive_down) {
-                    this.animation = this.animations.inactive_down;
+                this.drawImg(ctx);
+            }
+
+            drawImg(ctx) {
+                this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+                if (this.game.drawBoxes) {
+                    this.drawOutline(ctx);
                 }
-                if (this.states.inactive_up) {
-                    this.animation = this.animations.inactive_up;
+            }
+        }
+
+        class ProjectileCircle extends Enemy {
+            constructor(game, x, y, img = null, ctx = null, scale = null, xSpeed, ySpeed, radius = 10, timer = 100) {
+                super(game, x, y, img, ctx);
+                this.parentClass = "Enemy";
+                this.type = "Hazard";
+                //this.y += 44; Give a +44 offset when instantiating 
+                this.scale = scale;
+                this.origX = this.x;
+                this.origY = this.y;
+                this.radius = radius;
+                this.timer = timer;
+                this.updatePos(0, -this.radius);
+                this.spriteWidth = 60;
+                this.spriteHeight = 60;
+                this.centerX = x + ((this.spriteWidth * this.scale) / 2) - this.spriteWidth;
+                this.boundWidth = this.scale * 8 + 3;
+                this.boundHeight = this.scale * 8 + 3;
+                this.boundX = this.centerX - this.scale * 5;
+                this.boundY = this.y - this.spriteHeight * this.scale / 2 + 5 * this.scale;
+
+                this.xSpeed = xSpeed;
+                this.ySpeed = ySpeed;
+                this.quadrants = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
+                this.quadrant = 0;
+                this.damage = 1;
+                this.tick = 1;
+
+                this.states = {
+                    "active": true,
+                };
+                this.animations = {
+                    "active": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 9, 13, 3, 1, true, this.scale, 12),
+                };
+                this.animation = this.animations.active;
+            }
+
+            /*Updates the entity each game loop. i.e. what does this entity do? */
+            update() {
+                if (this.x - this.origX >= 0 && this.y - this.origY <= 0) {
+                    this.quadrant = 0;
+                }
+                else if (this.x - this.origX >= 0 && this.y - this.origY > 0) {
+                    this.quadrant = 1;
+                }
+                else if (this.x - this.origX < 0 && this.y - this.origY > 0) {
+                    this.quadrant = 2;
+                } 
+                else if (this.x - this.origX < 0 && this.y - this.origY <= 0) {
+                    this.quadrant = 3;
+                }
+                this.updatePos(this.xSpeed * this.quadrants[this.quadrant][0], this.ySpeed * this.quadrants[this.quadrant][1]);
+            }
+
+            collided(other, direction) {
+                //// collide with terrain
+                //if (other.name === "Terrain") {
+                //    this.removeFromWorld = true;
+                //}
+                ////TODO refactor this (artifact from instanceof days)
+                //else if (other.name === "Actor" && !(other.name === "Enemy")) {//Hero collision
+                //    if (other.name === "Projectile") {
+                //        if (this.tick === 0) {
+                //            this.removeFromWorld = true;
+                //        }
+                //        this.tick--;
+                //        other.health -= 1;
+                //    } else {
+                //        this.removeFromWorld = true;
+                //    }
+                //}
+                //else if (other.name === "Hurtbox") {
+                //    //other.hasOwnProperty("isEnemy");
+                //    //other.hasOwnProperty("damage");
+                //    if (!other.isEnemy) {
+                //        this.removeFromWorld = true;
+                //    }
+                //}
+            }
+
+            drawOutline(ctx) {
+                ctx.beginPath();
+                ctx.strokeStyle = "green";
+                ctx.rect(this.boundX,
+                    this.boundY,
+                    this.boundWidth, this.boundHeight);
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            draw(ctx) {
+                if (this.states.active) {
+                    this.animation = this.animations.active;
                 }
                 this.drawImg(ctx);
             }
@@ -461,6 +567,7 @@ define([
                 }
             }
         }
+
 
         class Launcher extends Entity {
             constructor(game, x, y, img = null, ctx = null, scale = null,
@@ -534,6 +641,7 @@ define([
             "fireball": Fireball,
             "spikes": Spikes,
             "projectile": ProjectileHazard,
+            "projectile-circle": ProjectileCircle,
             "launcher": Launcher,
         };
     });

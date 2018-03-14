@@ -76,10 +76,11 @@ define([
             this.shootCooldownTimer = 0;
             this.shootCooldown = 0;
 
-            //Dev Tools
-            this.setPosTimer = 0;
-            this.godToggleTimer = 0;
-            this.iPC = 0;
+            //DEV TOOLS
+            this.godModeEnergyMin = 0;
+            this.notGodModeEnergyMin = this.energyCooldownMin;
+            this.godEnergyDelay = 0;
+            this.notGodEnergyDelay = this.energyDelay;
 
             this.states = {
                 "energized": false,
@@ -373,7 +374,7 @@ define([
                 }
                 //Respawn
                 if (this.states.respawned) {
-                    //respawn
+                    //respawn (can define things like activity cooldown, respawn animation, etc...)
                 }
 
                 //Timer Checks
@@ -386,7 +387,7 @@ define([
                     else if (this.energy < this.maxEnergy) {
                         this.energy++;
                         if (this.energyCooldown > this.energyCooldownMin) { //energy cooldown time decreases non-linearly
-                            this.energyCooldown *= .75;
+                            this.energyCooldown *= .5;
                         }
                         else if (this.energyCooldown < this.energyCooldownMin) {
                             this.energyCooldown = this.energyCooldownMin;
@@ -394,6 +395,7 @@ define([
                         this.energyCooldownTimer = this.energyCooldown;
                     }
                 }
+
                 if (this.damageCooldownTimer > 0) {
                     this.damageCooldownTimer--;
                 }
@@ -416,6 +418,12 @@ define([
                     this.states.framelocked = true;
                     this.states.hasGravity = false;
                     this.yVelocity = 0;
+                }
+
+                //GOD MODE
+                if (this.states.isGod) {
+                    this.energy = this.maxEnergy;
+                    this.jumpsLeft = 1;
                 }
             }
         }//END Update
@@ -543,7 +551,7 @@ define([
                             }
                         }
                         else if (other.damageType === "energy" && this.energy > 0) {
-                            this.energyCooldown = this.energyCooldownMin*24;
+                            this.energyCooldown = this.energyCooldownMin*26;
                             this.energy = Math.floor(this.energy/2);
                         }
                     }

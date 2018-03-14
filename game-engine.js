@@ -19,6 +19,7 @@ define([
 
         constructor(gameboard, hero) {
             this.drawBoxes = false;
+            this.devMode = false;
             this.sound = new Sound();
             this.entities = [];
             this.backgroundLayers = [];
@@ -31,6 +32,14 @@ define([
             this.surfaceWidth = null;
             this.surfaceHeight = null;
             this.music = null;
+
+            //DEV TOOL FIELDS
+            this.toggleCooldown= 20;
+            this.boxToggleTimer = 0;
+            this.setPosTimer = 0;
+            this.godToggleTimer = 0;
+            this.checkpointCycleCount = 1;
+
             // KB input keycodes
             this.controlKeys = {
                 "Space": { "active": false },
@@ -50,6 +59,7 @@ define([
                 "KeyT": { "active": false },
                 "KeyY": { "active": false },
                 "KeyV": { "active": false },
+                "KeyC": { "active": false },
                 "Numpad1": { "active": false },
                 "Numpad2": { "active": false },
                 "Numpad3": { "active": false },
@@ -76,6 +86,7 @@ define([
                 "layoutA": "Numpad9",
                 "layoutB": "KeyP",
                 "testPos": "KeyV",
+                "toggleBoxes": "KeyC",
             }
             this.controlLayoutB = {
                 "jump": "Space",
@@ -94,6 +105,7 @@ define([
                 "layoutA": "Numpad9",
                 "layoutB": "KeyP",
                 "testPos": "KeyV",
+                "toggleBoxes": "KeyC",
             }
             this.controls = this.controlLayoutA;
             this.hero = hero;
@@ -323,20 +335,9 @@ define([
                  this.music.play();
             }
 
-            //DEV TOOLS & PLAYER SETTINGS
-            if (this.controlKeys[this.controls.getPos].active) {
-                console.log("x: " + this.hero.x + ", y: " + this.hero.y);
-            }
-            if (this.controlKeys[this.controls.setPos].active && this.hero.setPosTimer <= 0) {
-                this.hero.setPos(this.gameboard.level.checkpoints[this.hero.iPC]);
-                this.hero.setPosTimer = 20;
-                this.hero.iPC = (this.hero.iPC + 1) % this.gameboard.level.checkpoints.length; 
-            }
-            if (this.controlKeys[this.controls.godToggle].active && this.hero.godToggleTimer <= 0) {
-                this.hero.states.isGod = !this.hero.states.isGod;
-                this.hero.godToggleTimer = 40;
-            }
+            //PLAYER SETTINGS
             if (this.controlKeys[this.controls.easymode].active) {
+                //TODO Move difficulty to gameboard
                 this.hero.difficulty = 1;
                 this.gameboard.score = 0;
             }
@@ -350,8 +351,46 @@ define([
             if (this.controlKeys[this.controls.layoutB].active) {
                 this.controls = this.controlLayoutB;
             }
-            if (this.controlKeys[this.controls.testPos].active) {
-                this.hero.setPos(this.gameboard.testPos);
+            if (this.controlKeys[this.controls.setPos].active && this.setPosTimer <= 0) {
+                this.hero.setPos(this.gameboard.level.checkpoints[this.checkpointCycleCount]);
+                this.setPosTimer = this.toggleCooldown;
+                this.checkpointCycleCount = (this.checkpointCycleCount + 1) % this.gameboard.level.checkpoints.length;
+            }
+            if (this.controlKeys[this.controls.godToggle].active && this.godToggleTimer <= 0) {
+                this.hero.states.isGod = !this.hero.states.isGod;
+                this.godToggleTimer = this.toggleCooldown;
+            }
+            //DEV TOOLS
+            if (this.devMode) {
+                if (this.controlKeys[this.controls.getPos].active) {
+                    console.log("x: " + this.hero.x + ", y: " + this.hero.y);
+                }
+                if (this.controlKeys[this.controls.setPos].active && this.setPosTimer <= 0) {
+                    this.hero.setPos(this.gameboard.level.checkpoints[this.checkpointCycleCount]);
+                    this.setPosTimer = this.toggleCooldown;
+                    this.checkpointCycleCount = (this.checkpointCycleCount + 1) % this.gameboard.level.checkpoints.length;
+                }
+                if (this.controlKeys[this.controls.godToggle].active && this.godToggleTimer <= 0) {
+                    this.hero.states.isGod = !this.hero.states.isGod;
+                    this.godToggleTimer = this.toggleCooldown;
+                }
+                if (this.controlKeys[this.controls.testPos].active) {
+                    this.hero.setPos(this.gameboard.testPos);
+                }
+                if (this.controlKeys[this.controls.toggleBoxes].active && this.boxToggleTimer <= 0) {
+                    this.drawBoxes = !this.drawBoxes;
+                    this.boxToggleTimer = this.toggleCooldown;
+                }
+                //Toggle timers (should finally learn how to use an "on keyup" for keys)
+                if (this.boxToggleTimer > 0) {
+                    this.boxToggleTimer--;
+                }
+                if (this.setPosTimer > 0) {
+                    this.setPosTimer--;
+                }
+                if (this.godToggleTimer > 0) {
+                    this.godToggleTimer--;
+                }
             }
         }
 
