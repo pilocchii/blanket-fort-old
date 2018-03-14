@@ -25,6 +25,8 @@ define([
             this.pvtt = 20;
             this.lostScore = 0;
 
+            this.deadEnemies = [[[0,0], 0, 0]];
+
             this.score = 0;
             this.time;
             this.hero = hero;
@@ -126,6 +128,7 @@ define([
                         this.states.showPointValues = false;
                     }
                 }
+
             }
         }
 
@@ -139,6 +142,23 @@ define([
                     this.game.hero.y - 150
                 );
                 this.respawnMessage--;
+            }
+            if (this.deadEnemies.length > 0) {
+                for (let i = this.deadEnemies.length - 1; i >= 0; --i) {
+                    if (this.deadEnemies[i][2] === 0) {
+                        this.deadEnemies.splice(i, 1);
+                    }
+                    else {
+                        console.log("draw")
+                        this.ctx.font = "20px Verdana";
+                        this.ctx.fillStyle = "#00ff00";
+                        this.ctx.fillText("+" + this.deadEnemies[i][1] + " points",
+                            this.deadEnemies[i][0][0] + 10,
+                            this.deadEnemies[i][0][1] - 150
+                        );
+                        this.deadEnemies[i][2]--;
+                    }
+                }
             }
         }
 

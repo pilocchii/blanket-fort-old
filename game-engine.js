@@ -297,12 +297,13 @@ define([
                     if (this.entities[i].hasOwnProperty("pointValue") && !this.gameboard.states.respawnSection) {
                         if (this.entities[i].pointValue > 0) {
                             //TODO Refactor hero multiplier and difficulty to gameboard
-                            if (!this.gameboard.states.showPointValues) {
+                            //if (!this.gameboard.states.showPointValues) {
                                 
-                                this.gameboard.states.showPointValues = true;
-                                this.gameboard.pvt = this.gameboard.pvtt;
-                            }
+                            //    this.gameboard.states.showPointValues = true;
+                            //    this.gameboard.pvt = this.gameboard.pvtt;
+                            //}
                             this.addedpoints = this.hero.difficulty * this.entities[i].pointValue * this.hero.multiplier;
+                            this.gameboard.deadEnemies.push([[this.entities[i].x, this.entities[i].y], this.addedpoints, 30]);
                             this.gameboard.score += this.addedpoints;
                             this.hero.multiplier += this.hero.difficulty * .5;
                         }

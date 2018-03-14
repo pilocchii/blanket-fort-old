@@ -63,15 +63,15 @@ define([
                 this.dest_coords[0] - 100, 
                 this.dest_coords[1] - 10
             );
-            if (this.game_engine.gameboard.states.showPointValues) {
-                console.log("draw")
-                ctx.font = "20px Verdana";
-                ctx.fillStyle = "#00ff00";
-                ctx.fillText("+" + this.game_engine.addedpoints + " points",
-                    this.game_engine.hero.x + 10,
-                    this.game_engine.hero.y - 150
-                );
-            }
+            //if (this.game_engine.gameboard.states.showPointValues) {
+            //    console.log("draw")
+            //    ctx.font = "20px Verdana";
+            //    ctx.fillStyle = "#00ff00";
+            //    ctx.fillText("+" + this.game_engine.addedpoints + " points",
+            //        this.game_engine.hero.x + 10,
+            //        this.game_engine.hero.y - 150
+            //    );
+            //}
         }
     }
 
