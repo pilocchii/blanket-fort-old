@@ -61,6 +61,7 @@ define([
                     this.states.loadedLevel = true;
                     this.states.newLevel = false;
                     this.game.addEntity(this.hero);
+                    this.game.addEntity(this.level.portal);
                     this.hero.removeFromWorld = false;
                     this.hero.states.active = true;
                     if (this.states.newBoard) {

@@ -21,7 +21,8 @@ define([
     "item",
     "hand",
     "hazards",
-    "sound"
+    "sound",
+    "animation",
 ], function (
     AssetManager,
     GameEngine,
@@ -44,7 +45,8 @@ define([
     Item,
     Hand,
     Hazards,
-    Sound
+    Sound,
+    Animation,
 ) {
 
     class LevelOne {
@@ -64,7 +66,8 @@ define([
             this.camSpeeds = [[7, 7], [7, 7]];
             this.activatedCheckpoints = [true, false, false, false];
             this.nextLevel = 2;
-            this.activatedCheckpoints = [true, false]
+            this.activatedCheckpoints = [true, false];
+            this.portal = new Portal(this.gameEngine, 3870, -20, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, false);
 
             this.tileSize = 96;
 
@@ -201,6 +204,8 @@ lj[][]!  |[]lj~~~~~lj           lj[]
             this.camSpeeds = [[7, 7], [7, 4], [4, 4], [4, 4]];
             this.activatedCheckpoints = [true, false, false, false];
             this.nextLevel = -1;
+            this.portal = new Portal(this.gameEngine, -570, 1420, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, true);
+
             //I'd like to use an array of functions (will let us have an actual Level superclass)
             //this.sectionFunctions = null;
 
@@ -468,7 +473,67 @@ l-j
                 1248 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20 * 3, 2, 0);
         }
     }
-        
+
+    class Portal extends Entity {
+        constructor(game, x, y, img = null, ctx = null, scale = null, facingRight) {
+            super(game, x, y, img, ctx);
+            this.parentClass = "Enemy";
+            this.type = "Hazard";
+            //this.y += 44; Give a +44 offset when instantiating 
+            this.scale = scale;
+            this.spriteWidth = 60;
+            this.spriteHeight = 60;
+            this.centerX = x + ((this.spriteWidth * this.scale) / 2) - this.spriteWidth;
+            this.boundWidth = this.scale * 8 + 3;
+            this.boundHeight = this.scale * 8 + 3;
+            this.boundX = this.centerX - this.scale * 5;
+            this.boundY = this.y - this.spriteHeight * this.scale / 2 + 5 * this.scale;
+
+            this.cooldown = 50;
+
+            this.states = {
+                "facingRight": facingRight,
+                "active": true,
+            };
+            this.animations = {
+                "active": new Animation(this.img, [this.spriteWidth, this.spriteHeight], 11, 8, 5, 8, true, this.scale),
+            };
+            this.animation = this.animations.active;
+        }
+
+        /*Updates the entity each game loop. i.e. what does this entity do? */
+        update() {
+
+        }
+
+        collided(other, direction) {
+            //Make noise when hero collides?
+        }
+
+        drawOutline(ctx) {
+            ctx.beginPath();
+            ctx.strokeStyle = "green";
+            ctx.rect(this.boundX,
+                this.boundY,
+                this.boundWidth, this.boundHeight);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        draw(ctx) {
+            if (this.states.active) {
+                this.animation = this.animations.active;
+            }
+            this.drawImg(ctx);
+        }
+
+        drawImg(ctx) {
+            this.animation.drawFrame(1, ctx, this.x, this.y, this.states.facingRight);
+            if (this.game.drawBoxes) {
+                this.drawOutline(ctx);
+            }
+        }
+    }
 
     return {
         "level-one": LevelOne,
