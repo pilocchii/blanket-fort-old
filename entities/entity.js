@@ -86,7 +86,10 @@ define([
                 "width" : other.boundWidth,
                 "height": other.boundHeight
             }
-            
+
+            if (rect1.width === 0 || rect1.height === 0 || rect2.width === 0 || rect2.height === 0) {
+                return 'none'
+            }
             // This is the same as Mariott's method, just formatted differently
             let collision = 'none';
             var dx = (rect1.x + rect1.width/2) - (rect2.x + rect2.width/2);

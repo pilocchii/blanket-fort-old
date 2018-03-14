@@ -143,8 +143,8 @@ define([
                     //    this.bounceCount++;
                     //}
                 }
-                else if (other.name === "Projectile" && other.states.blue) {
-                    this.removeFromWorld;
+                else if ((other.name === "Projectile" && other.states.blue) || other.parent === "Projectile_Sword") {
+                    this.removeFromWorld = true;
                 }
             }
 

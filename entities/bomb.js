@@ -105,7 +105,7 @@ define([
                     var explosionY = 150;
                     this.game.playSound("explosion_1")
                     this.game.addEntity(new Hurtbox(this.game, this.ctx, this.boundX, this.boundY, -1.75 * explosionX + 10, this.spriteHeight - 20,
-                        this.spriteWidth, this.spriteHeight, explosionX, explosionY, this.scale + 2, 4, this.states.facingRight, !this.states.reflected, "health", 15));
+                        this.spriteWidth, this.spriteHeight, explosionX, explosionY, this.scale + 2, Math.max(4, this.damage), this.states.facingRight, !this.states.reflected, "health", 15));
                     this.states.exploded = true;
                 }
                 if (this.animation.isDone()) {

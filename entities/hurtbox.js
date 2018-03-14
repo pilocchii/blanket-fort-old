@@ -24,6 +24,7 @@ define([
                             damage, facingRight = true, isEnemy = false, damageType = "health", frames = 2, persistent = false, img = null) {
                 super(game, x, y, img, ctx);
                 this.parentClass = "Actor";
+                this.parent = null;
                 this.movementSpeed = 0;
                 this.scale = scale;
                 this.isEnemy = isEnemy;

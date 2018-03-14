@@ -49,13 +49,14 @@ define([
             this.jumpStrength = (20);
             this.jumpsLeft = 2;
             this.maxJumps = 2;
+            this.terminalVelocity = 15;
 
             this.maxHealth = 30;
             this.maxEnergy = 30;
             this.energy = 30;
             this.health = 30;
             this.slashEnergyCost = 25;
-            this.cleaveEnergyCost = 20;
+            this.cleaveEnergyCost = 15;
             this.shootCost = 2;
             this.shootEnergyCost = 10;
             this.dashEnergyCost = 7;
@@ -171,7 +172,7 @@ define([
                 //cleave
                 if (this.game.controlKeys[this.game.controls.cleave].active && this.states.grounded && !this.states.framelocked) {
                     this.animation.reset();
-                    this.game.playSound("sword_swing")
+                    this.game.playSound("sword_swing");
                     this.setStates(false, false, false, true, this.states.facingRight, false, false, false, true, this.states.energized, false, false);
                     this.states.cleaving = true;
                     this.states.framelocked = true;
@@ -181,16 +182,21 @@ define([
                     if (this.game.controlKeys[this.game.controls.right].active) { this.states.facingRight = true; }
                     else if (this.game.controlKeys[this.game.controls.left].active) { this.states.facingRight = false; }
                     this.animation.reset();
-                    this.game.playSound("sword_swing")
+                    this.game.playSound("sword_swing");
                     this.setStates(false, false, false, false, this.states.facingRight, false, true, false, true, this.states.energized, false, false);
                 }
                 //dash
-                if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && this.energy >= this.dashEnergyCost && !this.states.shooting) {
-                    this.states.dashing = true;
-                    this.states.dashingStart = true;
-                    this.states.hasDashed = true;
-                    this.states.running = false;
-                    this.states.framelocked = true;
+                if (this.game.controlKeys[this.game.controls.dash].active && !this.states.framelocked && !this.states.shooting) {
+                    if (this.energy >= this.dashEnergyCost) {
+                        this.states.dashing = true;
+                        this.states.dashingStart = true;
+                        this.states.hasDashed = true;
+                        this.states.running = false;
+                        this.states.framelocked = true;
+                    }
+                    else {
+                        this.game.playSound("out_of_energy");
+                    }
                 }
 
                 //KEY UP
@@ -265,7 +271,7 @@ define([
                                 this.states.hasReflected = true;
                             }
                             else {
-                                //Womp Wooomp
+                                this.game.playSound("out_of_energy");
                             }
                         }
                     }
@@ -283,13 +289,23 @@ define([
                         if (this.energy >= this.shootEnergyCost && this.states.energized) {
                             this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, this.states.energized));
                             this.useEnergy(this.shootEnergyCost);
+                            this.states.shotlocked = true;
+                            this.game.playSound("hero_shoot");
                         }
                         else if (this.energy >= this.shootCost && !this.states.energized) {
                             this.game.addEntity(new Projectile(this.game, this.x, this.y, this.img, this.ctx, this.scale, this.states.facingRight, false));
                             this.energy -= this.shootCost;
+                            this.states.shotlocked = true;
+                            this.game.playSound("hero_shoot");
                         }
-                        this.game.playSound("hero_shoot")
-                        this.states.shotlocked = true;
+                        else {
+                            this.animation.reset();
+                            this.states.shooting = false;
+                            this.shootCooldownTimer = this.shootCooldown;
+                            this.states.framelocked = false;
+                            this.states.shotlocked = false;
+                            this.game.playSound("out_of_energy");
+                        }
                     }
                     if (this.animation.isDone()) {
                         this.animation.reset();
@@ -302,11 +318,15 @@ define([
                 //Slashing
                 if (this.states.slashing) {
                     this.states.hasGravity = true; //Fixes super-duper jump bug. (When interrupting dash, dash doesn't enter isDone() so grav isn't reset)
-                    if (this.animation.currentFrame() === 2 && this.states.energized
-                        && !this.states.shotlocked && this.energy >= this.slashEnergyCost) {
-                        this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
-                        this.states.shotlocked = true;
-                        this.useEnergy(this.slashEnergyCost);
+                    if (this.animation.currentFrame() === 2 && this.states.energized && !this.states.shotlocked) {
+                        if (this.energy >= this.slashEnergyCost) {
+                            this.game.addEntity(new Projectile_Sword(this.game, this.x + 20, this.y, this.img, this.ctx, this.scale, this.states.facingRight));
+                            this.states.shotlocked = true;
+                            this.useEnergy(this.slashEnergyCost);
+                        }
+                        else {
+                            this.game.playSound("out_of_energy");
+                        }
                     }
                     if (this.animation.currentFrame() >= 2 && this.animation.currentFrame() <= 6) {//Hurtbox
                         if (this.states.facingRight)//facing right
@@ -337,7 +357,7 @@ define([
                             this.yVelocity = 0;
                             if (this.energy >= this.dashEnergyCost) {
                                 this.energy -= this.dashEnergyCost;
-                                this.states.energyDash = true; //NOT USED FOR NOW (Don't like it);
+                                this.states.energyDash = true;
                             }
                             this.energyDelayTimer = this.energyDelay;
                             this.states.hasDashed = false;
@@ -413,7 +433,12 @@ define([
                         if (this.energyCooldown > this.energyCooldownMin) { //energy cooldown time decreases non-linearly
                             this.energyCooldown *= .5;
                         }
-                        else if (this.energyCooldown < this.energyCooldownMin) {
+                        else if (this.energyCooldown - this.energyCooldownMin < -.5) {
+                            console.log(this.energyCooldown);
+                            this.energyCooldown *= 1.1;
+                        }
+                        else {
+                            console.log(this.energyCooldown);
                             this.energyCooldown = this.energyCooldownMin;
                         }
                         this.energyCooldownTimer = this.energyCooldown;
@@ -428,7 +453,7 @@ define([
                 }
 
                 // update velocities based on gravity and friction
-                if (this.states.hasGravity) {
+                if (this.states.hasGravity && this.yVelocity < this.terminalVelocity) {
                     this.yVelocity += this.gravity * this.gravity;
                 }
                 this.y += this.yVelocity;

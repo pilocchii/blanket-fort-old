@@ -18,7 +18,8 @@ define([
                 "explosion_1": new Audio("./audio/explosion-1.wav"),
                 "lava_ball": new Audio("./audio/lava-ball.wav"),
                 "shield_block": new Audio("./audio/shield-block.wav"),
-                "sword_swing": new Audio("./audio/sword-swing.wav")
+                "sword_swing": new Audio("./audio/sword-swing.wav"),
+                "out_of_energy": new Audio("./audio/ooe.wav"),
             }
 
             let n_dups = 5

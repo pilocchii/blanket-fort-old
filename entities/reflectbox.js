@@ -76,15 +76,18 @@ define([
                 }
                 if (other.name === "Rocket") {
                     console.log("NO SOUP FOR YOU!");
+                    other.pointValue = 5;
                     other.removeFromWorld = true;
                     if (this.parent !== null) {
-                        this.parent.energy += 10;
+                        //this.parent.energy += 10;
+                        this.parent.energyCooldown /= 4.2;
                     }
                 }
                 if (other.name === "Bomb") {
                     other.launching = true;
                     other.xVelocity = -this.facing * 5;
                     other.yVelocity = -20;
+                    other.damage = 50;
                     other.states.reflected = true;
                 }
             }
