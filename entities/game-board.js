@@ -20,6 +20,10 @@ define([
             //used for recalling a section's non-terrain, non-hazard actors on death
             this.levelNum;
             this.sectionNum;
+            //point value timer
+            this.pvt = 0;
+            this.pvtt = 20;
+            this.lostScore = 0;
 
             this.score = 0;
             this.time;
@@ -39,6 +43,7 @@ define([
                 "respawnSection": false,
                 "newLevel": false,
                 "loadNextLevel": false,
+                "showPointValues": false,
             }
         }
 
@@ -109,12 +114,32 @@ define([
                     this.hero.setPos([this.lastCheckpoint.x, this.lastCheckpoint.y - 10]);
                     this.clearBoard("actors");
                     console.log("respawn");
+                    this.respawnMessage = 2*this.pvtt;
+
+                }
+
+                if (this.states.showPointValues) {
+                    if (this.pvt > 0) {
+                        this.pvt--;
+                    }
+                    else {
+                        this.states.showPointValues = false;
+                    }
                 }
             }
         }
 
         draw(ctx) {
-
+            if (this.respawnMessage > 0) {
+                console.log("draw")
+                this.ctx.font = "Bold 25px Verdana";
+                this.ctx.fillStyle = "#FF0000";
+                this.ctx.fillText("-" + this.lostScore + " points",
+                    this.game.hero.x + 10,
+                    this.game.hero.y - 150
+                );
+                this.respawnMessage--;
+            }
         }
 
         clearBoard(scope) {

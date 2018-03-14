@@ -14,6 +14,9 @@ define([
             this.energybar = new EnergyBar(game_engine, img, hero, src_coordinates, src_dimensions, dest_coordinates, scale=3, camera);
             this.scoreboard = new ScoreBoard(game_engine, dest_coordinates, scale, camera);
             this.components = [this.healthbar, this.energybar, this.scoreboard];
+            this.gradientStop1 = 0;
+            this.gradientStop2 = 1;
+            this.gradientStop3 = 2;
         }
 
         update() {
@@ -48,19 +51,27 @@ define([
             this.dest_coords = [-this.camera.xView + 200, -this.camera.yView + 100]
         }
 
-
         draw(ctx) {
-            ctx.font = "italic bold 20px Verdana";
-            var gradient = ctx.createLinearGradient(0, 0, this.camera.canvasWidth, 0);
-            gradient.addColorStop("0","magenta");
-            gradient.addColorStop("0.5","blue");
-            gradient.addColorStop("1.0","green");
+            ctx.font = "italic bold 25px Verdana" ;
+            var gradient = ctx.createLinearGradient(this.dest_coords[0] - 100, this.dest_coords[1] - 10, this.dest_coords[0], this.dest_coords[1] - 10);
+            gradient.addColorStop(0,"magenta");
+            gradient.addColorStop(.5 ,"blue");
+            gradient.addColorStop(1 ,"green");
             // Fill with gradient
             ctx.fillStyle=gradient;
             ctx.fillText("Score: " + this.score,
                 this.dest_coords[0] - 100, 
                 this.dest_coords[1] - 10
             );
+            if (this.game_engine.gameboard.states.showPointValues) {
+                console.log("draw")
+                ctx.font = "20px Verdana";
+                ctx.fillStyle = "#00ff00";
+                ctx.fillText("+" + this.game_engine.addedpoints + " points",
+                    this.game_engine.hero.x + 10,
+                    this.game_engine.hero.y - 150
+                );
+            }
         }
     }
 

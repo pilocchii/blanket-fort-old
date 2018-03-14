@@ -32,6 +32,7 @@ define([
             this.surfaceWidth = null;
             this.surfaceHeight = null;
             this.music = null;
+            this.addedpoints = 0;
 
             //DEV TOOL FIELDS
             this.toggleCooldown= 20;
@@ -296,7 +297,13 @@ define([
                     if (this.entities[i].hasOwnProperty("pointValue") && !this.gameboard.states.respawnSection) {
                         if (this.entities[i].pointValue > 0) {
                             //TODO Refactor hero multiplier and difficulty to gameboard
-                            this.gameboard.score += this.hero.difficulty * this.entities[i].pointValue * this.hero.multiplier;
+                            if (!this.gameboard.states.showPointValues) {
+                                
+                                this.gameboard.states.showPointValues = true;
+                                this.gameboard.pvt = this.gameboard.pvtt;
+                            }
+                            this.addedpoints = this.hero.difficulty * this.entities[i].pointValue * this.hero.multiplier;
+                            this.gameboard.score += this.addedpoints;
                             this.hero.multiplier += this.hero.difficulty * .5;
                         }
                     }
