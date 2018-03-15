@@ -580,7 +580,7 @@ define([
             }
             //If Hero can take damage, check if...
             if (!this.states.isGod && this.damageCooldownTimer <= 0 && !this.states.invulnerable && !this.states.dead && !this.states.stunned) { 
-                if (other.parentClass === "Enemy") {             
+                if (other.parentClass === "Enemy" && other.name !== "Bomb") {             
                     if (other.damage > 0) {
                         //Determine interaction based on other's damage type
                         if (other.damageType === "health") {
