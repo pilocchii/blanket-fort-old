@@ -1,6 +1,8 @@
 # pencil-knight
 TCSS 491 Computational Worlds project
 
+# Published on Github io. [Play Here](https://greenfour.github.io/pencil-knight/) 
+
 # Controls and Basic Instructions
     There are two different control layouts. 
 	**Press Numpad 9** for layout A
