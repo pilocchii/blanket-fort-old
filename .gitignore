@@ -1,2 +1,3 @@
 ./ignored
 .vs
+node_modules

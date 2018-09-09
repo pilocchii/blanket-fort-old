@@ -1,0 +1,30 @@
+{
+  "name": "game_engine",
+  "version": "1.0.0",
+  "description": "TCSS 491 Computational Worlds project",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saerith/game_engine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Saerith/game_engine/issues"
+  },
+  "homepage": "https://github.com/Saerith/game_engine#readme",
+  "devDependencies": {
+    "ts-loader": "^5.1.0",
+    "typescript": "^3.0.3",
+    "webpack": "^4.17.2",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "npm": "^6.4.1",
+    "npx": "^10.2.0"
+  }
+}
