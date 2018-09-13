@@ -1,25 +1,14 @@
-define([
-    'asset-manager',
-    'game-engine',
-    "game-board",
-    "camera",
-    "hud",
-    "terrain",
-    "background",
-    "hero",
-    "sound",
+import AssetManager from "asset-manager"
+import GameEngine from "game-engine"
+import GameBoard from "game-board"
+import Camera from "camera"
+import Hud from "hud"
+import Terrain from "terrain"
+import Background from "background"
+import Hero from "hero"
+import Sound from "sound"
 
-], function(
-    AssetManager,
-    GameEngine,
-    GameBoard,
-    Camera,
-    Hud,
-    Terrain,
-    Background,
-    Hero,
-    Sound
-) {
+class Core {
 
     let init = function() {
         console.log("init")
@@ -83,10 +72,6 @@ define([
         gameEngine.init(ctx);
         gameEngine.start();
     });
+}
 
-    return {
-        init: init
-    };
-
-});
-
+export Core
