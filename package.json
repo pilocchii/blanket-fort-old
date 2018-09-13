@@ -18,9 +18,10 @@
   },
   "homepage": "https://github.com/Saerith/game_engine#readme",
   "devDependencies": {
-    "ts-loader": "^5.1.0",
-    "typescript": "^3.0.3",
-    "webpack": "^4.17.2",
+    "@babel/core": "^7.0.1",
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.2",
+    "webpack": "^4.0.1",
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {

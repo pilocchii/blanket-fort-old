@@ -1,3 +1,4 @@
+import Core from "./core"
 
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
@@ -10,4 +11,4 @@ window.requestAnimFrame = (function () {
             };
 })();
 
-Core.init();
+Core.init()

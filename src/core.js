@@ -8,7 +8,7 @@ import Background from "background"
 import Hero from "hero"
 import Sound from "sound"
 
-class Core {
+var Core = {
 
     let init = function() {
         console.log("init")
