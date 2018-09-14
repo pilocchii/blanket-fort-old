@@ -3,14 +3,12 @@ import GameEngine from "./game-engine"
 import GameBoard from "./entities/game-board"
 import Camera from "./entities/camera"
 import Hud from "./hud"
-import Terrain from "./entities/terrain"
 import Background from "./background"
 import Hero from "./entities/hero"
-import Sound from "./sound"
 
+
+/* Assembles and starts the game. */
 export default function() {
-
-    // the "main" code begins here
 
     let toload = [
         "img/ZXe.png",
@@ -31,7 +29,6 @@ export default function() {
     let ASSET_MANAGER = new AssetManager(toload);
 
     ASSET_MANAGER.downloadAll(function () {
-        console.log("starting up da sheild");
         let canvas = document.getElementById('gameWorld');
         let ctx = canvas.getContext('2d');
         console.log("canvas width: " + canvas.width);
