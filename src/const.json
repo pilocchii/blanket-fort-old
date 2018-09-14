@@ -1,13 +1,8 @@
-/* Constants */
-
-
-/* Settings */
 {
-    "debug" : "true"
+
+    "settings" : {
+        "debug" : true
+    }
+
 }
 
-
-/* Entities */
-{
-    
-}
