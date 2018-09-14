@@ -8,6 +8,7 @@ import Hurtbox from "./hurtbox"
 import Reflectbox from "./reflectbox"
 import Hazards from "./hazards"
 import Rocket from "./rocket"
+import Actor from "./actor"
 
 
 class Hero extends Actor {

@@ -12,7 +12,7 @@ export default function() {
 
     // the "main" code begins here
 
-    toload = [
+    let toload = [
         "img/ZXe.png",
         "img/Leo.png",
         "img/EnemySheet1.png",

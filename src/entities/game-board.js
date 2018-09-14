@@ -1,5 +1,5 @@
 import Entity from "./entity"
-import {LevelOne, LevelTwo} from "./"
+import {LevelOne, LevelTwo} from "../maps/levels"
 
 
 /**************
@@ -185,7 +185,7 @@ class GameBoard extends Entity {
 
     getLevel(level) {
         if (level === 1) {
-            this.level = new Levels["level-one"](this.game, this.assetManager, this.ctx);
+            this.level = new LevelOne(this.game, this.assetManager, this.ctx);
             this.levelNum = level;
             //Should move this into the LevelTwo class(?)
             //Create checkpoint linked list.
@@ -229,7 +229,7 @@ class GameBoard extends Entity {
         }
 
         if (level === 2) {
-            this.level = new Levels["level-two"](this.game, this.assetManager, this.ctx);
+            this.level = new LevelTwo(this.game, this.assetManager, this.ctx);
             this.levelNum = level;
             //Should move this into the LevelTwo class(?)
             //Create checkpoint linked list.

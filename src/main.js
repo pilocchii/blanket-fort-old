@@ -11,4 +11,4 @@ window.requestAnimFrame = (function () {
             };
 })();
 
-Core.init()
+Core()

@@ -1,7 +1,7 @@
 import AssetManager from "../asset-manager"
 import GameEngine from "../game-engine"
 import Hud from "../hud"
-import Background from "../Background"
+import Background from "../background"
 import Sound from "../sound"
 import Animation from "../animation"
 import {
