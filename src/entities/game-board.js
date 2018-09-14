@@ -1,5 +1,5 @@
 import Entity from "./entity"
-import Levels from "../maps/levels"
+import {LevelOne, LevelTwo} from "./"
 
 
 /**************
