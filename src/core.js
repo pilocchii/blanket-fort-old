@@ -1,6 +1,6 @@
 import AssetManager from "./asset-manager"
 import GameEngine from "./game-engine"
-import GameBoard from "./game-board"
+import GameBoard from "./entities/game-board"
 import Camera from "./entities/camera"
 import Hud from "./hud"
 import Terrain from "./entities/terrain"
