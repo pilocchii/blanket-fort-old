@@ -21,7 +21,8 @@ import {
     Hurtbox,
     Hand,
     Hazards,
-    Item
+    HealthPack,
+    EnergyPack
 } from "../entities"
 
 
@@ -144,18 +145,18 @@ lj[][]!  |[]lj~~~~~lj           lj[]
 
     section_1() {
         this.sectionNum = 0;
-        this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 2935, 1200, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 4));
-        this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 2965, 1200, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 4));
-        this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 300, 400, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 4));
-        this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 330, 400, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 4));
+        this.gameEngine.addEntity(new HealthPack(this.gameEngine, 2935, 1200, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 4));
+        this.gameEngine.addEntity(new EnergyPack(this.gameEngine, 2965, 1200, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 4));
+        this.gameEngine.addEntity(new HealthPack(this.gameEngine, 300, 400, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 4));
+        this.gameEngine.addEntity(new EnergyPack(this.gameEngine, 330, 400, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 4));
 
         this.gameEngine.addEntity(new Hand(this.gameEngine, 2300, 1450, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
-        this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1800, 1450, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+        this.gameEngine.addEntity(new SoldierShield(this.gameEngine, 1800, 1450, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
         this.gameEngine.addEntity(new Crow(this.gameEngine, 1350, 1300, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
         this.gameEngine.addEntity(new Crow(this.gameEngine, 2950, 1700, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
 
 
-        this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1300, 1100, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+        this.gameEngine.addEntity(new SoldierShield(this.gameEngine, 1300, 1100, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
         this.gameEngine.addEntity(new Crow(this.gameEngine, 400, 300, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
 
         this.gameEngine.addEntity(new Dino(this.gameEngine, 2130, 1061, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, 400, 250));
@@ -322,7 +323,7 @@ l-j
         this.gameEngine.addEntity(new Dino(this.gameEngine, 1460, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, /*patrol distance*/300, /*shot time offset*/ 0));
         this.gameEngine.addEntity(new Crow(this.gameEngine, 2300, 1000, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
             /*sightRadius*/[300, 1000], /*Murder Parameters*/true, [[-600, 200], [400, 400]]));
-        this.gameEngine.addEntity(new Soldier_Shield(this.gameEngine, 1000, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
+        this.gameEngine.addEntity(new SoldierShield(this.gameEngine, 1000, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
         this.gameEngine.addEntity(new Hand(this.gameEngine, 3200, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
         //this.gameEngine.addEntity(new Dino(this.gameEngine, 3000, 1440, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 90, 60, /*patrol distance*/0, /*shot time offset*/ 125));
 
@@ -335,48 +336,48 @@ l-j
     section_2() {
         this.sectionNum = 1;
         this.gameEngine.addEntity(new Hand(this.gameEngine, 6825, 984, this.assetManager.getAsset("img/Enemies.png"), this.ctx));
-        this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875, 792 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 90, 350, 20))
-        this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875 - 95, 984 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 90, 350, 50))
-        this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 6875, 1176 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 45, 350, 60))
+        this.gameEngine.addEntity(new Launcher(this.gameEngine, 6875, 792 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 90, 350, 20))
+        this.gameEngine.addEntity(new Launcher(this.gameEngine, 6875 - 95, 984 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 90, 350, 50))
+        this.gameEngine.addEntity(new Launcher(this.gameEngine, 6875, 1176 + 2 * 70, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 8, 8, [-1, 0], 45, 350, 60))
     }
 
     section_3() {
         this.sectionNum = 2;
         /***BOTTOM LAYER ENTITIES***/
-        this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 8665, 950, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 4, 15));
-        this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 8635, 1000, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 4, 15));
+        this.gameEngine.addEntity(new HealthPack(this.gameEngine, 8665, 950, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 4, 15));
+        this.gameEngine.addEntity(new EnergyPack(this.gameEngine, 8635, 1000, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 4, 15));
 
         /***HAZARDS***/
-        this.gameEngine.addEntity(new Hazards["fireball"](this.gameEngine, 7300, 1450 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 4,
+        this.gameEngine.addEntity(new Fireball(this.gameEngine, 7300, 1450 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 4,
                             /*cooldown*/ 50, /*speed*/ 20));
-        this.gameEngine.addEntity(new Hazards["fireball"](this.gameEngine, 7820, 1450 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 4,
+        this.gameEngine.addEntity(new Fireball(this.gameEngine, 7820, 1450 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 4,
                             /*cooldown*/ 50, /*speed*/ 20, /*offset*/ 25));
-        this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 7512,
+        this.gameEngine.addEntity(new Spikes(this.gameEngine, 7512,
             1152 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 4, 0, 3));
-        this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 7980,
+        this.gameEngine.addEntity(new Spikes(this.gameEngine, 7980,
             1056 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 4, 20, 3));
-        this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 8665,
+        this.gameEngine.addEntity(new Spikes(this.gameEngine, 8665,
 
             1150 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 3.5, 40, 0));
-        this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 7692,
+        this.gameEngine.addEntity(new Spikes(this.gameEngine, 7692,
             700 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 4.5, 0, 3));
-        this.gameEngine.addEntity(new Hazards["spikes"](this.gameEngine, 8064,
+        this.gameEngine.addEntity(new Spikes(this.gameEngine, 8064,
             250 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 7, 40, 20));
 
-        this.gameEngine.addEntity(new Hazards["launcher"](this.gameEngine, 7965, -300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 7, 7, [0, 1], 120, 160))
+        this.gameEngine.addEntity(new Launcher(this.gameEngine, 7965, -300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 7, 7, [0, 1], 120, 160))
 
         /***ENEMIES***/
         this.gameEngine.addEntity(new Crow(this.gameEngine, 8650, -300, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 50, 40,
             [25, 1000], true, [[-600, 250], [600, 250]]));
 
         /***ITEMS***/
-        this.gameEngine.addEntity(new Item.HealthPack(this.gameEngine, 7050, 1248, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 4, 15));
-        this.gameEngine.addEntity(new Item.EnergyPack(this.gameEngine, 7080, 1248, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 4, 15));
+        this.gameEngine.addEntity(new HealthPack(this.gameEngine, 7050, 1248, this.assetManager.getAsset("img/healthpack.png"), this.ctx, 10, 8, 4, 15));
+        this.gameEngine.addEntity(new EnergyPack(this.gameEngine, 7080, 1248, this.assetManager.getAsset("img/energypack.png"), this.ctx, 10, 8, 4, 15));
 
         /***TOP LAYER ENTITIES***/
-        this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 7500, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
-        this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 8400, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
-        this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 9300, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+        this.gameEngine.addEntity(new Lava(this.gameEngine, 7500, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+        this.gameEngine.addEntity(new Lava(this.gameEngine, 8400, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+        this.gameEngine.addEntity(new Lava(this.gameEngine, 9300, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
     }
 
     section_4() {
@@ -396,39 +397,39 @@ l-j
         var i = 0;
         var time = 80;
         /***HAZARDS***/
-        var spikes1 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes1 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 40, 2, 0);
 
-        var spikes2 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes2 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 60, 2, 0);
 
-        var spikes3 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes3 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 80, 2, 0);
 
-        var spikes4 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes4 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 80, 2, 0);
 
-        var spikes5 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes5 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 60, 2, 0);
 
-        var spikes6 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes6 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 40, 2, 0);
 
-        var spikes7 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes7 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 20, 2, 0);
 
-        var spikes8 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes8 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 20, 2, 0);
 
-        var spikes9 = new Hazards["spikes"](this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
+        var spikes9 = new Spikes(this.gameEngine, spikesOrigin[0] + spikeOffsets[i][0], spikesOrigin[1] + spikeOffsets[i++][1],
             this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true,
             time, 0, 2, 0);
         //this.gameEngine.addEntity(new Hazards["projectile-circle"](this.gameEngine, 11600, 800, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 10, 10, 100))
@@ -442,10 +443,10 @@ l-j
         /***ITEMS***/
 
         /***TOP LAYER ENTITIES***/
-        this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 10200, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
-        this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 11100, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
-        this.gameEngine.addEntity(new Hazards["lava"](this.gameEngine, 12000, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
-        var spikesBorder = new Hazards["spikes"](this.gameEngine, 12543 - 20,
+        this.gameEngine.addEntity(new Lava(this.gameEngine, 10200, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+        this.gameEngine.addEntity(new Lava(this.gameEngine, 11100, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+        this.gameEngine.addEntity(new Lava(this.gameEngine, 12000, 1400 - 140, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 3, 300));
+        var spikesBorder = new Spikes(this.gameEngine, 12543 - 20,
             1248 + 44, this.assetManager.getAsset("img/Enemies.png"), this.ctx, 2, true, 20 * 5, 20 * 3, 2, 0);
     }
 }
