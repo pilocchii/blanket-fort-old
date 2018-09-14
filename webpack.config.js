@@ -6,6 +6,7 @@ module.exports = {
   mode: 'development',
   module: {
     rules: [
+
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -16,15 +17,16 @@ module.exports = {
           }
         }
       },
+
       {
         test: /\.ts$/,
         exclude: /node_modules/,
         loader: 'babel-loader!awesome-typescript-loader'
-      } 
+      }
     ]
   },
   resolve: {
-    extensions: [ '.ts', '.js' ]
+    extensions: [ '.ts', '.js', '.yaml', '.yml' ]
   },
   output: {
     filename: 'bundle.js',

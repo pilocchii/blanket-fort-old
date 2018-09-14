@@ -5,6 +5,7 @@ import Camera from "./entities/camera"
 import Hud from "./hud"
 import Background from "./background"
 import Hero from "./entities/hero"
+import L from "./logging"
 
 
 /* Assembles and starts the game. */
@@ -29,12 +30,14 @@ export default function() {
     let ASSET_MANAGER = new AssetManager(toload);
 
     ASSET_MANAGER.downloadAll(function () {
+        L.debug("starting asset manager download")
         let canvas = document.getElementById('gameWorld');
         let ctx = canvas.getContext('2d');
-        console.log("canvas width: " + canvas.width);
-        console.log("canvas height: " + canvas.height);
+        L.debug("canvas width: " + canvas.width);
+        L.debug("canvas height: " + canvas.height);
 
         let gameEngine = new GameEngine();
+        // TODO: 
         let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, 2000, 2000);
         let hero = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
         let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx);
