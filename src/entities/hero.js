@@ -1,13 +1,8 @@
-import Animation from "../animation"
+import {Animation} from "../engine"
 import Terrain from "./terrain"
-import Projectile from "./projectile"
-import Projectile_Sword from "./projectile-sword"
-import Soldier_Shield from "./soldier-shield"
 import Enemy from "./enemy"
 import Hurtbox from "./hurtbox"
 import Reflectbox from "./reflectbox"
-import Hazards from "./hazards"
-import Rocket from "./rocket"
 import Actor from "./actor"
 
 

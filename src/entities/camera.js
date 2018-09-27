@@ -1,9 +1,10 @@
-import Entity from "./entity"
-import Animation from "../animation"
+import {Entity} from "../entities"
+import {Animation} from "../engine"
 
 
 /***********
-Camera class
+2-D side-scrolling Camera class
+
 xView, yView - position of camera (top left)
 canvasWidth, canvasHeight - camera dimensions
 worldWidth, worldHeight - dimensions that represent the world's boundary

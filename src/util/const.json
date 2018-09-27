@@ -1,0 +1,14 @@
+{
+
+    "debug" : true,
+    "canvasSettings" : {
+        "canvasID": "gameWorld",
+        "canvasWidth": 2000,
+        "canvasHeight": 2000
+    },
+    "gameSettings": {
+        "gravity": 0.9
+    }
+
+}
+

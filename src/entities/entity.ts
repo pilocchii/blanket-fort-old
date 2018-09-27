@@ -1,5 +1,5 @@
 import {Animation} from "../engine"
-import C from "../util/const.json"
+import * as C from "../util/const.json"
 
 /***********
 Entity class
@@ -10,7 +10,27 @@ removeFromWorld - a flag that denotes when to remove this entity from the game
 ************/
 class Entity {
 
-    constructor (game, {
+    x?: number;
+    y?: number;
+    img?: any;
+    ctx?: any;
+    level?: any;
+    section?: any;
+    parentClass?: string;
+    type?: string;
+    gravity?: number;
+    removeFromWorld?: boolean;
+
+    boundX?: number; 
+    boundY?: number;
+    lastBoundY?: number;
+    boundWidth?: number;
+    boundHeight?: number;
+
+    name: any;
+    game: any;
+
+    constructor (game: any, { 
 
         x = 0,
         y = 0,
@@ -23,56 +43,67 @@ class Entity {
         gravity = C.gameSettings.gravity,
         removeFromWorld = false,
 
-        boundX = null, 
+        boundX = null,  
         boundY = null,
         lastBoundY = null,
         boundWidth = null,
         boundHeight = null
 
+    } : {
+        x?: number,
+        y?: number,
+        img?: any,
+        ctx?: any,
+        level?: any,
+        section?: any,
+        parentClass?: string,
+        type?: string,
+        gravity?: number,
+        removeFromWorld?: boolean,
+
+        boundX?: number,
+        boundY?: number,
+        lastBoundY?: number,
+        boundWidth?: number,
+        boundHeight?: number,
+
+        name?: any,
+        game?: any
     } = {}) {
         
-        this.name = this.constructor.name;
+        // this.name = this.constructor.name;
         this.game = game;
     }
 
     // TODO, implement a list of bounding shapes, iterate through depending on type (circle or rect) 
-    rectangle() {
+    rectangle(): void {
 
     }
     
-    circle() {
+    circle(): void {
 
     }
 
     /* Draws the outline of this entity */
-    drawOutline (ctx) {
-        ctx.beginPath();
-        ctx.strokeStyle = "green";
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        ctx.stroke();
-        ctx.closePath();
+    drawOutline (ctx: any): void {
+
     }
 
     /*
     Updates the entity each game loop
     i.e. what does this entity do?
     */
-    update () { }
+    update (): void { }
 
     /* Draws this entity. Called every cycle of the game engine. */
-    draw (ctx) {
-        if (this.game.showOutlines && this.boundX) {
-            drawOutline(ctx);
-        }
-        if (this.img) {
-            this.animation.drawFrame(this.clockTick, ctx, this.x, this.y, true);
-        }
+    draw (ctx: any): void {
+        
     }
 
     /*
     Collision detection, rectangle
     */
-    isColliding(other) {
+    isColliding(other: Entity): string {
         let rect1 = {
             "x" : this.boundX,
             "y" : this.boundY,
@@ -121,7 +152,7 @@ class Entity {
 
     }
 
-    collided(other, direction) {
+    collided(other: Entity, direction: string): void {
     }
 } // end of Entity class
 

@@ -1,4 +1,4 @@
-import { Camera, Entity } from "./entities"
+import { Camera, Entity } from "../entities"
 
 
 class Layer {

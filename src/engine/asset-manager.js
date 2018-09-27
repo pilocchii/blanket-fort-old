@@ -1,3 +1,4 @@
+// TODO: this can all be managed by es6 promises
 
 /*****************
 AssetManager class

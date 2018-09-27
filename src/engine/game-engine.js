@@ -1,5 +1,5 @@
 import AssetManager from "./asset-manager"
-import Hero from "./entities/hero"
+// import Hero from "./entities/hero"
 import Hud from "./hud"
 import Background from "./background"
 import Sound from "./sound"

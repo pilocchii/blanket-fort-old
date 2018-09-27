@@ -1,16 +1,24 @@
-import AssetManager from "./asset-manager"
-import GameEngine from "./game-engine"
-import GameBoard from "./entities/game-board"
-import Camera from "./entities/camera"
-import Hud from "./hud"
-import Background from "./background"
-import Hero from "./entities/hero"
-import L from "./logging"
+import {
+    AssetManager,
+    GameEngine,
+    //Hud,
+    Background
+} from "./engine"
+
+import {
+   // GameBoard,
+    Camera,
+    //Hero
+} from "./entities"
+
+import {Logging as L} from "./util"
+import C from "./util/const.json"
 
 
 /* Assembles and starts the game. */
 export default function() {
 
+    let canvasId = C.canvasId;
     let toload = [
         "img/ZXe.png",
         "img/Leo.png",
@@ -28,24 +36,25 @@ export default function() {
     ];
 
     let ASSET_MANAGER = new AssetManager(toload);
+    L.debug("Starting asset manager download...")
 
-    ASSET_MANAGER.downloadAll(function () {
-        L.debug("starting asset manager download")
-        let canvas = document.getElementById('gameWorld');
+    // callback after AssetManager is finished... downloads every asset before beginning. what's a better way?
+    ASSET_MANAGER.downloadAll(() => {
+        
+        let canvas = document.getElementById(canvasId);
         let ctx = canvas.getContext('2d');
         L.debug("canvas width: " + canvas.width);
         L.debug("canvas height: " + canvas.height);
 
         let gameEngine = new GameEngine();
-        // TODO: 
-        let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, 2000, 2000);
-        let hero = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
-        let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx);
-        gameEngine.hero = hero;
-        gameEngine.gameboard = board;
-        let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
-        board.hud = hud;
-        board.hero = hero;
+        let camera = new Camera(gameEngine, 0, 0, null, ctx = ctx, canvas.width, canvas.height, C.settings.canvasWidth, C.settings.canvasHeight);
+        // let hero = new Hero(gameEngine, 0, 0, ASSET_MANAGER.getAsset("img/ZXe.png"), ctx);
+        // let board = new GameBoard(gameEngine, ASSET_MANAGER, ctx);
+        gameEngine.hero = null;
+        // gameEngine.gameboard = board;
+        // let hud = new Hud(gameEngine, ASSET_MANAGER.getAsset("img/hud.png"), hero, [0, 0], [0, 0], [100, 100], 3, camera);
+        // board.hud = hud;
+        // board.hero = hero;
         
         // ### music ###
         
@@ -59,7 +68,7 @@ export default function() {
         let background = new Background(gameEngine, ASSET_MANAGER, ctx, camera);
 
         //Loads level n
-        board.getLevel(1);
+        // board.getLevel(1);
 
         camera.follow(hero);
         gameEngine.addEntity(board);
