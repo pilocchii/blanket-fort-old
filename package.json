@@ -1,22 +1,22 @@
 {
   "name": "game_engine",
-  "version": "1.0.0",
-  "description": "TCSS 491 Computational Worlds project",
+  "version": "0.0.1",
+  "description": "An event log-driven game engine",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Saerith/game_engine.git"
+    "url": "git+https://github.com/Saerith/blanket-fort.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Saerith/game_engine/issues"
+    "url": "https://github.com/Saerith/blanket-fort/issues"
   },
-  "homepage": "https://github.com/Saerith/game_engine#readme",
+  "homepage": "https://github.com/Saerith/blanket-fort#readme",
   "devDependencies": {
     "@babel/core": "^7.0.1",
     "@babel/preset-env": "^7.0.0",

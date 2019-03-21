@@ -1,2 +1,2 @@
 # js-game-engine
-Intended to make boilerplate of engine code in greenfour/pencil-knight using new technologies - webpack and typescript
+Gutting a project I did in school to apply new knowledge and learn typescript
